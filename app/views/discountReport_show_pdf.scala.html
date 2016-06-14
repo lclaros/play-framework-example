@@ -1,0 +1,34 @@
+@(discounts: Seq[DiscountDetail], stardDate: String, endDate: String, total: String)
+@import helper._
+
+@main("Mostrar") {
+    <div class="container">
+        <div>
+            <div style="display: inline-block; width: 150px;" >Fecha de Inicio: </div>
+            <div style="display: inline-block; width: 150px;" id="startDate">@stardDate </div>
+            <div style="display: inline-block; width: 150px;">Fecha Final: </div>
+            <div style="display: inline-block; width: 150px;" id="endDate">@endDate </div>
+        </div>
+        <div>
+            <div style="display: inline-block; width: 150px;"> Total: </div>
+            <div style="display: inline-block; width: 150px;" id="total"> @total Bs </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Productor</th>
+                    <th>Descuento</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(discount <- discounts) {
+                <tr><td>@discount.productorId</td><td>@discount.discount</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+}

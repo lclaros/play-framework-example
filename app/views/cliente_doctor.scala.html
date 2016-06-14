@@ -1,0 +1,20 @@
+@(cliente: Form[CreateClienteForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Welcome to Play") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
+
+    
+    <div class="table-responsive">
+        <table class="table" id="clientes">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Carnet</th>
+                    <th>Asociacion</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

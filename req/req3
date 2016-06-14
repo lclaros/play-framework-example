@@ -1,0 +1,51 @@
+1	Activo	ACTIVO	0	des	false	EditarEliminarMostrar
+1.1	Activo Disponible	ACTIVO	1	ss	false	EditarEliminarMostrar
+1.1.1	Caja	ACTIVO	3	Activo disponible	true	EditarEliminarMostrar
+2	Pasivo	PASIVO	0		false	EditarEliminarMostrar
+2.1	Pasivo disponible	PASIVO	2	ss	true	EditarEliminarMostrar
+3	Patrimonio	PATRIMONIO	0	ss	false	EditarEliminarMostrar
+31	Capital social	PATRIMONIO	5	22	true	EditarEliminarMostrar
+410	Egreso 1	EGRESO	0	ss	true	EditarEliminarMostrar
+430	Egreso 3	EGRESO	0	ss	true	EditarEliminarMostrar
+440	Egreso 2	EGRESO	0	ss	true	EditarEliminarMostrar
+450	Egreso 4	EGRESO	0	sss	true	EditarEliminarMostrar
+460	Egreso 7	EGRESO	0	ss	true	EditarEliminarMostrar
+470	Egreso 5	EGRESO	0	sss	true	EditarEliminarMostrar
+480	Egreso 6	EGRESO	0	sss	true	EditarEliminarMostrarw
+510	Ingreso 1	INGRESO	0	ww	true	EditarEliminarMostrar
+530	Ingreso 3	INGRESO	0	sss	true	EditarEliminarMostrar
+540	Ingreso 2	INGRESO	0	ss	true	EditarEliminarMostrar
+570	Ingreso 5	INGRESO	0		true	EditarEliminarMostrar
+580	Ingreso 6	EGRESO	0	sss	true	EditarEliminarMostrar
+ACEI	Egreso ACEI	EGRESO	0	sss	true	EditarEliminarMostrar
+ADADC	Egreso ADADC	EGRESO	0	sss	true
+
+
+
+Test Planning
+- User creation
+- Request creation
+- Insumo Planning
+- Transaction register
+- Account reports
+
+Administracion de usuarios
+- Contabilidad
+- Session Save
+	- User Id
+	- User Name
+	- User Login
+	. User Password
+- Session Managemenet
+
+
+
+RFB = 510 - 410
+ROB = RFB + 540 - 440
+RODI = ROB + 530 - 430
+RON = RODI - 450
+RDADC = RON - ADADC
+RNEGA = RDADC + 570 - 470
+RAIYI = RNEGA + 580 - 480
+RAI = RAIYI - ACEI
+RNG = RAI - 460

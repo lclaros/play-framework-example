@@ -1,0 +1,44 @@
+@(banco: Form[CreateReporteForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar réporte") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/reporte_index.js")'></script>
+    <div>Lista de reporte de descuentos</div>
+    <div class="table-responsive">
+        <table class="table" id="reportes">
+            <thead>
+                <tr>
+                    <th>Reporte</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        <tbody>
+            <tr>
+                <td>Reporte de descuentos</td>
+                <td><a href="/productores_report_pdf" class="btn btn-info">Mostrar</a><a href="/discountReports_view" class="btn btn-info">Lista</a></td>
+            </tr>
+            <tr>
+                <td>Balance General</td>
+                <td><a href="/reportes_balance" class="btn btn-info">Mostrar</a></td>
+            </tr>
+            <tr>
+                <td>Ganancias Y perdidas</td>
+                <td><a href="/result_finance" class="btn btn-info">Mostrar</a></td>
+            </tr>
+            <tr>
+                <td>Libro Diario</td>
+                <td><a href="/reportes_diary" class="btn btn-info">Mostrar</a></td>
+            </tr>
+            <tr>
+                <td>Libros del mayor</td>
+                <td><a href="/reportes_mayor" class="btn btn-info">Mostrar</a></td>
+            </tr>
+            <tr>
+                <td>Sumas Y Saldos</td>
+                <td><a href="/reportes_sumasYSaldos" class="btn btn-info">Mostrar</a></td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,27 @@
+@(products: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountReport_index.js")'></script>
+    <div>
+        <a href="/reportes_view">Lista de Reportes</a>
+    </div>
+    <div>
+        <a href="/discountReport_addGet" class="btn btn-primary">Crear Reporte</a>
+    </div>
+    <div>Lista de Reportes</div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>status</th>
+                    <th>Total</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

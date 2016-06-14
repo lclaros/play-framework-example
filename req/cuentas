@@ -1,0 +1,13 @@
+Codigo	Nombre	Tipo	Parent	Descripcion	Hoja	---
+1	ACTIVO	ACTIVO	0	
+1.1	CORRIENTE	ACTIVO	1	
+1.1.1	Disponible	ACTIVO	3	
+1.1.1.1	Caja	ACTIVO	5	
+1.1.1.2	Banco	ACTIVO	5	
+1.2	FIJO	ACTIVO	1	
+2	PASIVO	PASIVO	0	
+2.1	CORRIENTE	PASIVO	2	
+2.1.1	Deudas comerciales	PASIVO	10	
+2.1.2	Deudas con el personal	PASIVO	10	
+3	CAPITAL	PATRIMONIO	0	
+3.1	Aportes de los socios	PATRIMONIO	8

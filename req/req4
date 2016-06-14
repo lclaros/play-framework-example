@@ -1,0 +1,43 @@
+NEXT
+	Loader by account
+	Discount report is not working
+		Generar no esta generando
+	Inventory Updates needs to be updated
+		Despues de entregar el producto a veterinario
+
+DONE
+	Transaccion updates(recieved, autorized by, created by)
+		I will need to update the 
+	Products
+		Unit Of Measure(CRUD)
+		Apply to products Unit Of Measure
+	Product Request
+		Price calculate
+		Use Price calculated
+
+NEXT
+DONE
+	Integrate search
+	Search resource is done
+
+
+Unidad de medida(id, nombre, quantity, description)
+
+Unidades de medida
+- Por bidon
+Asiento diario
+- Recibido por(lista para seleccionar)
+- Autorizado por(lista para seleccionar)
+- Elaborado por(automatico)
+
+Insumos
+Bauche -> Transaccion
+Usario insumo
+- Grupo de personas, registrar despues de crear la planificacion de entrega
+- O un modulo.
+
+Cupo ->  Por asociacion
+
+APL 
+- Asociacion tiene modulos
+- Federacion tiene asociaciones

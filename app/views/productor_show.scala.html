@@ -1,0 +1,92 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productor_show.js")'></script>
+    <div>
+        <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista de Productores</span></a>
+    </div>
+    <div class="container">
+    <div class="col-lg-6">
+        <div>
+            <div style="display: inline-block;"> Nombre: </div>
+            <div style="display: inline-block;" id="name">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Carnet: </div>
+            <div style="display: inline-block;" id="carnet">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Telefono: </div>
+            <div style="display: inline-block;" id="telefono">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Direccion: </div>
+            <div style="display: inline-block;" id="direccion">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Modulo: </div>
+            <div style="display: inline-block;" id="moduleName">  </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+         <div>
+            <div style="display: inline-block;"> Cuenta: </div>
+            <div style="display: inline-block;" id="account">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Deuda Total: </div>
+            <div style="display: inline-block;" id="totalDebt">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Cantidad De Pagos: </div>
+            <div style="display: inline-block;" id="numberPayment">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Cargo: </div>
+            <div style="display: inline-block;" id="position">  </div>
+        </div>
+    </div>
+    </div>
+    <div class="container">
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowProductorByProductor.js")'></script>
+        <div>
+            <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+        </div>
+        <div>Lista de Pedidos</div>
+        <div class="table-responsive">
+            <table class="table" id="requestRowProductors">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Producto</th>
+                        <th>Productor</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Pagado</th>
+                        <th>Estado</th>
+                        <th>-----------</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+   
+   <div class="container">
+       <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetailByProductor.js")'></script>
+        <div>Lista de Descuentos</div>
+        <div class="table-responsive">
+            <table class="table" id="descuentos_rows">
+                <thead>
+                    <tr>
+                        <th>Report</th>
+                        <th>Productor</th>
+                        <th>Estado</th>
+                        <th>Descuento</th>
+                        <th>-----------</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+   </div>
+
+}

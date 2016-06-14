@@ -1,0 +1,17 @@
+@(row: Form[UpdateAccountForm], yes_no: Map[String, String], account_type: Map[String, String], accounts: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar Cuenta") {
+    @form(routes.AccountController.updatePost()) {
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @inputText(row("code"))
+        @inputText(row("name"))
+        @select(field = row("type_1"), options = options(account_type))
+        @select(field = row("negativo"), options = options(yes_no))
+        @select(field = row("parent"), options = options(accounts))
+        @inputText(row("description"))
+        <input type="submit" value="Actualizar"  class="btn btn-primary"/>
+        <a href="/accounts_view" class="btn btn-primary">Cancel</a>
+    }
+}

@@ -1,0 +1,18 @@
+@(row: Form[UpdateRequestRowByInsumoForm], requests: Map[String, String], productos: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar") {
+	<a href="/productInvs_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    @form(routes.RequestRowByInsumoController.updatePost()) {
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @select(field = row("requestId"), options = options(requests))
+        @select(field = row("productId"), options = options(productos))
+        @inputText(row("quantity"))
+        @inputText(row("precio"))
+        @inputText(row("status"))
+        @select(field = row("unitMeasure"), options = options(unitMeasures))
+        <input type="submit" value="Actualizar"/>
+        <a href="/requestRows_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+    }
+}

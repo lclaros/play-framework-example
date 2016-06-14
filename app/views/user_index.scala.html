@@ -1,0 +1,44 @@
+@(row: Form[CreateUserForm], types: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/user_index.js")'></script>
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    @form(routes.UserController.add()) {
+        <div class="container">
+        <div class="col-md-6">
+            @inputText(row("nombre"))
+            @inputText(row("carnet"))
+            @inputText(row("telefono"))
+            @inputText(row("login"))
+            @inputText(row("password"))
+        </div>
+        <div class="col-md-6">
+            @inputText(row("direccion"))
+            @inputText(row("sueldo"))
+            @select(field = row("type_1"), options = options(types))
+        </div>
+        <div class="col-md-12">
+            <input type="submit" value="Agregar Usuario"class="btn btn-primary"/>
+        </div>
+        </div>
+    }
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Carnet</th>
+                    <th>Telefono</th>
+                    <th>Direccion</th>
+                    <th>Sueldo</th>
+                    <th>Tipo</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

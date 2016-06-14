@@ -1,0 +1,30 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/proveedor_show.js")'></script>
+    <div>
+        <a href="/proveedores_view"><span class="glyphicon glyphicon-plus">Lista de Proveedores</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Nombre: </div>
+            <div style="display: inline-block;" id="name">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Telefono: </div>
+            <div style="display: inline-block;" id="telefono">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Direccion: </div>
+            <div style="display: inline-block;" id="direccion">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Contacto: </div>
+            <div style="display: inline-block;" id="contacto">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Cuenta: </div>
+            <div style="display: inline-block;" id="cuenta">  </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,26 @@
+@(row: Form[UpdateProductorForm], modules: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar Productor") {
+    @form(routes.ProductorController.updatePost()) {
+    <div class="container">
+        <div class="col-lg-6">
+            @inputText(row("nombre"))
+            @inputText(row("carnet"))
+            @inputText(row("telefono"))
+            @inputText(row("direccion"))
+            @select(field = row("module"), options = options(modules))
+            @inputText(row("id"), 'hidden -> "true", '_label -> "")
+         </div>
+        <div class="col-lg-6">
+            @inputText(row("account"))
+            @inputText(row("totalDebt"), 'readonly -> "readonly")
+            @inputText(row("numberPayment"))
+            @inputText(row("position"), 'readonly -> "readonly")
+        </div>
+    </div>
+        <input type="submit" value="Actualizar"  class="btn btn-primary"/>
+        <a href="/productores_view" class="btn btn-primary">Cancel</a>
+    }
+}

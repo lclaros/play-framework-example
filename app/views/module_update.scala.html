@@ -1,0 +1,15 @@
+@(row: Form[UpdateModuleForm], associations: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar Modulo") {
+    @form(routes.ModuleController.updatePost()) {
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @inputText(row("name"))
+        @inputText(row("president"))
+        @inputText(row("description"))
+        @select(field = row("asociacion"), options = options(associations))
+        <input type="submit" value="Actualizar"  class="btn btn-primary"/>
+        <a href="/modules_view" class="btn btn-primary">Cancel</a>
+    }
+}

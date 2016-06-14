@@ -1,0 +1,15 @@
+@(row: Form[CreateDiscountReportForm], productores: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Crear") {
+    <div>
+        <a href="/"></a>
+    </div>
+    @form(routes.DiscountReportController.add()) {
+        @inputDate(row("startDate"))
+        @inputDate(row("endDate"))
+        @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
+        <input type="submit" value="Guardar Descuento" class="btn btn-primary"/> <a href="/" class="btn btn-primary"> Cancelar</a>
+    }
+}

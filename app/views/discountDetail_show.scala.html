@@ -1,0 +1,26 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetail_show.js")'></script>
+    <div>
+        <a href="/discountReport_show/1"><span class="glyphicon glyphicon-plus">Reporte de descuento</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Discount: </div>
+            <div style="display: inline-block;" id="discountReport">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Productor: </div>
+            <div style="display: inline-block;" id="productorId">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Estado: </div>
+            <div style="display: inline-block;" id="status">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Descuento: </div>
+            <div style="display: inline-block;" id="discount">  </div>
+        </div>
+    </div>
+}

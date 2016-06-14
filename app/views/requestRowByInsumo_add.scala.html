@@ -1,0 +1,17 @@
+@(row: Form[CreateRequestRowByInsumoForm], requests: Map[String, String], products: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Crear") {
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    @form(routes.RequestRowByInsumoController.add()) {
+        @select(field = row("requestId"), options = options(requests))
+        @select(field = row("productId"), options = options(products))
+        @inputText(row("quantity"))
+        @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
+        @select(field = row("unitMeasure"), options = options(unitMeasures))
+        <input type="submit" value="Guardar"/>
+    }
+}

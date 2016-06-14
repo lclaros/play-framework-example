@@ -1,0 +1,15 @@
+@(row: Form[LoginForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/account_index.js")'></script>
+    <div>
+        <a href="/">Muro</a>
+    </div>
+    @form(routes.LoginController.login()) {
+        @inputText(row("user"))
+        @inputText(row("password"))
+        <input type="submit" value="Login" class="btn btn-primary"/>
+    }
+}

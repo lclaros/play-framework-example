@@ -1,0 +1,16 @@
+@(row: Form[UpdateTransactionDetailForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar") {
+	<a href="/productInvs_view">Lista</a>
+    @form(routes.TransactionDetailController.updatePost()) {
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @select(field = row("transactionId"), options = options(products))
+        @select(field = row("accountId"), options = options(vendors))
+        @inputText(row("debit"))
+        @inputText(row("credit"))
+        <input type="submit" value="Actualizar" class="btn btn-primary"/>
+        <a href="/transaction_show/@(row)" class="btn btn-primary">Cancelar</a>
+    }
+}

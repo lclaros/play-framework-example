@@ -1,0 +1,32 @@
+@(accounts: Seq[Account])
+@import helper._
+
+@main("Sumas Y Saldos") {
+    <div>Balance de comprobacion de Sumas y Saldos</div>
+    <div class="table-responsive">
+        <table id="details" style="width: 100%;">
+        <thead>
+                <tr>
+                    <th>Nro</th>
+                    <th>Cuentas</th>
+                    <th>DEBE</th>
+                    <th>HABER</th>
+                    <th>DEUDOR</th>
+                    <th>ACREEDOR</th>
+                </tr>
+            </thead>
+        <tbody>
+            @for(account <- accounts) {
+                <tr>
+                    <td>#</td>
+                    <td>@account.name</td>
+                    <td>@account.debit</td>
+                    <td>@account.credit</td>
+                    <td>@(account.debit - account.credit)</td>
+                    <td>@(account.credit - account.debit)</td>
+                </tr>
+            }
+        </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,90 @@
+@import helper._
+
+@main("Mostrar") {
+    <div>
+        <a href="/logout">Cerrar session</a>
+    </div>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/insumoUser_profile.js")'></script>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Nombre: </div>
+            <div style="display: inline-block;" id="name">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Carnet: </div>
+            <div style="display: inline-block;" id="carnet">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Telefono: </div>
+            <div style="display: inline-block;" id="telefono">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Direccion: </div>
+            <div style="display: inline-block;" id="direccion">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> <a href="/productRequestByInsumo_addGet" class="btn btn-primary">Planificar Entrega</a> </div>
+        </div>
+    </div>
+    <!-- Copy from productrequest_index.scala.html -->
+
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productRequestByInsumoUser.js")'></script>
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+    <div>Lista de Insumo a planificar</div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Status</th>
+                    <th>Detail</th>
+                    <th>Modulo</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="table-responsive">
+        <div>
+            Formularios
+        </div>
+        <table class="table" id="clientes">
+            <thead>
+                <tr>
+                    <th>Formulario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>
+                    Productos
+                </td>
+                <td>
+                    <a href="/product_list"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                    <a href="/products"><span class="glyphicon glyphicon-th-list"></span></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Proveedores
+                </td>
+                <td>
+                    <a href="/proveedores_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                    <a href="/proveedores"><span class="glyphicon glyphicon-th-list"></span></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Productores
+                </td>
+                <td>
+                    <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+                    <a href="/productores"><span class="glyphicon glyphicon-th-list"></span></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+}

@@ -1,0 +1,64 @@
+#Second presentation and goal
+	Associations
+		Modules()
+			Productors
+	Insumo User
+		Plan the insumo(Soya) to the module
+		Insumo type.
+	Counter
+		Register the bouche
+	Discount
+		Add the number of discounts
+		Total debs by productor
+		Manage the totals in discounts, requests
+	Manage request by productor
+		requestProductor record
+
+	Search 
+		by #productorCode
+		by #productCode
+
+
+
+req0
+cCrear veterinario
+Crear producto
+Registrar Producto
+	Crear veterinario
+	Crear producto
+	Crear 
+
+req1
+	Crear Productor, Veterinario, Almacenero
+	Crear peticion desde veterinario profile
+	Acceptar peticion desde almacen profile
+
+req2
+	Crear reporte con los productos vendidos
+
+
+inf1
+	Mostrar informacion relacionada en Veterinario
+	Mostrar informacion relacionada en Almacen
+	Mostrar informacion relacionada en Productor
+
+req3
+Validations
+
+q1
+	Que informacion mostrar en el reporte
+
+Reportes
+Mostrar el reporte de descuento
+
+
+escenarios
+- Registrar Producto
+- Peticion, Entrega de Producto
+- Crear Reporte de descuento
+
+siguiente escenario
+- sessiones
+- reportes contables
+=======
+	Mostrar el reporte de descuento

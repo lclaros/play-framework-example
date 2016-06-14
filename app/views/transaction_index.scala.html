@@ -1,0 +1,26 @@
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transaction_index.js")'></script>
+    <div>
+        <a href="/transaction_addGet"><span class="btn btn-primary">Registrar Asiento Diario</span></a>
+    </div>
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    <div>Lista de Asientos diarios</div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Description</th>
+                    <th>Recibido Por</th>
+                    <th>Autorizado Por</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

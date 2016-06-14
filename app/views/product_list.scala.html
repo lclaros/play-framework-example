@@ -1,0 +1,30 @@
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/product_index.js")'></script>
+    <div>
+        <a href="/" >Muro</a>
+    </div>
+        <div>
+        <a href="/products_view" class="btn btn-info">Agregar</a>
+    </div>
+    <div>
+        Lista de Productos
+    </div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                     <th>Nombre</th>
+                    <th>Costo</th>
+                    <th>Porcentage</th>
+                    <th>Precio</th>
+                    <th>Descripcion</th>
+                    <th>Unidad de Medida</th>
+                    <th>En Inventario</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

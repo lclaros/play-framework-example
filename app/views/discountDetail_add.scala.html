@@ -1,0 +1,16 @@
+@(row: Form[CreateDiscountDetailForm], discounts: Map[String, String], productors: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Crear") {
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    @form(routes.DiscountDetailController.add()) {
+        @select(field = row("discountReport"), options = options(discounts))
+        @select(field = row("productorId"), options = options(productors))
+        @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
+        @inputText(row("discount"))
+        <input type="submit" value="Guardar"/>
+    }
+}

@@ -1,0 +1,17 @@
+@(row: Form[UpdateProductRequestForm], veterinarios: Map[String, String], storekeepers: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar") {
+	<a href="/profile"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    @form(routes.ProductRequestController.updatePostVeterinaria()) {
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @inputText(row("date"))
+        @select(field = row("veterinario"), options = options(veterinarios))
+        @select(field = row("storekeeper"), options = options(storekeepers))
+        @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
+        @inputText(row("detail"))
+        <input type="submit" value="Actualizar"/>
+        <a href="/productInvs_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+    }
+}

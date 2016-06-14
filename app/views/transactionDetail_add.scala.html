@@ -1,0 +1,16 @@
+@(row: Form[CreateTransactionDetailForm], transactions: Map[String, String], accounts: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Crear") {
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    @form(routes.TransactionDetailController.add()) {
+        @select(field = row("transactionId"), options = options(transactions))
+        @select(field = row("accountId"), options = options(accounts))
+        @inputText(row("debit"))
+        @inputText(row("credit"))
+        <input type="submit" value="Guardar"/>
+    }
+}

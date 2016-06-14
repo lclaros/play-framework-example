@@ -1,0 +1,31 @@
+@(row: Form[CreateUnitMeasureForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/unitMeasure_index.js")'></script>
+    <div>
+        <a href="/">Muro</a>
+    </div>
+    @form(routes.UnitMeasureController.add()) {
+        @inputText(row("name"))
+        @inputText(row("quantity"))
+        @inputText(row("description"))
+        <input type="submit" value="Agregar Unidad de Medida" class="btn btn-primary"/>
+    }
+    <div>
+        Lista de Unidades de Medida
+    </div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Equivalente En unidaded</th>
+                    <th>Descripcion</th>
+                    <th>---</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

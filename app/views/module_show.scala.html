@@ -1,0 +1,41 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/module_show.js")'></script>
+    <div>
+        <a href="/modules_view"><span class="glyphicon glyphicon-plus">Lista de Productores</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Nombre: </div>
+            <div style="display: inline-block;" id="name">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Presidente: </div>
+            <div style="display: inline-block;" id="president">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Descripcion: </div>
+            <div style="display: inline-block;" id="description">  </div>
+        </div>
+    </div>
+    <div class="container">
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productorsByModule.js")'></script>
+        <div>
+            <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+        </div>
+        <div>Lista de Productores</div>
+        <div class="table-responsive">
+            <table class="table" id="rows">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Carnet</th>
+                        <th>-----------</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,4 @@
+Useful commands
+Activator.bat
+ run -Dhttp.port=80
+

@@ -1,0 +1,48 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productRequest_show.js")'></script>
+    <div>
+        <a href="/profile"><span class="glyphicon glyphicon-plus">Cuenta</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Date: </div>
+            <div style="display: inline-block;" id="date">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Veterinario: </div>
+            <div style="display: inline-block;" id="veterinarioName">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Almacen: </div>
+            <div style="display: inline-block;" id="storekeeperName">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;" id="status">  </div>
+        </div>
+    </div>
+    <div>
+            <div style="display: inline-block;"> <a href="/requestRow_addGet" class="btn btn-primary">Agregar Productos</a> </div>
+    </div>
+
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowByParent.js")'></script>
+    <div>Lista de Productos</div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Pagado</th>
+                    <th>Estado</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+}

@@ -1,0 +1,16 @@
+mysql -u root isystem < account.sql
+mysql -u root isystem < asociacion.sql
+mysql -u root isystem < discountdetail.sql
+mysql -u root isystem < discountreport.sql
+mysql -u root isystem < module.sql
+mysql -u root isystem < product.sql
+mysql -u root isystem < productinv.sql
+mysql -u root isystem < productor.sql
+mysql -u root isystem < productrequest.sql
+mysql -u root isystem < proveedor.sql
+mysql -u root isystem < reportes.sql
+mysql -u root isystem < requestrow.sql
+mysql -u root isystem < requestrowproductor.sql
+mysql -u root isystem < transaction.sql
+mysql -u root isystem < transactiondetail.sql
+mysql -u root isystem < user.sql

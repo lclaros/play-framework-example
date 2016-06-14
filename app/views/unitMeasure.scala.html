@@ -1,0 +1,22 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/unitMeasure_show.js")'></script>
+    <div>
+        <a href="/modules_view"><span class="glyphicon glyphicon-plus">Lista de Unidaded de medida</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Nombre: </div>
+            <div style="display: inline-block;" id="name">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Equivalente: </div>
+            <div style="display: inline-block;" id="quantity">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Descripcion: </div>
+            <div style="display: inline-block;" id="description">  </div>
+        </div>
+    </div>
+}

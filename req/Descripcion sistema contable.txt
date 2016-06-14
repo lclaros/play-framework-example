@@ -1,0 +1,124 @@
+IMPUESTOS
+Impuestos khipu.com.boEl módulo impuestos de Khipu emite de forma automática, y con tan solo un clic, los formularios más comunes exigidos por el SIN, como son:
+
+• Formulario IVA 200
+
+• Formulario IT 400
+
+• Formulario IUE 500
+
+PLAN DE CUENTAS
+Plan de cuentas de Khipu
+
+El plan de cuentas es el corazón de cualquier programa de contabilidad. La estructura del plan de cuentas determina la extensión de la composición de los estados financieros.
+
+El módulo Plan de cuentas de Khipu permite la modificación y edición de su estructura, proporcionando un modelo capaz de ser adecuado a la mayor parte de las empresas de Bolivia, sea cúal sea su rubro o  idiosincracia, permitiendo al profesional contable un fácil manejo y una cómoda edición, ahorrando tiempo y esfuerzo.
+
+Con el plan de cuentas de Khipu la contabilidad de su empresa estará dotada de la máxima eficiencia y flexibilidad, facilitando su labor contable.
+
+
+COMPROBANTES
+El módulo Comprobantes del programa contable Khipu permite al usuario ingresar los datos de los registros contables de una manera fácil y rápida gracias a su interfaz intuitiva y a los procesos automáticos de registros genéricos, reforzando la eficiencia del usuario. Este módulo se divide en:
+
+• Comprobante de compras/ventas
+
+• Créditos y préstamos
+
+• Devoluciones
+
+
+LIBRO DIARIO
+Libro Diario de Khipu.com.boEl plan de cuentas es el corazón de cualquier programa de contabilidad. La estructura del plan de cuentas determina la extensión de la composición de los estados financieros.
+
+El módulo Libro Diario de Khipu recoge, día a día, los movimientos económicos de la empresa, realizando los correspondientes asientos efectuados en el formulario de compras o ventas.
+
+Del mismo modo, posibilita la realización de asientos manuales, así como automáticos, agilizando el trabajo del contador
+
+LIBRO MAYOR
+Libro Mayor de Khipu.com.boEl módulo Libro Mayor de Khipu detalla cualquier movimiento específico realizado por cada una de las cuentas disponibles en el plan de cuentas.
+
+Este registro acumulativo permite clasificar las informaciones asentadas en el libro diario o los comprobantes contables, obteniendo el movimiento de los débitos y créditos y determinar su saldo final.
+
+
+LIBRO DE COMPRAS Y VENTAS (IVA)
+Libro de Compras y Ventas khipu.com.bo
+
+Sin duda uno de las conflictos más relevantes a los que se enfrenta un contador es el de poder preparar los libros compras y ventas IVA e irlos consolidando en el formato correspondiente para poder enviarlos al portal tributario. Con el módulo Libro de compras y ventas (IVA) de Khipu tan solo será necesario hacer un clic para genéralo automáticamente y tenerlo listo para enviarlo a Impuestos en el formato pertinente (TXT).  
+
+LIBRO DE SUMAS Y SALDOS
+Libro de Sumas y Saldos khipu.com.bo
+
+El módulo Sumas y Saldos de Khipu muestra el balance de los saldos de todas las cuentas para un periodo determinado.
+
+Este libro aporta valor al empresario ya que le permite hacerse una idea sobre la situación de su empresa y de las operaciones realizadas
+
+Este arqueo es uno de los más populares entre los contadores, ya que ofrece, con tan solo un clic, la existencia de asientos descuadrados en la contabilidad.
+
+PLANILLA DE SUELDOS Y SALARIOS
+Módulo de sueldos y salarios de Khipu.com.boLa planilla de sueldos y salarios es un libro que registra y controla el salario pagado a los diferentes trabajadores que prestan sus servicios a la empresa, contemplando parámetros como su salario base, horas extra y nocturnas, Bonus, aguinaldos...
+
+
+NOTAS A LOS EEFF
+Notas a los Estados Financieros khipu.com.bo
+
+El módulo notas a los Estados Financieros representan aclaraciones o explicaciones de hechos o situaciones cuantificables o no, que se presentan en el movimiento de las cuentas, las mismas que deben leerse conjuntamente a los Estados Financieros para una correcta interpretación.
+
+REPORTES DE INGRESOS Y EGRESOS
+Reporte de Ingresos y Egresos khipu.com.bo
+
+El módulo Reportes de ingresos y egresos de Khipu permiten generar los reportes básicos más importantes a la hora de obtener la información económica y financiera de la empresa
+
+
+BALANCE GENERAL
+Balance General khipu.com.bo
+
+El módulo Balance general de Khipu refleja la situación de una empresa en un momento determinado, estando estructurado a través de tres conceptos patrimoniales: el activo, el pasivo y el patrimonio neto.
+
+Este informe constituye uno de los productos finales de la contabilidad de cualquier empresa, siendo elaborados en base a la normativa y legislación de Bolivia, y normalizados para ser válidos por el SIN (Servicio de Impuestos Nacionales).
+
+ESTADO DE RESULTADOS
+Estado de Resultados khipu.com.bo
+
+El módulo Estado de resultados es un informe preparado en base a la información de las cuentas de resultados, es decir, las cuentas de ingreso y de gasto para determinar si la empresa obtuvo utilidades o pérdidas durante un periodo determinado de un ejercicio contable.
+
+Este informe de obligada presentación a las autoridades pertinentes consiste en desglosar los gastos e ingresos en distintas categorías y obtener el resultado, antes y después de impuestos, siendo elaborados en base a la normativa y legislación de Bolivia, y normalizados para ser válidos por el SIN (Servicio de Impuestos Nacionales).
+
+FLUJO DE CAJA
+Flujo de Caja khipu.com.bo
+
+El módulo Estado de flujo de caja es un estado financiero que muestra el efectivo generado y utilizado en las actividades de operación, inversión y financiación. Para el efecto Khipu determina el cambio en las diferentes partidas del balance general que inciden en el efectivo
+
+
+DEPRECIACIÓN Y ACTUALIZACIÓN DE ACTIVOS FIJOS
+Depreciación y actualización de activos fijos de Khipu.com.boLa tabla de depreciación y actualización de activos fijos muestra la disminución periódica del valor de los bienes materiales o inmateriales, derivadas del desgaste debido al uso, paso del tiempo o vejez.
+
+ESTADO DE CAMBIOS EN EL PATRIMONIO NETO
+Estado de cambios en el patrimonio de Khipu.com.boEl módulo estado de cambios en el patrimonio neto es un estado financiero que informa de las variaciones en las cuentas del patrimonio originadas por las transacciones comerciales que realiza la compañía durante una gestión contable.
+
+Su importancia radica en la información patrimonial que nos proporciona para la toma de decisiones gerenciales, como son los aumentos de capital, la distribución de utilidades, la capitalización de las reservas, etc.
+
+
+CUADRO DE ACTUALIZACIÓN DEL PATRIMONIO
+Cuadro de actualización del patrimonio de Khipu.com.boEl módulo cuadro de actualización del patrimonio de Khipu nos ofrece una revaloracización del patrimonio, a través del valor de la UFV inicial y final.
+
+REPORTE DE CLIENTES Y PROVEEDORES
+Reporte de clientes y proveedores khipu.com.bo
+
+El módulo clientes y proveedores de Khipu nos ofrece un histórico de los mobimientos realizados con los diferentes clientes y proveedores con el que se ha realizado una compra o una venta, ofreciendo los montos de dichos mobimientos.
+
+REPORTE BANCARIO
+Reporte Bancario khipu.com.boEl módulo Bancario permite llevar de forma adecuada el proceso de control de los movimientos de las cuentas bancarias con las que trabaje la empresa, generando el libro de bancos por cada cuenta bancaria utilizada
+
+
+BANCARIZACIÓN
+Bancarización khipu.com.bo
+
+El módulo bancarización de Khipu facilita el registro y tramitación de cualquier operación de compra o venta de bienes y servicios superior a Bs 50.000 (Cincuenta Mil 00/100 Bolivianos), respaldando la transacción con un documento emitido por una entidad de intermediación financiera regulada por la Autoridad de Supervisión del Sistema Financiero (ASFI), independientemente que la transacción sea efectuada al contado, a crédito o a través de pagos parciales.
+
+CONCILIACIÓN BANCARIA
+Conciliación bancaria de KhipuEl módulo conciliación bancaria de Khipu nos ofrece una comparación entre los apuntes contables que la empresa tiene contabilizados en las cuentas corrientes de sus libros con el extracto bancario que la propia entidad financiera nos emite sobre las mismas cuentas, pudiendo observar con facilidad las diferencias entre ambos.
+
+BALANCE DE APERTURA
+Balance de apertura de Khipu.com.boEl balance de apertura de Khipu permite al usuario registrar la situación financiera de la empresa al comienzo de una gestión contable, pudiendo convertir el balance de cierre de una gestión con la apertura de la siguiente gestión con tan solo un clic.
+
+

@@ -1,0 +1,109 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Pagina Principal") {
+    <div><a href="/logout">Cerrar session</a>
+    </div>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
+    <div class="table-responsive">
+        <table class="table" id="clientes">
+            <thead>
+                <tr>
+                    <th>Formulario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            @restrict(roles = List(Array("product"))) {
+                <tr>
+                    <td>
+                        Unidades de Medida
+                    </td>
+                    <td>
+                        <a href="/unitMeasures_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                    </td>
+                </tr>
+            }
+            @restrict(roles = List(Array("product"))) {
+                <tr>
+                    <td>
+                        Productos
+                    </td>
+                    <td>
+                        <a href="/product_list"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                    </td>
+                </tr>
+            }
+            @restrict(roles = List(Array("proveedor"))) {
+                <tr>
+                    <td>
+                        Proveedores
+                    </td>
+                    <td>
+                        <a href="/proveedores_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                    </td>
+                </tr>
+            }
+            @restrict(roles = List(Array("module"))) {
+                <tr>
+                    <td>
+                        Modulos
+                    </td>
+                    <td>
+                        <a href="/modules_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+                    </td>
+                </tr>
+            }
+            @restrict(roles = List(Array("productor"))) {
+                <tr>
+                    <td>
+                        Productores
+                    </td>
+                    <td>
+                        <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+                    </td>
+                </tr>
+            }
+            @restrict(roles = List(Array("user"))) {
+                <tr>
+                    <td>
+                        Usuarios
+                    </td>
+                    <td>
+                        <a href="/users_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                    </td>
+                </tr>
+            }
+            @restrict(roles = List(Array("account"))) {
+            <tr>
+                <td>
+                    Cuentas
+                </td>
+                <td>
+                    <a href="/accounts_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                </td>
+            </tr>
+            }
+            @restrict(roles = List(Array("transaction"))) {
+            <tr>
+                <td>
+                    Transacciones
+                </td>
+                <td>
+                    <a href="/transactions_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                </td>
+            </tr>
+            }
+            @restrict(roles = List(Array("report"))) {
+            <tr>
+                <td>
+                    Reportes
+                </td>
+                <td>
+                    <a href="/reportes_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                </td>
+            </tr>
+            }
+        </table>
+    </div>
+}

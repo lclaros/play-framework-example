@@ -1,0 +1,42 @@
+Descripcion costos
+Paquete de Costos
+
+El paquete de Costos Khipu tiene como fin predeterminar, registrar, acumular, distribuir, controlar, analizar, interpretar e informar de los costos de producción, distribución, administración y financiación, para el desarrollo de las funciones de planificación, control y toma de decisiones dentro de una empresa con perfil industrial.
+
+Se trata de un software de contabilidad online seguro, sencillo e inteligente, que le obsequia con predicciones, avisos y vencimientos, contribuyendo a su organización económica de una forma sencilla, clara y precisa. Sin limitación de tiempo y con acceso 24 horas al día, los 365 días del año a través de Pc o laptop, tablet y celular.
+
+dulos y funcionalidades
+COTIZACIONES
+Con el módulo Cotizaciones de Khipu disfrutarás de las ventajas de disponer de un registro de todas las cotizaciones ofertadas a los diferentes clientes, pudiéndola convertir en orden de trabajo en un solo clic.
+
+HOJA DE COSTOS
+Hoja de Costos de Khipu.com.boA través del módulo hoja de costos, el usuario podrá realizar la correspondiente cotización en base a las diferentes categorías de costos establecidas (materia prima, insumos, fuerza de trabajo, máquinas y herramientas, costos indirectos....).
+
+CENTRO DE COSTOS
+Precios y Tarifas de Khipu.com.boEl módulo centro de costos de Khipu, es un formulario donde poder registrar cada uno de los costos relacionados con nuestra producción que no estén relacionados con la materia prima o insumos, ya sea los costos de las máquinas y herramientas, la fuerza de trabajo, los gastos indirectos, etc.
+
+Al mismo tiempo el sistema nos ofrece un reporte sobre el histórico de las mismas.
+
+
+ORDEN DE PRODUCCIÓN
+Órdenes de producción de Khipu.com.boEl módulo órdenes de producción emite las respectivas instrucciones para poder desarrollar los productos previamente cotizados, dirigidas a los diferentes responsables de cada departamento involucrado en el trabajo, y supervisados por el responsable de producción.
+
+ORDEN DE TRABAJO
+Orden de trabajo de Khipu.com.boA través del módulo orden de trabajo, el responsable de producción podrá anotar cronológicamente los diferentes avances, o retrocesos, en cada uno de los procesos productivos, relaciados con una órden de producción determinada.
+
+CONCILIACIÓN DE PRODUCCIÓN
+Conciliación de producción de Khipu.com.boEl módulo conciliación de producción es un reporte que permite al usuario analizar lo q se registra en la orden de produccion como teorico, respecto el proceso de producción real.
+
+Con esta funcionalidad resulta muy sencillo poder ver la eficiencia en una Orden de producción determinada, así como a nivel global.
+
+COMISIONES POR DESTAJO
+Comisiones por destajo de Khipu.com.boCon el módulo comisiones por destajo, la asignación de las comisiones a pagar a los diferentes empleados se realiza de forma totalmente automática, evitando el trabajo manual de valorización del trabajo realizado.
+
+SISTEMA DE ALARMAS
+Sistema de alarmas de Khipu.com.boEl módulo alarmas permite al usuario configurar una serie de notificaciones con el fin que el usuario las reciba a través de correo electrónico.
+
+Estas alarmas pueden ser ajustadas a las necesidades de cada empresa, teniedo como objetivo final prevenir o evitar incidencias o retrasos en el proceso de producción. Algunos ejemplos son:
+
+Obligaciones financieras
+Deficiencia o exceso de materia prima o insumos
+Órdenes de producción retrasadas

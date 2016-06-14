@@ -1,0 +1,53 @@
+Descripcion Inventarios
+Paquete de Inventarios
+
+	El paquete de Inventarios Khipu te ofrece una relación detallada de las existencias materiales incluidas en el activo, mostrando el número de unidades en existencia, la descripción de los artículos, los precios unitarios, el importe de cada categoría o grupo, así como el total del inventario, con posibilidad de registro mediante lector de código de barras.
+
+	Khipu se rige bajo los métodos de valoración PEPS, UEPS o Promedios, ofreciéndote reportes totalmente parametrizables según los requerimientos de cada momento.
+
+	Se trata de un software de Inventarios online seguro, sencillo e inteligente, que le obsequia con predicciones, avisos y vencimientos, contribuyendo a su organización económica de una forma sencilla, clara y precisa. Sin limitación de tiempo y con acceso 24 horas al día, los 365 días del año a través de Pc o laptop, tablet y celular.
+
+
+PROVEEDORES
+	Proveedores Khipu.com.boEl módulo Proveedores de Khipu permite el registro y control de las empresas proveedoras de productos, disponiendo de un listado completo de sus datos, con la posibilidad de filtrar por el nombre del mismo o por los productos provistos.
+
+	Adicionalmente facilita el acceso al registro de los productos adquiridos a un proveedor durante un periodo en particular.
+
+ALMACENES
+	Almacenes de Khipu.com.boEl módulo Almacenes permite la creación y gestión de diferentes almacenes, asignándole un responsable y otros datos relevantes.
+
+	Desde el propio módulo se puede acceder al Kardex de cada almacén en particular, obteniendo el detalle de los saldos (cantidad, valor unitario, costo total) de cada uno de los productos disponibles en el mismo.
+
+
+KARDEX
+	Kardex de Khipu.com.boDesde el módulo Kardex de Khipu podrás ver, de forma organizada y clara, los movimientos de entrada, salida y saldos de la mercancía que se tiene, o ha tenido, en el almacén, pudiendo valorar el inventario bajo los criterios de UEPS, PEPS y Promedio. 
+
+	El sistema permite el acceso al Kardex detallado de un producto en particular, así como el Kardex de un almacén en particular.
+
+NOTAS DE INGRESO/SALIDA
+	Notas de Ingreso y Salida de Khipu.com.boEstos dos módulos tienen como finalidad la acreditación formal de cualquier entrada a un almacén o salida del mismo, constituyendo un soporte para legalizar los registros en almacén y efectuar los correspondientes asientos contables.
+
+SOLICITUD DE FONDOS
+	Solicitudes de Khipu.com.boEl módulo solicitud de fondos permite al usuario poder emitir un documento de uso interno dirigido al departamento de contabilidad, para la solicitud formal de fondos para la compra de material prima o insumos.
+
+	Este documento representa el paso previo a la propia órden de compra.
+
+
+ÓRDENES DE COMPRA
+	Órdenes de compra de Khipu.com.boEl módulo Órdenes de compra de Khipu nos permite, como comprador, emitir un documento para solicitar al vendedor la mercancía necesaria para una cotización en particular, indicando cantidades, detalle, precios y condiciones de pago, entre otros parámetros.
+
+	El sistema también ofrece un cuadro comparativo de precios de compra según proveedor y producto.
+
+
+MUESTRAS EN CONSIGNACIÓN
+	Muestras de consignacion de Khipu.com.boEl módulo muestras en consignación permite al usuario tener un control total sobre las muestras enviadas a los diferentes clientes, así como las muestras recibidas por parte de los clientes.
+
+	El objetivo de esta funcionalidad es poder gestionar adecuadamente los modelos, patrones o prototipos de entrada y salida.
+
+
+NOTAS DE REMISIÓN
+	Notas de remisión de Khipu.com.boEl módulo notas de remisión, o albarán de entrega, tiene como objetivo principal respaldar la entrega de artículos o productos con los diferentes clientes.
+
+	Cabe destacar que este documento no tiene el valor de una factura, sino que tan solo actúa como comprobante de que los artículos han sido entregados por una parte y recibidos por la otra.
+
+

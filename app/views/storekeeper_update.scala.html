@@ -1,0 +1,20 @@
+@(row: Form[UpdateStorekeeperForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar") {
+	<a href="/storekeepers_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    @form(routes.StorekeeperController.updatePost()) {
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @inputText(row("nombre"))
+        @inputText(row("carnet"))
+        @inputText(row("telefono"))
+        @inputText(row("direccion"))
+        @inputText(row("sueldo"))
+        @inputText(row("type_1"))
+        @inputText(row("login"))
+        @inputText(row("password"))
+        <input type="submit" value="Actualizar"/>
+        <a href="/storekeepers_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+    }
+}

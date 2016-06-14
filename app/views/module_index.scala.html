@@ -1,0 +1,33 @@
+@(row: Form[CreateModuleForm], associations: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/module_index.js")'></script>
+    <div>
+        <a href="/">Muro</a>
+    </div>
+    @form(routes.ModuleController.add()) {
+        @inputText(row("name"))
+        @inputText(row("president"))
+        @inputText(row("description"))
+        @select(field = row("asociacion"), options = options(associations))
+        <input type="submit" value="Agregar Modulo" class="btn btn-primary"/>
+    }
+    <div>
+        Lista de Modulos
+    </div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Presidente</th>
+                    <th>Descripcion</th>
+                    <th>Asociacion</th>
+                    <th>---</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

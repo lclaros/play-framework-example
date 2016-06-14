@@ -1,0 +1,67 @@
+@(row_id: Long)(implicit messages: Messages)
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/product_show.js")'></script>
+    <div>
+        <a href="/products_view">Lista de Insumos</a>
+    </div>
+    <div class="container">
+        <div class="col-md-6" style="">
+            <div>
+                <div style="display: inline-block;">Nombre: </div>
+                <div style="display: inline-block;" id="nombre">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Costo: </div>
+                <div style="display: inline-block;" id="cost">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Porcentage: </div>
+                <div style="display: inline-block;" id="percent">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Precio: </div>
+                <div style="display: inline-block;" id="price">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Description: </div>
+                <div style="display: inline-block;" id="description">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Unidad De Medida: </div>
+                <div style="display: inline-block;" id="unitMeasure">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;">En Inventario: </div>
+                <div style="display: inline-block;" id="currentAmount">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;"><a href="/productInvs_addByProduct/@row_id" class="btn btn-primary">Registrar producto</a> </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img src="@routes.Assets.versioned("images/" + row_id + "_product.jpg")" width="200">
+            @helper.form(action = routes.ProductController.upload(row_id), 'enctype -> "multipart/form-data") {
+                <input type="file" name="picture">
+                <input type="submit">
+            }
+        </div>
+        <div class="col-md-12">
+            <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInvByInsumo.js")'></script>
+            <div class="table-responsive">
+                <table class="table" id="rows">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Proveedor</th>
+                            <th>Registrado</th>
+                            <th>En Inventario</th>
+                            <th>-----------</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,35 @@
+@(row: Form[CreateInsumoUserForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/insumoUser_index.js")'></script>
+    <div>
+        <a href="/">Muro</a>
+    </div>
+    @form(routes.InsumoUserController.add()) {
+        @inputText(row("nombre"))
+        @inputText(row("carnet"))
+        @inputText(row("telefono"))
+        @inputText(row("direccion"))
+        @inputText(row("sueldo"))
+        @inputText(row("type_1"))
+        @inputText(row("login"))
+        @inputText(row("password"))
+        <input type="submit" value="Agregar" class="btn btn-primary"/>
+    }
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Carnet</th>
+                    <th>Telefono</th>
+                    <th>Direccion</th>
+                    <th>Sueldo</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

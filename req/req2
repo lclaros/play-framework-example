@@ -1,0 +1,16 @@
+TODO
+Accounts
+- Asiento diario
+- Prepare los asientos diarios para reportes
+Reports
+- Balance General
+- Libros del mayor
+-- create the page to generate this source code
+- Libro Diario (Add date, Account code, Add Folio, Add Descripcion in TransctionDetail Table)
+- Reporte de Descuentos
+-- 
+Users
+- Login, Logout
+DONE
+Users
+- Permiso de usuarios

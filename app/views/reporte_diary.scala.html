@@ -1,0 +1,42 @@
+@(transaccions: Seq[Transaction])
+@import helper._
+
+@main("Libro Diario") {
+    <div>Libro Diario</div>
+    <div class="table-responsive">
+        <table id="details" style="width: 100%;">
+        <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Codigo</th>
+                    <th>Cuenta Y Detalle</th>
+                    <th>Folio</th>
+                    <th>Debe</th>
+                    <th>Haber</th>
+                </tr>
+            </thead>
+        <tbody>
+            @for(transaccion <- transaccions) {
+                <tr>
+                    <td>@(transaccion.date)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                @for(detail <- transaccion.details) {
+                <tr>
+                    <td></td>
+                    <td>@(detail.accountCode)</td>
+                    <td>@(detail.accountName)</td>
+                    <td>@(detail.id)</td>
+                    <td>@(detail.debit)</td>
+                    <td>@(detail.credit)</td>
+                </tr>
+                }
+            }
+        </tbody>
+        </table>
+    </div>
+}

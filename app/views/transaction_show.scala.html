@@ -1,0 +1,50 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transaction_show.js")'></script>
+    <div>
+        <a href="/transactions_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Date: </div>
+            <div style="display: inline-block;" id="date">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Type: </div>
+            <div style="display: inline-block;" id="type_1">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Descripcion: </div>
+            <div style="display: inline-block;" id="description">  </div>
+        </div>
+    </div>
+    <div>
+            <div style="display: inline-block;"> <a href="/transactionDetail_addGet" class="btn btn-primary">Agregar Cuentas</a> </div>
+    </div>
+
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transactionDetail_index.js")'></script>
+    <div>Cuentas y Detalle</div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Transaccion</th>
+                    <th>Cuenta</th>
+                    <th>Debe</th>
+                    <th>Haber</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td>Total</td>
+                    <td></td>
+                    <td><div style="display: inline-block;" id="totalDebit"></div></td>
+                    <td><div style="display: inline-block;" id="totalCredit"></div></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+}

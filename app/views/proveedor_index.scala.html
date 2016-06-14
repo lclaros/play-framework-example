@@ -1,0 +1,40 @@
+@(proveedor: Form[CreateProveedorForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar proveedor") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/proveedor_index.js")'></script>
+    <div>
+        <a href="/">Muro</a>
+    </div>
+    @form(routes.ProveedorController.addProveedor()) {
+        <div class="container">
+            <div class="col-md-6">
+                @inputText(proveedor("nombre"))
+                @inputText(proveedor("telefono"))
+                @inputText(proveedor("direccion"))
+            </div>
+            <div class="col-md-6">
+                @inputText(proveedor("contacto"))
+                @inputText(proveedor("account"))
+            </div>
+            <div class="col-md-12">
+                <input type="submit" class="btn btn-primary" value="Agregar Proveedor"/>
+            </div>
+        </div>
+    }
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Direccion</th>
+                    <th>Contacto</th>
+                    <th>Cuenta</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

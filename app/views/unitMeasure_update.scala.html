@@ -1,0 +1,14 @@
+@(row: Form[UpdateUnitMeasureForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar Modulo") {
+    @form(routes.UnitMeasureController.updatePost()) {
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @inputText(row("name"))
+        @inputText(row("quantity"))
+        @inputText(row("description"))
+        <input type="submit" value="Actualizar"  class="btn btn-primary"/>
+        <a href="/unitMeasures_view" class="btn btn-primary">Cancel</a>
+    }
+}
