@@ -140,12 +140,18 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   def getUpdate(id: Long) = Action.async {
     modules = getModuleNamesMap()
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre,
-        "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(),
-        "direccion" -> res.toList(0).direccion, "account" -> res.toList(0).account.toString(),
+      val anyData = Map(
+        "id" -> id.toString().toString(),
+        "nombre" -> res.toList(0).nombre,
+        "carnet" -> res.toList(0).carnet.toString(),
+        "telefono" -> res.toList(0).telefono.toString(),
+        "direccion" -> res.toList(0).direccion,
+        "account" -> res.toList(0).account.toString(),
         "module" -> res.toList(0).module.toString(),
         "totalDebt" -> res.toList(0).totalDebt.toString(),
-        "numberPayment" -> res.toList(0).numberPayment.toString(), "position" -> res.toList(0).position.toString())
+        "numberPayment" -> res.toList(0).numberPayment.toString(),
+        "position" -> res.toList(0).position.toString()
+        )
       Ok(views.html.productor_update(updateForm.bind(anyData), modules))
     }
   }
@@ -174,8 +180,9 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
         repo.update(
                       res.id, res.nombre, res.carnet, res.telefono,
                       res.direccion, res.account, res.module,
-                      modules(res.module.toString), "Asociacion Name",
-                      res.totalDebt, res.numberPayment, res.position
+                      modules(res.module.toString()), "Asociacion Name",
+                      res.totalDebt, res.numberPayment,
+                      res.position
                     ).map { _ =>
           Redirect(routes.ProductorController.index)
         }

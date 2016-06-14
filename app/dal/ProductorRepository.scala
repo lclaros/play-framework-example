@@ -88,8 +88,16 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     db.run(q4.update(account))
     val q5 = for { c <- tableQ if c.id === id } yield c.module
     db.run(q5.update(module))
-    val q6 = for { c <- tableQ if c.id === id } yield c.moduleName
-    db.run(q6.update(moduleName))
+    val q6 = for { c <- tableQ if c.id === id } yield c.direccion
+    db.run(q6.update(direccion))
+    val q7 = for { c <- tableQ if c.id === id } yield c.moduleName
+    db.run(q7.update(moduleName))
+    val q8 = for { c <- tableQ if c.id === id } yield c.totalDebt
+    db.run(q8.update(totalDebt))
+    val q9 = for { c <- tableQ if c.id === id } yield c.numberPayment
+    db.run(q9.update(numberPayment))
+    val q10 = for { c <- tableQ if c.id === id } yield c.position
+    db.run(q10.update(position))
 
     tableQ.filter(_.id === id).result
   }
