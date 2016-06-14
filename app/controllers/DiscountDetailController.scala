@@ -33,10 +33,12 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   }
 
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
+  var discountsNames = getDiscountRepMap()
+  var productorsNames = getProductorsNamesMap()
 
   def index = Action {
-    val discountsNames = getDiscountRepMap()
-    val productorsNames = getProductorsNamesMap()
+    discountsNames = getDiscountRepMap()
+    productorsNames = getProductorsNamesMap()
     Ok(views.html.discountDetail_index(newForm, discountsNames, productorsNames))
   }
 
@@ -46,7 +48,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
         Future.successful(Ok(views.html.discountDetail_index(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.discountReport, res.productorId, res.status, res.discount).map { _ =>
+        repo.create(res.discountReport, res.productorId, productorsNames(res.productorId.toString), res.status, res.discount).map { _ =>
           //repoDiscReport.updatediscount(res.discountReport, res.status)
           Redirect(routes.DiscountReportController.show(res.discountReport))
         }
@@ -55,8 +57,8 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   }
 
   def addGet = Action {
-    val discountsNames = getDiscountRepMap()
-    val productorsNames = getProductorsNamesMap()
+    discountsNames = getDiscountRepMap()
+    productorsNames = getProductorsNamesMap()
     Ok(views.html.discountDetail_add(newForm, discountsNames, productorsNames))
   }
 
@@ -83,7 +85,6 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       Ok(Json.toJson(res))
     }
   }
-
 
   // update required
   val updateForm: Form[UpdateDiscountDetailForm] = Form {
@@ -158,7 +159,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
         Future.successful(Ok(views.html.discountDetail_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.discountReport, res.productorId, res.status, res.discount).map { _ =>
+        repo.update(res.id, res.discountReport, res.productorId, productorsNames(res.productorId.toString), res.status, res.discount).map { _ =>
           Redirect(routes.DiscountDetailController.index)
         }
       }

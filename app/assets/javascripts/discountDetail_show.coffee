@@ -3,6 +3,6 @@ $ ->
   $.get "/discountDetails/" + row_id, (rows) ->
     $.each rows, (index, row) ->
       $("#discountReport").html row.discountReport
-      $("#productorId").html row.productorId
+      $("#productorId").html row.productorName
       $("#status").html row.status
       $("#discount").html row.discount
