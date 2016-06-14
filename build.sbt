@@ -38,10 +38,15 @@ packageDescription := """Test Windows MSI."""
 enablePlugins(JavaServerAppPackaging)
 
 fork in run := true
+javaOptions in run += "-Dhttp.port=8081"
+
+fork in run := true
 
 fork in run := true
 
 
+
+fork in run := true
 
 fork in run := true
 
