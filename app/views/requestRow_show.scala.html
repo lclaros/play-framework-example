@@ -7,6 +7,10 @@
     </div>
     <div class="container">
         <div>
+            <div style="display: inline-block;"> Id: </div>
+            <div style="display: inline-block;" id="Id">  </div>
+        </div>
+        <div>
             <div style="display: inline-block;"> Request: </div>
             <div style="display: inline-block;" id="requestId">  </div>
         </div>
@@ -24,21 +28,21 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRowProductor_addGet"  class="btn btn-primary">Entrega de producto</a> </div>
+            <div style="display: inline-block;"> <a href="/requestRowProductor_addGet"  class="btn btn-primary">Entrega de Producto</a> </div>
     </div>
 
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowProductor_index.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowProductorsByRequestRow.js")'></script>
     <div>Lista de Productos Entregados</div>
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>
                 <tr>
                     <th>Id</th>
+                    <th>RequestRowId</th>
                     <th>Producto</th>
                     <th>Productor</th>
                     <th>Cantidad</th>
                     <th>Precio</th>
-                    <th>Pagado</th>
                     <th>Estado</th>
                     <th>-----------</th>
                 </tr>

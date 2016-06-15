@@ -7,7 +7,7 @@ $ ->
       productorId = $("<td>").text row.productorId
       quantity = $("<td>").text row.quantity
       precio = $("<td>").text row.precio
-      paid = $("<td>").text row.paid
+      totalPrice = $("<td>").text (row.quantity * row.precio)
       status = $("<td>").text row.status
       links = $("<td>").html '<a href="/requestRow_show/' + row.id + '" class="btn btn-info">Mostrar</a>'
-      $("#requestRowProductors").append $("<tr>").append(requestRowId).append(productId).append(productorId).append(quantity).append(precio).append(paid).append(status).append(links)
+      $("#requestRowProductors").append $("<tr>").append(requestRowId).append(productId).append(productorId).append(quantity).append(precio).append(totalPrice).append(status).append(links)

@@ -19,7 +19,7 @@ import play.api.data.format.Formats._
 
 import javax.inject._
 
-class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoProductReq: RequestRowRepository, 
+class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoRequestRow: RequestRowRepository, 
                                                repoInsum: ProductRepository, repoProductor: ProductorRepository,
                                                val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
@@ -109,7 +109,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   }
 
   def getProductReqNamesMap(): Map[String, String] = {
-    Await.result(repoProductReq.getListNames().map{ case (res1) => 
+    Await.result(repoRequestRow.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: Long) => 
         cache put (key.toString(), value.toString())
@@ -180,6 +180,12 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   // to copy
   def requestRowProductorsByProductor(id: Long) = Action.async {
     repo.requestRowProductorsByProductor(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+  def getByRequestRow(id: Long) = Action.async {
+    repo.requestRowProductorsByRequestRow(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
