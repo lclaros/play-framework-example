@@ -44,15 +44,35 @@ class LoginController @Inject() (repo: UserRepository, val messagesApi: Messages
       res => {
         Await.result(repo.getByLogin(res.user, res.password).map { res2 =>
           if (res2.length > 0) {
-            Ok("Welcome!").withSession("userSecurity" -> res2(0).login, "role" -> res2(0).type_1, "userId" -> res2(0).id.toString())
+            Ok("Welcome!").withSession(
+                                        "userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1,
+                                        "userId" -> res2(0).id.toString(),
+                                        "userName" -> res2(0).nombre.toString()
+                                      )
             if (res2(0).type_1.toLowerCase == "admin") {
-              Redirect("/").withSession("userSecurity" -> res2(0).login, "role" -> res2(0).type_1, "userId" -> res2(0).id.toString())
+              Redirect("/").withSession("userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1,
+                                        "userId" -> res2(0).id.toString(),
+                                        "userName" -> res2(0).nombre.toString())
             } else if (res2(0).type_1.toLowerCase == "veterinario") {
-              Redirect(routes.VeterinarioController.profile(res2(0).id)).withSession("userSecurity" -> res2(0).login, "role" -> res2(0).type_1, "userId" -> res2(0).id.toString())
+              Redirect(routes.VeterinarioController.profile(res2(0).id)).withSession(
+                                        "userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1,
+                                        "userId" -> res2(0).id.toString(),
+                                        "userName" -> res2(0).nombre.toString())
             } else if (res2(0).type_1.toLowerCase == "insumo") {
-              Redirect(routes.InsumoUserController.profile(res2(0).id)).withSession("userSecurity" -> res2(0).login, "role" -> res2(0).type_1, "userId" -> res2(0).id.toString())
+              Redirect(routes.InsumoUserController.profile(res2(0).id)).withSession(
+                                        "userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1,
+                                        "userId" -> res2(0).id.toString(),
+                                        "userName" -> res2(0).nombre.toString())
             } else if (res2(0).type_1.toLowerCase == "almacen") {
-              Redirect(routes.StorekeeperController.profile(res2(0).id)).withSession("userSecurity" -> res2(0).login, "role" -> res2(0).type_1, "userId" -> res2(0).id.toString())
+              Redirect(routes.StorekeeperController.profile(res2(0).id)).withSession(
+                                        "userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1,
+                                        "userId" -> res2(0).id.toString(),
+                                        "userName" -> res2(0).nombre.toString())
             } else {
               Redirect("/error")
             }

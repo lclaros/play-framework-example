@@ -290,6 +290,7 @@ GET     /requestRowProductor_fill/:id        		controllers.RequestRowProductorCo
 GET     /requestRowProductor_finish/:id        		controllers.RequestRowProductorController.getFinish(id: Long)
 GET     /requestRowProductor_remove/:id        		controllers.RequestRowProductorController.delete(id: Long)
 GET     /requestRowProductors/:id 					controllers.RequestRowProductorController.getById(id: Long)
+GET     /requestRowProductorsByRequestRow/:id 		controllers.RequestRowProductorController.getByRequestRow(id: Long)
 POST    /requestRowProductor_update             	controllers.RequestRowProductorController.updatePost
 
 POST    /requestRowProductor                 		controllers.RequestRowProductorController.add

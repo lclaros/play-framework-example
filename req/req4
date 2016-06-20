@@ -1,3 +1,14 @@
+
+Transaccion:
+- Elaborado CI siempre por la contadora
+- 
+
+Estados de los reportes
+    finalizado = pagado por pil
+    enviado = esperando el pago de pil
+    borrado = en construccion
+
+
 NEXT
     Loader by account
     Inventory Updates needs to be updated

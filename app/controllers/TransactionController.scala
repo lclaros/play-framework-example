@@ -58,10 +58,15 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
         Future.successful(Ok(views.html.transaction_index()))
       },
       res => {
+        var userId = request.session.get("userId").getOrElse("0").toLong
+        var userName = request.session.get("userName").getOrElse("0").toString
+        println(userId)
+        println(userName)
         repo.create(
-                    res.date, res.type_1, res.description, res.receivedBy,
-                    users(res.receivedBy.toString), res.autorizedBy,
-                    users(res.autorizedBy.toString)
+                    res.date, res.type_1, res.description, 
+                    userId, userName,
+                    res.receivedBy, users(res.receivedBy.toString),
+                    res.autorizedBy, users(res.autorizedBy.toString)
                     ).map { _ =>
           Ok(views.html.transaction_index())
         }
@@ -97,7 +102,8 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
     users = getUsersMap()
     repo.getById(id).map {case (res) =>
       val anyData = Map(
-                        "id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(),
+                        "id" -> id.toString().toString(),
+                        "date" -> res.toList(0).date.toString(),
                         "type_1" -> res.toList(0).type_1.toString(),
                         "description" -> res.toList(0).description.toString(),
                         "receivedBy" -> res.toList(0).receivedBy.toString(),
@@ -129,8 +135,10 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
       },
       res => {
         repo.update(
-                    res.id, res.date, res.type_1, res.description, res.receivedBy, 
-                    users(res.receivedBy.toString), res.autorizedBy, users(res.autorizedBy.toString)
+                    res.id, res.date, res.type_1,
+                    res.description, res.receivedBy, 
+                    users(res.receivedBy.toString),
+                    res.autorizedBy, users(res.autorizedBy.toString)
                     ).map { _ =>
           Redirect(routes.TransactionController.index())
         }

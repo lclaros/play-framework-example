@@ -30,12 +30,15 @@ class TransactionRepository @Inject() (
     def date = column[String]("date")
     def type_1 = column[String]("type")
     def description = column[String]("description")
+    def createdBy = column[Long]("createdBy")
+    def createdByName = column[String]("createdByName")
     def receivedBy = column[Long]("receivedBy")
     def receivedByName = column[String]("receivedByName")
     def autorizedBy = column[Long]("autorizedBy")
     def autorizedByName = column[String]("autorizedByName")
     def * = (
-              id, date, type_1, description, receivedBy, 
+              id, date, type_1, description, createdBy, 
+              createdByName, receivedBy, 
               receivedByName, autorizedBy, autorizedByName
             ) <> ((Transaction.apply _).tupled, Transaction.unapply)
   }
@@ -43,20 +46,29 @@ class TransactionRepository @Inject() (
   private val tableQ = TableQuery[TransactionTable]
 
   def create(
-              date: String, type_1: String, description: String, receivedBy: Long,
+              date: String, type_1: String, description: String, createdBy: Long,
+              createdByName: String, receivedBy: Long,
               receivedByName: String, autorizedBy: Long, autorizedByName: String
             ): Future[Transaction] = db.run {
     (tableQ.map(p => (
-                        p.date, p.type_1, p.description, p.receivedBy, p.receivedByName,
+                        p.date, p.type_1, p.description,
+                        p.createdBy, p.createdByName,
+                        p.receivedBy, p.receivedByName,
                         p.autorizedBy, p.autorizedByName
                       )
                 ) returning tableQ.map(_.id)
       into ((nameAge, id) => Transaction(
                                           id, nameAge._1, nameAge._2, nameAge._3,
                                           nameAge._4, nameAge._5, nameAge._6, nameAge._7
+                                          , nameAge._8, nameAge._9
                                           )
             )
-    ) += (date, type_1, description, receivedBy, receivedByName, autorizedBy, autorizedByName)
+    ) += (
+            date, type_1, description,
+            createdBy, createdByName,
+            receivedBy, receivedByName,
+            autorizedBy, autorizedByName
+          )
   }
 
   def list(): Future[Seq[Transaction]] = db.run {
@@ -79,9 +91,11 @@ class TransactionRepository @Inject() (
 
   // update required to copy
   def update(
-              id: Long, date: String, type_1: String, description: String, receivedBy: Long,
-              receivedByName: String, autorizedBy: Long, autorizedByName: String
+              id: Long, date: String, type_1: String, description: String,
+              receivedBy: Long, receivedByName: String,
+              autorizedBy: Long, autorizedByName: String
             ): Future[Seq[Transaction]] = db.run {
+    
     val q = for { c <- tableQ if c.id === id } yield c.date
     db.run(q.update(date))
     val q4 = for { c <- tableQ if c.id === id } yield c.type_1
@@ -91,8 +105,8 @@ class TransactionRepository @Inject() (
 
     val q6 = for { c <- tableQ if c.id === id } yield c.receivedBy
     db.run(q6.update(receivedBy))
-    val q7 = for { c <- tableQ if c.id === id } yield c.receivedByName
-    db.run(q7.update(receivedByName))
+    val q71 = for { c <- tableQ if c.id === id } yield c.receivedByName
+    db.run(q71.update(receivedByName))
 
     val q8 = for { c <- tableQ if c.id === id } yield c.autorizedBy
     db.run(q8.update(autorizedBy))
@@ -107,7 +121,6 @@ class TransactionRepository @Inject() (
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
-    println("removed " + affectedRowsCount);
     tableQ.result
   }
 }
