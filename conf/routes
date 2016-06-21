@@ -34,10 +34,10 @@ GET     /productores/:id 				controllers.ProductorController.getById(id: Long)
 POST    /productor_update             	controllers.ProductorController.updatePost
 
 POST    /productor                 		controllers.ProductorController.add
-GET     /productores         			controllers.ProductorController.getProductores
+GET     /productoresPage/:page			controllers.ProductorController.getProductores(page: Int)
 GET     /productorsByModule/:id			controllers.ProductorController.getProductorsByModule(id: Long)
 GET     /productores_report    			controllers.ProductorController.getProductoresReport
-GET     /productores_view         		controllers.ProductorController.index
+GET     /productores_view/:page   		controllers.ProductorController.index(page: Int)
 
 # accounts routes
 GET     /accountChildren/:id 		controllers.AccountController.accountChildren(id: Long)

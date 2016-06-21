@@ -60,8 +60,8 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     ) += (nombre, carnet, telefono, direccion, account, module, moduleName, "", 0, 0, "Productor")
   }
 
-  def list(): Future[Seq[Productor]] = db.run {
-    tableQ.result
+  def list(start: Int, interval: Int): Future[Seq[Productor]] = db.run {
+    tableQ.drop(start).take(interval).result
   }
 
   // to cpy

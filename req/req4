@@ -1,3 +1,8 @@
+TODO
+    Work in the 
+DONE
+The import work witht his command
+    Update productor SET carnet = 1, telefono = 1, module=1, moduleName = 'this', asociacionName='asociacion1', totalDebt = 0, numberPayment=1, position='Productor', direccion= ‘Direccion’;
 
 Transaccion:
 - Elaborado CI siempre por la contadora
@@ -7,7 +12,6 @@ Estados de los reportes
     finalizado = pagado por pil
     enviado = esperando el pago de pil
     borrado = en construccion
-
 
 NEXT
     Loader by account

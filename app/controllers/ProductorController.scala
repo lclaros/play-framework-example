@@ -50,7 +50,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     )(CreateProductorForm.apply)(CreateProductorForm.unapply)
   }
 
-  def index = Action {
+  def index(start: Int) = Action {
     modules = getModuleNamesMap()
     Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor]()))
   }
@@ -85,26 +85,26 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
       res => {
         repo.create (res.nombre, res.carnet, res.telefono, res.direccion,
                     res.account, res.module, modules(res.module.toString)).map { _ =>
-          Redirect(routes.ProductorController.index)
+          Redirect(routes.ProductorController.index(1))
         }
       }
     )
   }
 
   def getProductorsByModule(id: Long) = Action.async {
-    repo.list().map { res =>
+    repo.list(0, 20).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductores = Action.async {
-    repo.list().map { res =>
+  def getProductores(page: Int) = Action.async {
+    repo.list((page - 1) * 20, 20).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   def getProductoresReport = Action.async {
-  	repo.list().map { res =>
+    repo.list(0, 20).map { res =>
       Ok(Json.toJson(res))
     }
   }
@@ -184,7 +184,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
                       res.totalDebt, res.numberPayment,
                       res.position
                     ).map { _ =>
-          Redirect(routes.ProductorController.index)
+          Redirect(routes.ProductorController.index(1))
         }
       }
     )

@@ -1,5 +1,7 @@
+page = location.pathname.split('/')[2]
+
 $ ->
-  $.get "/productores", (rows) ->
+  $.get "/productoresPage/" + page, (rows) ->
     $.each rows, (index, row) ->
       nombre = $("<td>").text row.nombre
       carnet = $("<td>").text row.carnet
