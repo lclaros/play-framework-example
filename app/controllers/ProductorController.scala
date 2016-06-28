@@ -22,6 +22,8 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   var modules = getModuleNamesMap()
+  var interval = 30
+
   def getModuleNamesMap(): Map[String, String] = {
     Await.result(repoModule.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
@@ -32,6 +34,14 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
       cache.toMap
     }, 3000.millis)
   }
+
+  def getTotal(): Int = {
+    Await.result(repo.getTotal().map{ case (res1) => 
+      println(res1)
+      res1
+    }, 3000.millis)
+  }
+
   def searchByAccount(account: String): Seq[Productor] = {
     Await.result(repo.getByAccount(account).map{ res => 
       res
@@ -52,19 +62,25 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
   def index(start: Int) = Action {
     modules = getModuleNamesMap()
-    Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor]()))
+    var total = getTotal()
+    var currentPage = 1
+    Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor](), total, currentPage, interval))
   }
 
   def search(search: String) = Action {
     val productors = searchByAccount(search)
     modules = getModuleNamesMap()
-    Ok(views.html.productor_index(newForm, searchForm, modules, productors))
+    var total = getTotal()
+    var currentPage = 1
+    Ok(views.html.productor_index(newForm, searchForm, modules, productors, total, currentPage, interval))
   }
 
   def searchProduct = Action.async { implicit request =>
+    var total = getTotal()
+    var currentPage = 1
     searchForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor]())))
+        Future.successful(Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor](), total, currentPage, interval)))
       },
       res => {
           Future.successful(Redirect(routes.ProductorController.search(res.account)))
@@ -78,9 +94,11 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   }
 
   def add = Action.async { implicit request =>
+    var total = getTotal()
+    var currentPage = 1
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(errorForm, searchForm, modules, Seq[Productor]())))
+        Future.successful(Ok(views.html.productor_index(errorForm, searchForm, modules, Seq[Productor](), total, currentPage, interval)))
       },
       res => {
         repo.create (res.nombre, res.carnet, res.telefono, res.direccion,
@@ -92,19 +110,19 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   }
 
   def getProductorsByModule(id: Long) = Action.async {
-    repo.list(0, 20).map { res =>
+    repo.list(0, interval).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   def getProductores(page: Int) = Action.async {
-    repo.list((page - 1) * 20, 20).map { res =>
+    repo.list((page - 1) * interval, interval).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   def getProductoresReport = Action.async {
-    repo.list(0, 20).map { res =>
+    repo.list(0, interval).map { res =>
       Ok(Json.toJson(res))
     }
   }
@@ -158,8 +176,10 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
   // delete required
   def delete(id: Long) = Action.async {
+    var total = getTotal()
+    var currentPage = 1
     repo.delete(id).map { res =>
-      Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor]()))
+      Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor](), total, currentPage, interval))
     }
   }
 

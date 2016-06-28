@@ -1,4 +1,4 @@
-@(row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm], modules: Map[String, String], productors: Seq[Productor])(implicit messages: Messages)
+@(row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm], modules: Map[String, String], productors: Seq[Productor], total: Int, currentPage: Int, interval: Int)(implicit messages: Messages)
 
 @import helper._
 
@@ -27,6 +27,7 @@
         <table class="table" id="searchProducts">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Nombre</th>
                     <th>Carnet</th>
                     <th>Telefono</th>
@@ -38,6 +39,7 @@
             <tbody>
             @for(productor <- productors) {
                 <tr>
+                    <td></td>
                     <td>@productor.nombre</td>
                     <td>@productor.carnet</td>
                     <td>@productor.telefono</td>
@@ -53,6 +55,7 @@
         <table class="table" id="rows">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Nombre</th>
                     <th>Carnet</th>
                     <th>Telefono</th>
@@ -60,7 +63,44 @@
                     <th>Modulo</th>
                     <th>---</th>
                 </tr>
+                <tr>
+                    <th colspan="7">
+                        Paginas
+                        <a href="/productores_view/1">1</a>
+                        @for(index <- 2 until (total/interval + 2)) {
+                            -<a href="/productores_view/@index">@index</a>
+                        }
+                        (ToTal productores: @total)
+                    </th>
+                </tr>
             </thead>
+            <tbody>
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="7">
+                        Paginas
+                        <a href="/productores_view/1">1</a>
+                        @for(index <- 2 until ((total/interval) + 2)) {
+                            -<a href="/productores_view/@index">@index</a>
+                        }
+                        (ToTal productores: @total)
+                    </th>
+                </tr>
+            </tfoot>
         </table>
+        <style type="text/css">
+            body {
+                counter-reset: Serial;
+            }
+            table {
+                border-collapse: separate;
+            }
+            tr td:first-child:before {
+              counter-increment: Serial;
+              content: counter(Serial);
+            }
+        </style>
     </div>
 }

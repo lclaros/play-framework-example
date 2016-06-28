@@ -115,6 +115,10 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
   }
 
+  def getTotal(): Future[Int] = db.run {
+    tableQ.length.result
+  }
+
     // Update the status to enviado status
   def updateTotalDebt(id: Long, monto: Double): Future[Seq[Productor]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.totalDebt
@@ -137,8 +141,12 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     tableQ.filter(_.totalDebt > 0.0).result
   }
 
-  def getByAccount(account: String): Future[Seq[Productor]] = db.run {
+  def getByAccount2(account: String): Future[Seq[Productor]] = db.run {
     tableQ.filter(_.account like "%" + account + "%").result
+  }
+
+  def getByAccount(account: String): Future[Seq[Productor]] = db.run {
+    tableQ.filter(_.account like "%" + account + "%").drop(0).take(100).result
   }
 
 }
