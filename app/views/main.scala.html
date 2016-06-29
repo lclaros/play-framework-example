@@ -1,4 +1,5 @@
 @(title: String)(content: Html)
+@import helper._
 <!DOCTYPE html>
 <html>
    <head>
@@ -123,27 +124,6 @@
       <header class="container">
          <img src="@routes.Assets.versioned("images/fb_banner.png")" width="1000">
       </header>
-      <nav class="container">
-         <ul>
-            <li><a href="/profile">Profile</a></li>
-            <li>
-               <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a>
-               <div>
-                  <ul>
-                     <li><a href="cooker.html">Cooker</a></li>
-                  </ul>
-               </div>
-            </li>
-            <li><a href="/product_list">Productos</a></li>
-            <li><a href="/proveedores_view">Proveedores</a></li>
-            <li><a href="/modules_view">Modulos</a></li>
-            <li><a href="/productores_view/1">Productores</a></li>
-            <li><a href="/users_view">Usuarios</a></li>
-            <li><a href="/accounts_view">Cuentas</a></li>
-            <li><a href="/transactions_view">Transacciones</a></li>
-            <li><a href="/reportes_view">Reportes</a></li>
-         </ul>
-      </nav>
       <article class="container">
          @content
       </article>

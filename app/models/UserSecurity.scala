@@ -12,7 +12,7 @@ class UserSecurity(val userName: String) extends Subject
 {
   var rol = "admin";
 
-  var rolesList: Map[String, List[SecurityRole]] = Map("admin" -> 
+  var rolesList: Map[String, List[SecurityRole]] = Map("Admin" -> 
                             List(
                                   new SecurityRole("product"), new SecurityRole("user"),
                                   new SecurityRole("productor"), new SecurityRole("module"),
@@ -20,8 +20,20 @@ class UserSecurity(val userName: String) extends Subject
                                   new SecurityRole("proveedor"), new SecurityRole("admin"),
                                   new SecurityRole("insumo"), new SecurityRole("account"),
                                   new SecurityRole("transaction"), new SecurityRole("report")
+                                ), "Veterinario" ->
+                            List(
+                                  new SecurityRole("veterinario"), new SecurityRole("report")
+                                ), "Almacen" ->
+                            List(
+                                  new SecurityRole("almacen"), new SecurityRole("report")
+                                ), "contabilidad" ->
+                            List(
+                                  new SecurityRole("contabilidad"), new SecurityRole("report")
+                                ), "Insumo" ->
+                            List(
+                                  new SecurityRole("insumo"), new SecurityRole("report")
                                 )
-                            )
+                          )
 
   def getRoles: java.util.List[SecurityRole] = {
     Scala.asJava(rolesList(rol))

@@ -3,6 +3,54 @@
 @import helper._
 
 @main("Pagina Principal") {
+    <nav class="container">
+       <ul>
+          <li><a href="/profile">Profile</a></li>
+          @restrict(roles = List(Array("admin"))) {
+              <li>
+                 <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a>
+                 <div>
+                    <ul>
+                       <li><a href="/unitMeasures_view">Lista</a></li>
+                    </ul>
+                 </div>
+              </li>
+              <li><a href="/product_list">Productos</a></li>
+              <li><a href="/proveedores_view">Proveedores</a></li>
+              <li><a href="/modules_view">Modulos</a></li>
+              <li><a href="/productores_view/1">Productores</a></li>
+              <li><a href="/users_view">Usuarios</a></li>
+              <li><a href="/accounts_view">Cuentas</a></li>
+              <li><a href="/transactions_view">Transacciones</a></li>
+              <li><a href="/reportes_view">Reportes</a></li>
+          }
+            @restrict(roles = List(Array("veterinario"))) {
+              <li><a href="/transactions_view">Transacciones</a></li>
+              <li><a href="/reportes_view">Reportes</a></li>
+          }
+          @restrict(roles = List(Array("almacen"))) {
+              <li> <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a> </li>
+              <li><a href="/product_list">Productos</a></li>
+              <li><a href="/proveedores_view">Proveedores</a></li>
+              <li><a href="/modules_view">Modulos</a></li>
+              <li><a href="/productores_view/1">Productores</a></li>
+              <li><a href="/users_view">Usuarios</a></li>
+              <li><a href="/transactions_view">Transacciones</a></li>
+          }
+          @restrict(roles = List(Array("contabilidad"))) {
+              <li><a href="/transactions_view">Transacciones</a></li>
+          }
+          @restrict(roles = List(Array("insumo"))) {
+              <li> <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a> </li>
+              <li><a href="/product_list">Productos</a></li>
+              <li><a href="/proveedores_view">Proveedores</a></li>
+              <li><a href="/modules_view">Modulos</a></li>
+              <li><a href="/productores_view/1">Productores</a></li>
+              <li><a href="/users_view">Usuarios</a></li>
+              <li><a href="/transactions_view">Transacciones</a></li>
+          }
+       </ul>
+    </nav>
     <div><a href="/logout">Cerrar session</a>
     </div>
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>

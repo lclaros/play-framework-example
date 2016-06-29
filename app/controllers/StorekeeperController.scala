@@ -13,6 +13,8 @@ import dal._
 import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class StorekeeperController @Inject() (repo: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -74,8 +76,8 @@ class StorekeeperController @Inject() (repo: UserRepository, val messagesApi: Me
   }
 
   // to copy
-  def profile(id: Long) = Action {
-    Ok(views.html.storekeeper_profile())
+  def profile(id: Long) = Action { implicit request =>
+    Ok(views.html.storekeeper_profile(new MyDeadboltHandler))
   }
 
   // update required

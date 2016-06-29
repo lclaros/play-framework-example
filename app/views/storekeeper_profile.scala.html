@@ -1,6 +1,55 @@
 @import helper._
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
 @main("Mostrar") {
+<nav class="container">
+       <ul>
+          @restrict(roles = List(Array("admin"))) {
+              <li>
+                 <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a>
+                 <div>
+                    <ul>
+                       <li><a href="/unitMeasures_view">Lista</a></li>
+                    </ul>
+                 </div>
+              </li>
+              <li><a href="/product_list">Productos</a></li>
+              <li><a href="/proveedores_view">Proveedores</a></li>
+              <li><a href="/modules_view">Modulos</a></li>
+              <li><a href="/productores_view/1">Productores</a></li>
+              <li><a href="/users_view">Usuarios</a></li>
+              <li><a href="/accounts_view">Cuentas</a></li>
+              <li><a href="/transactions_view">Transacciones</a></li>
+              <li><a href="/reportes_view">Reportes</a></li>
+          }
+            @restrict(roles = List(Array("veterinario"))) {
+              <li><a href="/transactions_view">Transacciones</a></li>
+              <li><a href="/reportes_view">Reportes</a></li>
+          }
+          @restrict(roles = List(Array("almacen"))) {
+              <li> <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a> </li>
+              <li><a href="/product_list">Productos</a></li>
+              <li><a href="/proveedores_view">Proveedores</a></li>
+              <li><a href="/modules_view">Modulos</a></li>
+              <li><a href="/productores_view/1">Productores</a></li>
+              <li><a href="/users_view">Usuarios</a></li>
+              <li><a href="/transactions_view">Transacciones</a></li>
+          }
+          @restrict(roles = List(Array("contabilidad"))) {
+              <li><a href="/transactions_view">Transacciones</a></li>
+          }
+          @restrict(roles = List(Array("insumo"))) {
+              <li> <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a> </li>
+              <li><a href="/product_list">Productos</a></li>
+              <li><a href="/proveedores_view">Proveedores</a></li>
+              <li><a href="/modules_view">Modulos</a></li>
+              <li><a href="/productores_view/1">Productores</a></li>
+              <li><a href="/users_view">Usuarios</a></li>
+              <li><a href="/transactions_view">Transacciones</a></li>
+          }
+       </ul>
+    </nav>
     <div>
         <a href="/logout">Cerrar session</a>
     </div>
