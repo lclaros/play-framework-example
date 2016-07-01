@@ -1,9 +1,8 @@
-@(row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm], modules: Map[String, String], productors: Seq[Productor], total: Int, currentPage: Int, interval: Int)(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm], modules: Map[String, String], productors: Seq[Productor], searchProductors: Seq[Productor], total: Int, currentPage: Int, interval: Int)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Agregar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productor_index.js")'></script>
     <div>
         <a href="/">Muro</a>
     </div>
@@ -37,7 +36,7 @@
                 </tr>
             </thead>
             <tbody>
-            @for(productor <- productors) {
+            @for(productor <- searchProductors) {
                 <tr>
                     <td></td>
                     <td>@productor.nombre</td>
@@ -75,7 +74,23 @@
                 </tr>
             </thead>
             <tbody>
-                
+            @for(productor <- productors) {
+                <tr>
+                    <td></td>
+                    <td>@productor.nombre</td>
+                    <td>@productor.carnet</td>
+                    <td>@productor.telefono</td>
+                    <td>@productor.account</td>
+                    <td>@productor.module</td>
+                    <td>
+                        @restrict(roles = List(Array("admin"))) {
+                            <a href="/productor_update/@productor.id" class="btn btn-primary">Editar</a> 
+                            <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
+                            <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>'
+                        }
+                    </td>
+                </tr>
+            }
             </tbody>
             <tfoot>
                 <tr>

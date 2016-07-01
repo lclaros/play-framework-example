@@ -16,6 +16,8 @@ import scala.concurrent.{ ExecutionContext, Future, Await }
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 import play.api.data.format.Formats._ 
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 
 class ProductorController @Inject() (repo: ProductorRepository, repoModule: ModuleRepository, val messagesApi: MessagesApi)
@@ -60,19 +62,21 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     )(CreateProductorForm.apply)(CreateProductorForm.unapply)
   }
 
-  def index(start: Int) = Action {
-    modules = getModuleNamesMap()
-    var total = getTotal()
-    var currentPage = 1
-    Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor](), total, currentPage, interval))
+  def index(start: Int) = Action.async { implicit request =>
+    repo.list((start - 1) * interval, interval).map { res =>
+      modules = getModuleNamesMap()
+      var total = getTotal()
+      var currentPage = 1
+      Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, res, Seq[Productor](), total, currentPage, interval))
+    }
   }
 
-  def search(search: String) = Action {
+  def search(search: String) = Action{ implicit request =>
     val productors = searchByAccount(search)
     modules = getModuleNamesMap()
     var total = getTotal()
     var currentPage = 1
-    Ok(views.html.productor_index(newForm, searchForm, modules, productors, total, currentPage, interval))
+    Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, Seq[Productor](), productors, total, currentPage, interval))
   }
 
   def searchProduct = Action.async { implicit request =>
@@ -80,7 +84,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     var currentPage = 1
     searchForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor](), total, currentPage, interval)))
+        Future.successful(Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, Seq[Productor](), Seq[Productor](), total, currentPage, interval)))
       },
       res => {
           Future.successful(Redirect(routes.ProductorController.search(res.account)))
@@ -98,7 +102,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     var currentPage = 1
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(errorForm, searchForm, modules, Seq[Productor](), total, currentPage, interval)))
+        Future.successful(Ok(views.html.productor_index(new MyDeadboltHandler, errorForm, searchForm, modules, Seq[Productor](), Seq[Productor](), total, currentPage, interval)))
       },
       res => {
         repo.create (res.nombre, res.carnet, res.telefono, res.direccion,
@@ -175,11 +179,11 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = Action.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
     repo.delete(id).map { res =>
-      Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor](), total, currentPage, interval))
+      Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, Seq[Productor](), Seq[Productor](), total, currentPage, interval))
     }
   }
 
