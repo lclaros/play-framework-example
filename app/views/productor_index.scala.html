@@ -65,11 +65,19 @@
                 <tr>
                     <th colspan="7">
                         Paginas
-                        <a href="/productores_view/1">1</a>
-                        @for(index <- 2 until (total/interval + 2)) {
-                            -<a href="/productores_view/@index">@index</a>
-                        }
-                        (ToTal productores: @total)
+                        <a href="/productores_view/1">1</a>....
+                            @for(index <- currentPage - 3 until (currentPage + 3)) {
+                                @if(index > 1) {
+                                    @if(index == currentPage) {
+                                        - <a href="/productores_view/@index" style="color: red;"><b>@index</b></a>
+                                    }
+                                    @if(index != currentPage) {
+                                        - <a href="/productores_view/@index">@index</a>
+                                    }
+                                }
+                            }
+                        ....<a href="/productores_view/@(total/interval + 1)">@(total/interval + 1)</a>
+                        (Total: @total)
                     </th>
                 </tr>
             </thead>
@@ -96,11 +104,19 @@
                 <tr>
                     <th colspan="7">
                         Paginas
-                        <a href="/productores_view/1">1</a>
-                        @for(index <- 2 until ((total/interval) + 2)) {
-                            -<a href="/productores_view/@index">@index</a>
-                        }
-                        (ToTal productores: @total)
+                        <a href="/productores_view/1">1</a>....
+                            @for(index <- currentPage - 3 until (currentPage + 3)) {
+                                @if(index > 1) {
+                                    @if(index == currentPage) {
+                                        - <a href="/productores_view/@index" style="color: red;"><b>@index</b></a>
+                                    }
+                                    @if(index != currentPage) {
+                                        - <a href="/productores_view/@index">@index</a>
+                                    }
+                                }
+                            }
+                        ....<a href="/productores_view/@(total/interval + 1)">@(total/interval + 1)</a>
+                        (Total: @total)
                     </th>
                 </tr>
             </tfoot>
