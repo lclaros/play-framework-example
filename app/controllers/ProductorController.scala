@@ -66,7 +66,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     repo.list((start - 1) * interval, interval).map { res =>
       modules = getModuleNamesMap()
       var total = getTotal()
-      var currentPage = 1
+      var currentPage = start
       Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, res, Seq[Productor](), total, currentPage, interval))
     }
   }
