@@ -44,6 +44,13 @@
                     <td>@productor.telefono</td>
                     <td>@productor.account</td>
                     <td>@productor.module</td>
+                    <td>
+                        @restrict(roles = List(Array("admin"))) {
+                            <a href="/productor_update/@productor.id" class="btn btn-primary">Editar</a> 
+                            <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
+                            <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>'
+                        }
+                    </td>
                 </tr>
             }
             </tbody>
