@@ -6,7 +6,7 @@
     <div>
         <a href="/">Muro</a>
     </div>
-    @form(routes.ProductorController.add()) {
+   @form(routes.ProductorController.add()) {
         @inputText(row("nombre"), '_label -> "Nombre Productor")
         @inputText(row("carnet"))
         @inputText(row("telefono"))
@@ -45,9 +45,13 @@
                     <td>@productor.account</td>
                     <td>@productor.module</td>
                     <td>
-                        @restrict(roles = List(Array("admin"))) {
+                        @restrict(roles = List(Array("productEdit"))) {
                             <a href="/productor_update/@productor.id" class="btn btn-primary">Editar</a> 
+                        }
+                        @restrict(roles = List(Array("productDelete"))) {
                             <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
+                        }
+                        @restrict(roles = List(Array("productShow"))) {
                             <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>'
                         }
                     </td>
@@ -98,9 +102,13 @@
                     <td>@productor.account</td>
                     <td>@productor.module</td>
                     <td>
-                        @restrict(roles = List(Array("admin"))) {
+                        @restrict(roles = List(Array("productEdit"))) {
                             <a href="/productor_update/@productor.id" class="btn btn-primary">Editar</a> 
+                        }
+                        @restrict(roles = List(Array("productDelete"))) {
                             <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
+                        }
+                        @restrict(roles = List(Array("productShow"))) {
                             <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>'
                         }
                     </td>
