@@ -64,6 +64,7 @@ POST    /module                 		controllers.ModuleController.add
 GET     /modules         			controllers.ModuleController.getModules
 GET     /modules_report    			controllers.ModuleController.getModulesReport
 GET     /module_list         		controllers.ModuleController.index
+GET     /module_add         		controllers.ModuleController.addGet
 
 # unit Measure routes
 GET     /measure_show/:id 			controllers.UnitMeasureController.show(id: Long)

@@ -1,19 +1,15 @@
-@(row: Form[CreateModuleForm], associations: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[Module])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
+
 @main("Agregar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/module_index.js")'></script>
-    <div>
-        <a href="/">Muro</a>
+    <div class="container">
+       <a href="/"  class="btn btn-primary">Muro</a>
+        @restrict(roles = List(Array("moduleCreate"))) {
+           <a href="/module_add" class="btn btn-primary">Agregar Modulo</a> 
+       }
     </div>
-    @form(routes.ModuleController.add()) {
-        @inputText(row("name"))
-        @inputText(row("president"))
-        @inputText(row("description"))
-        @select(field = row("asociacion"), options = options(associations))
-        <input type="submit" value="Agregar Modulo" class="btn btn-primary"/>
-    }
     <div>
         Lista de Modulos
     </div>
@@ -28,6 +24,27 @@
                     <th>---</th>
                 </tr>
             </thead>
+            <tbody>
+                @for(row <- rows) {
+                    <tr>
+                        <td>@row.name</td>
+                        <td>@row.president</td>
+                        <td>@row.description</td>
+                        <td>@row.asociacionName</td>
+                       <td>
+                           @restrict(roles = List(Array("moduleEdit"))) {
+                               <a href="/module_update/@row.id" class="btn btn-primary">Editar</a> 
+                           }
+                           @restrict(roles = List(Array("moduleDelete"))) {
+                               <a href="/module_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                           }
+                           @restrict(roles = List(Array("moduleShow"))) {
+                               <a href="/module_show/@row.id" class="btn btn-info">Mostrar</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 }

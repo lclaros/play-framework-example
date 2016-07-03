@@ -14,6 +14,8 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -29,8 +31,14 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
     )(CreateModuleForm.apply)(CreateModuleForm.unapply)
   }
 
-  def index = Action {
-    Ok(views.html.module_index(newForm, asociaciones))
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.module_index(new MyDeadboltHandler, res))
+    }
+  }
+
+  def addGet = Action { implicit request =>
+    Ok(views.html.module_add(new MyDeadboltHandler, newForm, asociaciones))
   }
 
   def index_pdf = Action {
@@ -41,11 +49,11 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.module_index(errorForm, asociaciones)))
+        Future.successful(Ok(views.html.module_add(new MyDeadboltHandler, errorForm, asociaciones)))
       },
       res => {
-        repo.create(res.name, res.president, res.description, res.asociacion, asociaciones(res.asociacion.toString)).map { _ =>
-          Redirect(routes.ModuleController.index)
+        repo.create(res.name, res.president, res.description, res.asociacion, asociaciones(res.asociacion.toString)).map { resNew =>
+          Redirect(routes.ModuleController.show(resNew.id))
         }
       }
     )
@@ -75,8 +83,10 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.module_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map{ res =>
+      Ok(views.html.module_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
   // update required
@@ -95,7 +105,7 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.module_index(newForm, asociaciones))
+      Redirect(routes.ModuleController.index)
     }
   }
 
@@ -114,7 +124,7 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
       },
       res => {
         repo.update(res.id, res.name, res.president, res.description, res.asociacion, asociaciones(res.asociacion.toString)).map { _ =>
-          Redirect(routes.ModuleController.index)
+          Redirect(routes.ModuleController.show(res.id))
         }
       }
     )

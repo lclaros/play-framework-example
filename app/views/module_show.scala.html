@@ -1,22 +1,32 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Module)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Mostrar") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/module_show.js")'></script>
-    <div>
-        <a href="/module_list"><span class="glyphicon glyphicon-plus">Lista de Productores</span></a>
+    <div class="container">
+        @restrict(roles = List(Array("moduleList"))) {
+            <a href="/module_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("moduleEdit"))) {
+            <a href="/module_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
+        @restrict(roles = List(Array("moduleDelete"))) {
+           <a href="/module_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     <div class="container">
         <div>
             <div style="display: inline-block;"> Nombre: </div>
-            <div style="display: inline-block;" id="name">  </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
             <div style="display: inline-block;"> Presidente: </div>
-            <div style="display: inline-block;" id="president">  </div>
+            <div style="display: inline-block;" id="president">@row.president</div>
         </div>
         <div>
             <div style="display: inline-block;"> Descripcion: </div>
-            <div style="display: inline-block;" id="description">  </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
         </div>
     </div>
     <div class="container">
