@@ -1,48 +1,51 @@
-@(row_id: Long)(implicit messages: Messages)
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/product_show.js")'></script>
     <div>
-        <a href="/products_view">Lista de Insumos</a>
+        <a href="/product_list">Lista de Insumos</a>
     </div>
     <div class="container">
+        @restrict(roles = List(Array("measureEdit"))) {
+            <a href="/product_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
         <div class="col-md-6" style="">
             <div>
                 <div style="display: inline-block;">Nombre: </div>
-                <div style="display: inline-block;" id="nombre">  </div>
+                <div style="display: inline-block;" id="nombre">@row.nombre</div>
             </div>
             <div>
                 <div style="display: inline-block;">Costo: </div>
-                <div style="display: inline-block;" id="cost">  </div>
+                <div style="display: inline-block;" id="cost">@row.cost</div>
             </div>
             <div>
                 <div style="display: inline-block;">Porcentage: </div>
-                <div style="display: inline-block;" id="percent">  </div>
+                <div style="display: inline-block;" id="percent">@row.percent</div>
             </div>
             <div>
                 <div style="display: inline-block;">Precio: </div>
-                <div style="display: inline-block;" id="price">  </div>
+                <div style="display: inline-block;" id="price">@row.price</div>
             </div>
             <div>
                 <div style="display: inline-block;">Description: </div>
-                <div style="display: inline-block;" id="description">  </div>
+                <div style="display: inline-block;" id="description">@row.descripcion</div>
             </div>
             <div>
                 <div style="display: inline-block;">Unidad De Medida: </div>
-                <div style="display: inline-block;" id="unitMeasure">  </div>
+                <div style="display: inline-block;" id="unitMeasure">@row.unitMeasureName</div>
             </div>
             <div>
                 <div style="display: inline-block;">En Inventario: </div>
-                <div style="display: inline-block;" id="currentAmount">  </div>
+                <div style="display: inline-block;" id="currentAmount">@row.currentAmount</div>
             </div>
             <div>
-                <div style="display: inline-block;"><a href="/productInvs_addByProduct/@row_id" class="btn btn-primary">Registrar producto</a> </div>
+                <div style="display: inline-block;"><a href="/productInvs_addByProduct/@row.id" class="btn btn-primary">Registrar producto</a> </div>
             </div>
         </div>
         <div class="col-md-6">
-            <img src="@routes.Assets.versioned("images/" + row_id + "_product.jpg")" width="200">
-            @helper.form(action = routes.ProductController.upload(row_id), 'enctype -> "multipart/form-data") {
+            <img src="@routes.Assets.versioned("images/@(row.id)_product.jpg")" width="200">
+            @helper.form(action = routes.ProductController.upload(row.id), 'enctype -> "multipart/form-data") {
                 <input type="file" name="picture">
                 <input type="submit">
             }

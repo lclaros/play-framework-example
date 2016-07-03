@@ -1,0 +1,18 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductorForm], modules: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Agregar") {
+    <div>
+        <a href="/">Muro</a>
+    </div>
+    @form(routes.ProductorController.add()) {
+        @inputText(row("nombre"), '_label -> "Nombre Productor")
+        @inputText(row("carnet"))
+        @inputText(row("telefono"))
+        @inputText(row("direccion"))
+        @inputText(row("account"))
+        @select(field = row("module"), options = options(modules))
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
+    }
+}

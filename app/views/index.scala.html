@@ -6,48 +6,39 @@
     <nav class="container">
        <ul>
           <li><a href="/profile">Profile</a></li>
-          @restrict(roles = List(Array("admin"))) {
+          @restrict(roles = List(Array("measureList"))) {
               <li>
-                 <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a>
+                 <a href="/measure_list">Unidades de Medida<span class="caret"></span></a>
                  <div>
                     <ul>
-                       <li><a href="/unitMeasures_view">Lista</a></li>
+                       <li><a href="/measure_list">Lista</a></li>
                     </ul>
                  </div>
               </li>
+          }
+          @restrict(roles = List(Array("productList"))) {
               <li><a href="/product_list">Productos</a></li>
-              <li><a href="/proveedores_view">Proveedores</a></li>
-              <li><a href="/modules_view">Modulos</a></li>
-              <li><a href="/productores_view/1">Productores</a></li>
-              <li><a href="/users_view">Usuarios</a></li>
-              <li><a href="/accounts_view">Cuentas</a></li>
-              <li><a href="/transactions_view">Transacciones</a></li>
-              <li><a href="/reportes_view">Reportes</a></li>
           }
-            @restrict(roles = List(Array("veterinario"))) {
-              <li><a href="/transactions_view">Transacciones</a></li>
-              <li><a href="/reportes_view">Reportes</a></li>
+          @restrict(roles = List(Array("proveedorList"))) {
+              <li><a href="/proveedore_list">Proveedores</a></li>
           }
-          @restrict(roles = List(Array("almacen"))) {
-              <li> <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a> </li>
-              <li><a href="/product_list">Productos</a></li>
-              <li><a href="/proveedores_view">Proveedores</a></li>
-              <li><a href="/modules_view">Modulos</a></li>
-              <li><a href="/productores_view/1">Productores</a></li>
-              <li><a href="/users_view">Usuarios</a></li>
-              <li><a href="/transactions_view">Transacciones</a></li>
+          @restrict(roles = List(Array("moduleList"))) {
+              <li><a href="/module_list">Modulos</a></li>
           }
-          @restrict(roles = List(Array("contabilidad"))) {
-              <li><a href="/transactions_view">Transacciones</a></li>
+          @restrict(roles = List(Array("productorList"))) {
+              <li><a href="/productor_list/1">Productores</a></li>
           }
-          @restrict(roles = List(Array("insumo"))) {
-              <li> <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a> </li>
-              <li><a href="/product_list">Productos</a></li>
-              <li><a href="/proveedores_view">Proveedores</a></li>
-              <li><a href="/modules_view">Modulos</a></li>
-              <li><a href="/productores_view/1">Productores</a></li>
-              <li><a href="/users_view">Usuarios</a></li>
-              <li><a href="/transactions_view">Transacciones</a></li>
+          @restrict(roles = List(Array("userList"))) {
+              <li><a href="/user_list">Usuarios</a></li>
+          }
+          @restrict(roles = List(Array("accountList"))) {
+              <li><a href="/account_list">Cuentas</a></li>
+          }
+          @restrict(roles = List(Array("transactionList"))) {
+              <li><a href="/transaction_list">Transacciones</a></li>
+          }
+          @restrict(roles = List(Array("reportList"))) {
+              <li><a href="/reporte_list">Reportes</a></li>
           }
        </ul>
     </nav>
@@ -58,100 +49,10 @@
         <table class="table" id="clientes">
             <thead>
                 <tr>
-                    <th>Formulario</th>
-                    <th>Acciones</th>
+                    <th>#</th>
+                    <th>Accion</th>
                 </tr>
             </thead>
-            @restrict(roles = List(Array("product"))) {
-                <tr>
-                    <td>
-                        Unidades de Medida
-                    </td>
-                    <td>
-                        <a href="/unitMeasures_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("product"))) {
-                <tr>
-                    <td>
-                        Productos
-                    </td>
-                    <td>
-                        <a href="/product_list"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("proveedor"))) {
-                <tr>
-                    <td>
-                        Proveedores
-                    </td>
-                    <td>
-                        <a href="/proveedores_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("module"))) {
-                <tr>
-                    <td>
-                        Modulos
-                    </td>
-                    <td>
-                        <a href="/modules_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("productor"))) {
-                <tr>
-                    <td>
-                        Productores
-                    </td>
-                    <td>
-                        <a href="/productores_view/1"><span class="glyphicon glyphicon-plus">Lista</span></a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("user"))) {
-                <tr>
-                    <td>
-                        Usuarios
-                    </td>
-                    <td>
-                        <a href="/users_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("account"))) {
-            <tr>
-                <td>
-                    Cuentas
-                </td>
-                <td>
-                    <a href="/accounts_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                </td>
-            </tr>
-            }
-            @restrict(roles = List(Array("transaction"))) {
-            <tr>
-                <td>
-                    Transacciones
-                </td>
-                <td>
-                    <a href="/transactions_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                </td>
-            </tr>
-            }
-            @restrict(roles = List(Array("report"))) {
-            <tr>
-                <td>
-                    Reportes
-                </td>
-                <td>
-                    <a href="/reportes_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                </td>
-            </tr>
-            }
         </table>
     </div>
 }

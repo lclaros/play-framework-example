@@ -1,0 +1,26 @@
+@(row: Form[CreateProductForm], unitMeasures: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <div>
+        <a href="/" >Muro</a>
+    </div>
+    @form(routes.ProductController.addProduct()) {
+        <div class="container">
+            <div class="col-md-6">
+                @inputText(row("nombre"))
+                @inputText(row("cost"))
+                @inputText(row("percent"))
+                @textarea(row("descripcion"), 'rows -> 3, 'cols -> 100)
+            </div>
+            <div class="col-md-6">
+                @select(field = row("unitMeasure"), options = options(unitMeasures))
+                @inputText(row("currentAmount"))
+            </div>
+            <div class="col-md-12">
+                <input type="submit" class="btn btn-primary" value="Agregar Producto"/>
+            </div>
+        </div>
+    }
+}

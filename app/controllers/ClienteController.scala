@@ -32,7 +32,7 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
   /**
    * The index action.
    */
-  def cliente_view = Action {
+  def cliente_list = Action {
     Ok(views.html.cliente_index(clienteForm))
   }
 

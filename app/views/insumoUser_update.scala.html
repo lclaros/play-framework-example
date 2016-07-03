@@ -3,7 +3,7 @@
 @import helper._
 
 @main("Actualizar") {
-	<a href="/insumoUsers_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+	<a href="/insumoUser_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.InsumoUserController.updatePost()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("nombre"))
@@ -15,6 +15,6 @@
         @inputText(row("login"))
         @inputText(row("password"))
         <input type="submit" value="Actualizar"/>
-        <a href="/insumoUsers_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+        <a href="/insumoUser_list"><span class="glyphicon glyphicon-plus">Cancel</span></a>
     }
 }

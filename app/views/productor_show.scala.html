@@ -1,49 +1,53 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Productor)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productor_show.js")'></script>
-    <div>
-        <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista de Productores</span></a>
+    <div class="container">
+        <a href="/productor_list"><span class="glyphicon glyphicon-plus">Lista de Productores</span></a>
     </div>
     <div class="container">
     <div class="col-lg-6">
+        @restrict(roles = List(Array("measureEdit"))) {
+            <a href="/product_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
         <div>
             <div style="display: inline-block;"> Nombre: </div>
-            <div style="display: inline-block;" id="name">  </div>
+            <div style="display: inline-block;" id="name">@row.nombre</div>
         </div>
         <div>
             <div style="display: inline-block;"> Carnet: </div>
-            <div style="display: inline-block;" id="carnet">  </div>
+            <div style="display: inline-block;" id="carnet">@row.carnet</div>
         </div>
         <div>
             <div style="display: inline-block;"> Telefono: </div>
-            <div style="display: inline-block;" id="telefono">  </div>
+            <div style="display: inline-block;" id="telefono">@row.telefono</div>
         </div>
         <div>
             <div style="display: inline-block;"> Direccion: </div>
-            <div style="display: inline-block;" id="direccion">  </div>
+            <div style="display: inline-block;" id="direccion">@row.direccion</div>
         </div>
         <div>
             <div style="display: inline-block;"> Modulo: </div>
-            <div style="display: inline-block;" id="moduleName">  </div>
+            <div style="display: inline-block;" id="moduleName">@row.moduleName</div>
         </div>
     </div>
     <div class="col-lg-6">
          <div>
             <div style="display: inline-block;"> Cuenta: </div>
-            <div style="display: inline-block;" id="account">  </div>
+            <div style="display: inline-block;" id="account">@row.account</div>
         </div>
         <div>
             <div style="display: inline-block;"> Deuda Total: </div>
-            <div style="display: inline-block;" id="totalDebt">  </div>
+            <div style="display: inline-block;" id="totalDebt">@row.totalDebt</div>
         </div>
         <div>
             <div style="display: inline-block;"> Cantidad De Pagos: </div>
-            <div style="display: inline-block;" id="numberPayment">  </div>
+            <div style="display: inline-block;" id="numberPayment">@row.numberPayment</div>
         </div>
         <div>
             <div style="display: inline-block;"> Cargo: </div>
-            <div style="display: inline-block;" id="position">  </div>
+            <div style="display: inline-block;" id="position">@row.position</div>
         </div>
     </div>
     </div>

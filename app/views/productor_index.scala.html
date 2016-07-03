@@ -3,25 +3,18 @@
 @import helper._
 
 @main("Agregar") {
-    <div>
+    <div class="conatiner">
         <a href="/">Muro</a>
+        @restrict(roles = List(Array("productCreate"))) {
+            <a href="/productor_add" class="btn btn-primary">Agregar</a> 
+        }
     </div>
-   @form(routes.ProductorController.add()) {
-        @inputText(row("nombre"), '_label -> "Nombre Productor")
-        @inputText(row("carnet"))
-        @inputText(row("telefono"))
-        @inputText(row("direccion"))
-        @inputText(row("account"))
-        @select(field = row("module"), options = options(modules))
-        <input type="submit" value="Guardar" class="btn btn-primary"/>
-    }
-    <div>
-     @form(routes.ProductorController.searchProduct()) {
-        @inputText(rowSearch("account"))
-        <input type="submit" value="Buscar" class="btn btn-primary"/>
-    }   
+    <div class="container">
+        @form(routes.ProductorController.searchProduct()) {
+            @inputText(rowSearch("account"))
+            <input type="submit" value="Buscar" class="btn btn-primary"/>
+        }   
     </div>
-
      <div class="table-responsive">
         <table class="table" id="searchProducts">
             <thead>
@@ -52,7 +45,7 @@
                             <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
                         }
                         @restrict(roles = List(Array("productShow"))) {
-                            <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>'
+                            <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>
                         }
                     </td>
                 </tr>
@@ -76,18 +69,18 @@
                 <tr>
                     <th colspan="7">
                         Paginas
-                        <a href="/productores_view/1">1</a>....
+                        <a href="/productor_list/1">1</a>....
                             @for(index <- (currentPage - 3) until (currentPage + 3)) {
                                 @if(index > 1) {
                                     @if(index == currentPage) {
-                                        - <a href="/productores_view/@index" style="color: red;"><b>@index</b></a>
+                                        - <a href="/productor_list/@index" style="color: red;"><b>@index</b></a>
                                     }
                                     @if(index != currentPage) {
-                                        - <a href="/productores_view/@index">@index</a>
+                                        - <a href="/productor_list/@index">@index</a>
                                     }
                                 }
                             }
-                        ....<a href="/productores_view/@(total/interval + 1)">@(total/interval + 1)</a>
+                        ....<a href="/productor_list/@(total/interval + 1)">@(total/interval + 1)</a>
                         (Total: @total)
                     </th>
                 </tr>
@@ -119,18 +112,18 @@
                 <tr>
                     <th colspan="7">
                         Paginas
-                        <a href="/productores_view/1">1</a>....
+                        <a href="/productor_list/1">1</a>....
                             @for(index <- (currentPage - 3) until (currentPage + 3)) {
                                 @if(index > 1) {
                                     @if(index == currentPage) {
-                                        - <a href="/productores_view/@index" style="color: red;"><b>@index</b></a>
+                                        - <a href="/productor_list/@index" style="color: red;"><b>@index</b></a>
                                     }
                                     @if(index != currentPage) {
-                                        - <a href="/productores_view/@index">@index</a>
+                                        - <a href="/productor_list/@index">@index</a>
                                     }
                                 }
                             }
-                        ....<a href="/productores_view/@(total/interval + 1)">@(total/interval + 1)</a>
+                        ....<a href="/productor_list/@(total/interval + 1)">@(total/interval + 1)</a>
                         (Total: @total)
                     </th>
                 </tr>

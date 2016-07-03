@@ -14,6 +14,8 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -26,14 +28,20 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
     )(CreateUnitMeasureForm.apply)(CreateUnitMeasureForm.unapply)
   }
 
-  def index = Action {
-    Ok(views.html.unitMeasure_index(newForm))
+  def addGet = Action {
+    Ok(views.html.unitMeasure_add(newForm))
+  }
+
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.unitMeasure_index(new MyDeadboltHandler, res))
+    }
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.unitMeasure_index(errorForm)))
+        Future.successful(Ok(views.html.unitMeasure_add(errorForm)))
       },
       res => {
         repo.create(res.name, res.quantity, res.description).map { _ =>
@@ -66,8 +74,10 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.unitMeasure_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.unitMeasure_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
   // update required
@@ -84,9 +94,10 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = Action.async { implicit request =>
     repo.delete(id).map { res =>
-      Ok(views.html.unitMeasure_index(newForm))
+      Redirect(routes.UnitMeasureController.index)
+      //Ok(views.html.unitMeasure_index(new MyDeadboltHandler, Seq[UnitMeasure]()))
     }
   }
 
@@ -105,7 +116,7 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
       },
       res => {
         repo.update(res.id, res.name, res.quantity, res.description).map { _ =>
-          Redirect(routes.UnitMeasureController.index)
+          Redirect(routes.UnitMeasureController.show(res.id))
         }
       }
     )

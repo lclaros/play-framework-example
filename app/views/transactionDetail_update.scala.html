@@ -3,7 +3,7 @@
 @import helper._
 
 @main("Actualizar") {
-	<a href="/productInvs_view">Lista</a>
+	<a href="/productInv_list">Lista</a>
     @form(routes.TransactionDetailController.updatePost()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @select(field = row("transactionId"), options = options(products))

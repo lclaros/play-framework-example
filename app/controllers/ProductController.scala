@@ -15,6 +15,8 @@ import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 import play.api.data.format.Formats._ 
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasureRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -42,9 +44,15 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
     }, 3000.millis)
   }
 
-  def index = Action {
+  def addGet = Action {
     unidades = getUnitMeasuresMap()
-    Ok(views.html.product_index(newForm, unidades))
+    Ok(views.html.product_add(newForm, unidades))
+  }
+
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.product_index(new MyDeadboltHandler, res))
+    }
   }
 
   def list = Action {
@@ -54,15 +62,15 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
   def addProduct = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_index(errorForm, unidades)))
+        Future.successful(Ok(views.html.product_add(errorForm, unidades)))
       },
       res => {
         repo.create(
                       res.nombre, res.cost, res.percent,res.cost + res.cost * res.percent, res.descripcion,
                       res.unitMeasure, unidades(res.unitMeasure.toString),
                       res.currentAmount
-                    ).map { _ =>
-          Redirect(routes.ProductController.list)
+                    ).map { resNew =>
+          Redirect(routes.ProductController.show(resNew.id))
         }
       }
     )
@@ -89,8 +97,10 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.product_show(id))
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.product_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
   // update required
@@ -114,7 +124,7 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.product_index(newForm, unidades))
+      Redirect(routes.ProductController.index)
     }
   }
 
@@ -137,7 +147,7 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
                       res.descripcion, res.unitMeasure, unidades(res.unitMeasure.toString),
                       res.currentAmount
                     ).map { _ =>
-          Redirect(routes.ProductController.index)
+          Redirect(routes.ProductController.show(res.id))
         }
       }
     )
@@ -152,13 +162,12 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
       val fileNewName = id.toString() + "_product" + type1
       val path_1 = "/home/llll/Desktop/projects/isystem/public/images/"
       try { 
-
         new File(s"$path_1$fileNewName").delete()
       } catch {
         case e: Exception => println(e)
       }
       picture.ref.moveTo(new File(s"$path_1$fileNewName"))
-      Ok(views.html.product_show(id))
+      Redirect(routes.ProductController.show(id))
     }.getOrElse {
       Redirect(routes.ProductController.show(id)).flashing(
         "error" -> "Missing file")

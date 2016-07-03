@@ -7,46 +7,46 @@
        <ul>
           @restrict(roles = List(Array("admin"))) {
               <li>
-                 <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a>
+                 <a href="/measure_list">Unidades de Medida<span class="caret"></span></a>
                  <div>
                     <ul>
-                       <li><a href="/unitMeasures_view">Lista</a></li>
+                       <li><a href="/measure_list">Lista</a></li>
                     </ul>
                  </div>
               </li>
               <li><a href="/product_list">Productos</a></li>
-              <li><a href="/proveedores_view">Proveedores</a></li>
-              <li><a href="/modules_view">Modulos</a></li>
-              <li><a href="/productores_view/1">Productores</a></li>
-              <li><a href="/users_view">Usuarios</a></li>
-              <li><a href="/accounts_view">Cuentas</a></li>
-              <li><a href="/transactions_view">Transacciones</a></li>
-              <li><a href="/reportes_view">Reportes</a></li>
+              <li><a href="/proveedore_list">Proveedores</a></li>
+              <li><a href="/module_list">Modulos</a></li>
+              <li><a href="/productor_list/1">Productores</a></li>
+              <li><a href="/user_list">Usuarios</a></li>
+              <li><a href="/account_list">Cuentas</a></li>
+              <li><a href="/transaction_list">Transacciones</a></li>
+              <li><a href="/reporte_list">Reportes</a></li>
           }
             @restrict(roles = List(Array("veterinario"))) {
-              <li><a href="/transactions_view">Transacciones</a></li>
-              <li><a href="/reportes_view">Reportes</a></li>
+              <li><a href="/transaction_list">Transacciones</a></li>
+              <li><a href="/reporte_list">Reportes</a></li>
           }
           @restrict(roles = List(Array("almacen"))) {
-              <li> <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a> </li>
+              <li> <a href="/measure_list">Unidades de Medida<span class="caret"></span></a> </li>
               <li><a href="/product_list">Productos</a></li>
-              <li><a href="/proveedores_view">Proveedores</a></li>
-              <li><a href="/modules_view">Modulos</a></li>
-              <li><a href="/productores_view/1">Productores</a></li>
-              <li><a href="/users_view">Usuarios</a></li>
-              <li><a href="/transactions_view">Transacciones</a></li>
+              <li><a href="/proveedore_list">Proveedores</a></li>
+              <li><a href="/module_list">Modulos</a></li>
+              <li><a href="/productor_list/1">Productores</a></li>
+              <li><a href="/user_list">Usuarios</a></li>
+              <li><a href="/transaction_list">Transacciones</a></li>
           }
           @restrict(roles = List(Array("contabilidad"))) {
-              <li><a href="/transactions_view">Transacciones</a></li>
+              <li><a href="/transaction_list">Transacciones</a></li>
           }
           @restrict(roles = List(Array("insumo"))) {
-              <li> <a href="/unitMeasures_view">Unidades de Medida<span class="caret"></span></a> </li>
+              <li> <a href="/measure_list">Unidades de Medida<span class="caret"></span></a> </li>
               <li><a href="/product_list">Productos</a></li>
-              <li><a href="/proveedores_view">Proveedores</a></li>
-              <li><a href="/modules_view">Modulos</a></li>
-              <li><a href="/productores_view/1">Productores</a></li>
-              <li><a href="/users_view">Usuarios</a></li>
-              <li><a href="/transactions_view">Transacciones</a></li>
+              <li><a href="/proveedore_list">Proveedores</a></li>
+              <li><a href="/module_list">Modulos</a></li>
+              <li><a href="/productor_list/1">Productores</a></li>
+              <li><a href="/user_list">Usuarios</a></li>
+              <li><a href="/transaction_list">Transacciones</a></li>
           }
        </ul>
     </nav>
@@ -118,7 +118,7 @@
                     Proveedores
                 </td>
                 <td>
-                    <a href="/proveedores_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                    <a href="/proveedore_list"><span class="glyphicon glyphicon-plus"></span>Lista</a>
                     <a href="/proveedores"><span class="glyphicon glyphicon-th-list"></span></a>
                 </td>
             </tr>
@@ -127,7 +127,7 @@
                     Productores
                 </td>
                 <td>
-                    <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+                    <a href="/productor_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
                     <a href="/productores"><span class="glyphicon glyphicon-th-list"></span></a>
                 </td>
             </tr>

@@ -19,7 +19,6 @@ import play.api.data.format.Formats._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-
 class ProductorController @Inject() (repo: ProductorRepository, repoModule: ModuleRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
@@ -62,6 +61,13 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     )(CreateProductorForm.apply)(CreateProductorForm.unapply)
   }
 
+  def addGet() = Action.async { implicit request =>
+    repo.list(0 * interval, interval).map { res =>
+      modules = getModuleNamesMap()
+      Ok(views.html.productor_add(new MyDeadboltHandler, newForm, modules))
+    }
+  }
+
   def index(start: Int) = Action.async { implicit request =>
     repo.list((start - 1) * interval, interval).map { res =>
       modules = getModuleNamesMap()
@@ -102,12 +108,12 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     var currentPage = 1
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(new MyDeadboltHandler, errorForm, searchForm, modules, Seq[Productor](), Seq[Productor](), total, currentPage, interval)))
+        Future.successful(Ok(views.html.productor_add(new MyDeadboltHandler, errorForm, modules)))
       },
       res => {
         repo.create (res.nombre, res.carnet, res.telefono, res.direccion,
-                    res.account, res.module, modules(res.module.toString)).map { _ =>
-          Redirect(routes.ProductorController.index(1))
+                    res.account, res.module, modules(res.module.toString)).map { resNew =>
+          Redirect(routes.ProductorController.show(resNew.id))
         }
       }
     )
@@ -154,9 +160,12 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.productor_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.productor_show(new MyDeadboltHandler, res(0)))
+    }
   }
+
 
   // update required
   def getUpdate(id: Long) = Action.async {
@@ -208,7 +217,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
                       res.totalDebt, res.numberPayment,
                       res.position
                     ).map { _ =>
-          Redirect(routes.ProductorController.index(1))
+          Redirect(routes.ProductorController.show(res.id))
         }
       }
     )
