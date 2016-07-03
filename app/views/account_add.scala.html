@@ -1,0 +1,24 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateAccountForm], yes_no: Map[String, String], account_type: Map[String, String], accounts: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@import helper._
+
+@main("Agregar") {
+    <div>
+        <a href="/" class="btn btn-info">Muro</a>
+        @restrict(roles = List(Array("accountList"))) {
+          <a href="/account_list" class="btn btn-info">Lista</a> 
+        }
+    </div>
+    @form(routes.AccountController.add()) {
+        @inputText(row("code"))
+        @inputText(row("name"))
+        @select(field = row("type_1"), options = options(account_type))
+        @select(field = row("negativo"), options = options(yes_no))
+        @select(field = row("parent"), options = options(accounts))
+        @inputText(row("description"))
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
+        <a href="/account_list" class="btn btn-info">Cancelar</a>
+    }
+}

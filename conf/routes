@@ -51,6 +51,7 @@ POST    /account_update             controllers.AccountController.updatePost
 POST    /account                 	controllers.AccountController.add
 GET     /accounts         			controllers.AccountController.getAccounts
 GET     /account_list         		controllers.AccountController.index
+GET     /account_add         		controllers.AccountController.addGet
 
 
 # modules routes

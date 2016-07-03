@@ -3,7 +3,6 @@
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/module_show.js")'></script>
     <div class="container">
         @restrict(roles = List(Array("moduleList"))) {
             <a href="/module_list" class="btn btn-primary">Listar</a> 

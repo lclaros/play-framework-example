@@ -1,30 +1,40 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Account)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/account_show.js")'></script>
-    <div>
-        <a href="/account_list"><span class="glyphicon glyphicon-plus">Lista de Cuentas</span></a>
+    <div class="container">
+        <a href="/" class="btn btn-primary">Muro</a> 
+        @restrict(roles = List(Array("accountList"))) {
+            <a href="/account_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("accountEdit"))) {
+            <a href="/account_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
+        @restrict(roles = List(Array("accountDelete"))) {
+           <a href="/account_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     <div class="container">
         <div>
             <div style="display: inline-block;"> Codigo: </div>
-            <div style="display: inline-block;" id="code">  </div>
+            <div style="display: inline-block;" id="code">@row.code</div>
         </div>
         <div>
             <div style="display: inline-block;"> Nombre: </div>
-            <div style="display: inline-block;" id="name">  </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
             <div style="display: inline-block;"> Tipo: </div>
-            <div style="display: inline-block;" id="type_1">  </div>
+            <div style="display: inline-block;" id="type_1">@row.type_1</div>
         </div>
         <div>
             <div style="display: inline-block;"> Description: </div>
-            <div style="display: inline-block;" id="description">  </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
         </div>
         <div>
             <div style="display: inline-block;"> Hoja: </div>
-            <div style="display: inline-block;" id="child">  </div>
+            <div style="display: inline-block;" id="child">@row.child</div>
         </div>
     </div>
 

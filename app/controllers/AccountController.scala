@@ -15,6 +15,8 @@ import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class AccountController @Inject() (repo: AccountRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -33,14 +35,20 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
     )(CreateAccountForm.apply)(CreateAccountForm.unapply)
   }
 
-  def index = Action {
-    Ok(views.html.account_index(newForm, yes_no, account_type, getAccountNamesMap()))
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.account_index(new MyDeadboltHandler, res))
+    }
+  }
+
+  def addGet = Action { implicit request =>
+    Ok(views.html.account_add(new MyDeadboltHandler, newForm, yes_no, account_type, getAccountNamesMap()))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_index(errorForm, yes_no, account_type, getAccountNamesMap())))
+        Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, errorForm, yes_no, account_type, getAccountNamesMap())))
       },
       res => {
         repo.create(res.code, res.name, res.type_1, res.negativo, res.parent, res.description).map { _ =>
@@ -76,8 +84,10 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.account_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.account_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
   // update required
@@ -91,7 +101,7 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.account_index(newForm, yes_no, account_type, getAccountNamesMap()))
+      Redirect(routes.AccountController.index)
     }
   }
 
