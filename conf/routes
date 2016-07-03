@@ -100,6 +100,7 @@ POST    /user_update            controllers.UserController.updatePost
 POST    /user                 	controllers.UserController.add
 GET     /users         			controllers.UserController.getUsers
 GET     /user_list     		controllers.UserController.index
+GET     /user_add     		controllers.UserController.addGet
 
 
 # Now for Storekeepers

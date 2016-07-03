@@ -14,6 +14,8 @@ import dal._
 import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
@@ -40,9 +42,16 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
 
   val types = scala.collection.immutable.Map[String, String]("Veterinario" -> "Veterinario", "Insumo" -> "Insumo", "Admin" -> "Admin", "Almacen" -> "Almacen")
 
-  def index = Action {
-    Ok(views.html.user_index(newForm, types))
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.user_index(new MyDeadboltHandler, res))
+    }
   }
+  
+  def addGet = Action { implicit request =>
+    Ok(views.html.user_add(new MyDeadboltHandler, newForm,types))
+  }
+
 
   def profile() = Action { implicit request =>
     Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
@@ -91,7 +100,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.user_index(errorForm, types)))
+        Future.successful(Ok(views.html.user_add(new MyDeadboltHandler, errorForm, types)))
       },
       res => {
         repo.create(res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
@@ -123,8 +132,10 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.user_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.user_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
   // update required
@@ -141,7 +152,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.user_index(newForm, types))
+      Redirect(routes.UserController.index)
     }
   }
 
@@ -160,7 +171,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
       },
       res => {
         repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
-          Redirect(routes.UserController.index)
+          Redirect(routes.UserController.show(res.id))
         }
       }
     )

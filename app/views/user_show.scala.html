@@ -1,34 +1,38 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: User)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/veterinario_show.js")'></script>
-    <div>
-        <a href="/veterinario_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    <div class="container">
+        <a href="/user_list">Lista</a>
     </div>
     <div class="container">
+        @restrict(roles = List(Array("userEdit"))) {
+            <a href="/user_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
         <div>
             <div style="display: inline-block;"> Nombre: </div>
-            <div style="display: inline-block;" id="name">  </div>
+            <div style="display: inline-block;" id="name">@row.nombre</div>
         </div>
         <div>
             <div style="display: inline-block;"> Carnet: </div>
-            <div style="display: inline-block;" id="carnet">  </div>
+            <div style="display: inline-block;" id="carnet">@row.carnet</div>
         </div>
         <div>
             <div style="display: inline-block;"> Telefono: </div>
-            <div style="display: inline-block;" id="telefono">  </div>
+            <div style="display: inline-block;" id="telefono">@row.telefono</div>
         </div>
         <div>
             <div style="display: inline-block;"> Direccion: </div>
-            <div style="display: inline-block;" id="direccion">  </div>
+            <div style="display: inline-block;" id="direccion">@row.direccion</div>
         </div>
         <div>
             <div style="display: inline-block;"> Sueldo: </div>
-            <div style="display: inline-block;" id="sueldo">  </div>
+            <div style="display: inline-block;" id="sueldo">@row.sueldo</div>
         </div>
         <div>
             <div style="display: inline-block;"> Tipo: </div>
-            <div style="display: inline-block;" id="type_1">  </div>
+            <div style="display: inline-block;" id="type_1">@row.type_1</div>
         </div>
     </div>
 }

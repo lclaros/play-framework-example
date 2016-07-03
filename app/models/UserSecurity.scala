@@ -18,8 +18,8 @@ class UserSecurity(val userName: String) extends Subject
             new SecurityRole("productCreate"), new SecurityRole("productList"), new SecurityRole("productShow"), new SecurityRole("productEdit"), new SecurityRole("productDelete"),
             //new SecurityRole("proveedorCreate"), new SecurityRole("proveedorList"), new SecurityRole("proveedorShow"), new SecurityRole("proveedorEdit"), new SecurityRole("proveedorDelete"),
             //new SecurityRole("moduleCreate"), new SecurityRole("moduleList"), new SecurityRole("moduleShow"), new SecurityRole("moduleEdit"), new SecurityRole("moduleDelete"),
-            new SecurityRole("productorCreate"), new SecurityRole("productorList"), new SecurityRole("productorShow"), new SecurityRole("productorEdit"), new SecurityRole("productorDelete")
-            //new SecurityRole("userCreate"), new SecurityRole("userList"), new SecurityRole("userShow"), new SecurityRole("userEdit"), new SecurityRole("userDelete"),
+            new SecurityRole("productorCreate"), new SecurityRole("productorList"), new SecurityRole("productorShow"), new SecurityRole("productorEdit"), new SecurityRole("productorDelete"),
+            new SecurityRole("userCreate"), new SecurityRole("userList"), new SecurityRole("userShow"), new SecurityRole("userEdit"), new SecurityRole("userDelete")
             //new SecurityRole("accountCreate"), new SecurityRole("accountList"), new SecurityRole("accountShow"), new SecurityRole("accountEdit"), new SecurityRole("accountDelete"),
             //new SecurityRole("transactionCreate"), new SecurityRole("transactionList"), new SecurityRole("transactionShow"), new SecurityRole("transactionEdit"), new SecurityRole("transactionDelete"), 
             //new SecurityRole("reportCreate"), new SecurityRole("reportList"), new SecurityRole("reportShow"), new SecurityRole("reportEdit"), new SecurityRole("reportDelete")

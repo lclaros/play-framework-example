@@ -1,31 +1,16 @@
-@(row: Form[CreateUserForm], types: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, users: Seq[User])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Agregar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/user_index.js")'></script>
-    <div>
+    <div class="container">
         <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
     </div>
-    @form(routes.UserController.add()) {
-        <div class="container">
-        <div class="col-md-6">
-            @inputText(row("nombre"))
-            @inputText(row("carnet"))
-            @inputText(row("telefono"))
-            @inputText(row("login"))
-            @inputText(row("password"))
-        </div>
-        <div class="col-md-6">
-            @inputText(row("direccion"))
-            @inputText(row("sueldo"))
-            @select(field = row("type_1"), options = options(types))
-        </div>
-        <div class="col-md-12">
-            <input type="submit" value="Agregar Usuario"class="btn btn-primary"/>
-        </div>
-        </div>
-    }
+    <div class="container">
+        @restrict(roles = List(Array("userCreate"))) {
+                                <a href="/user_add" class="btn btn-primary">Crear</a> 
+        }
+    </div>
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>
@@ -33,12 +18,31 @@
                     <th>Nombre</th>
                     <th>Carnet</th>
                     <th>Telefono</th>
-                    <th>Direccion</th>
-                    <th>Sueldo</th>
                     <th>Tipo</th>
                     <th>-----------</th>
                 </tr>
             </thead>
+            <tbody>
+                @for(row <- users) {
+                    <tr>
+                        <td>@row.nombre</td>
+                        <td>@row.carnet</td>
+                        <td>@row.telefono</td>
+                        <td>@row.type_1</td>
+                        <td>
+                            @restrict(roles = List(Array("userEdit"))) {
+                                <a href="/user_update/@row.id" class="btn btn-primary">Editar</a> 
+                            }
+                            @restrict(roles = List(Array("userDelete"))) {
+                                <a href="/user_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                            }
+                            @restrict(roles = List(Array("userShow"))) {
+                                <a href="/user_show/@row.id" class="btn btn-info">Mostrar</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 }
