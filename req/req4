@@ -1,14 +1,19 @@
 // July 3, 2016
 TODO
-- transactions
-    - recibe
-    - bauche
-- 
+    - transactions
+        - recibe
+        - bauche
+    - generic list
+        - pagination
+        - show the links when we have permissions to view it
+    - list of modules - (modules, accounts, transactions, reports, proveedors, profiles)
 PROGRESS
-- divide the add from list page
-- 
+    - list of modules - (users, )
+        - divide the add from list page(- add create to the list page - have edit in the add page)
+
 DONE
-- 
+    - list of modules - (measures, products, productors)
+        - divide the add from list page(- add create to the list page - have edit in the add page)
 
 
 /////////////////////
