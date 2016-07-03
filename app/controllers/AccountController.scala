@@ -51,8 +51,8 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
         Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, errorForm, yes_no, account_type, getAccountNamesMap())))
       },
       res => {
-        repo.create(res.code, res.name, res.type_1, res.negativo, res.parent, res.description).map { _ =>
-          Redirect(routes.AccountController.index)
+        repo.create(res.code, res.name, res.type_1, res.negativo, res.parent, res.description).map { resNew =>
+          Redirect(routes.AccountController.show(resNew.id))
         }
       }
     )
@@ -127,7 +127,7 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
       },
       res => {
         repo.update(res.id, res.code, res.name, res.type_1, res.negativo, res.parent, res.description).map { _ =>
-          Redirect(routes.AccountController.index)
+          Redirect(routes.AccountController.show(res.id))
         }
       }
     )

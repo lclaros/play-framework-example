@@ -6,13 +6,13 @@ TODO
     - generic list
         - pagination
         - show the links when we have permissions to view it
-    - list of modules - (transactions, reports, profiles)
+    - list of modules - (reports, profiles)
 PROGRESS
-    - list of modules - (proveedors, )
+    - list of modules - (transactions, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 DONE
-    - list of modules - (measures, products, productors, users, modules, accounts, )
+    - list of modules - (measures, products, productors, users, modules, accounts, proveedors, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 

@@ -3,7 +3,7 @@
 @import helper._
 
 @main("Actualizar") {
-	<a href="/proveedore_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
+	<a href="/proveedor_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.ProveedorController.updatePost()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("nombre"))
@@ -12,6 +12,6 @@
         @inputText(row("contacto"))
         @inputText(row("account"))
         <input type="submit" class="btn btn-primary" value="Actualizar"/>
-        <a href="/proveedore_list" class="btn btn-primary">Cancel</a>
+        <a href="/proveedor_list" class="btn btn-primary">Cancel</a>
     }
 }

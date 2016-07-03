@@ -13,6 +13,8 @@ import dal._
 import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -27,18 +29,24 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
     )(CreateProveedorForm.apply)(CreateProveedorForm.unapply)
   }
 
-  def index = Action {
-    Ok(views.html.proveedor_index(newForm))
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.proveedor_index(new MyDeadboltHandler, res))
+    }
+  }
+
+  def addGet = Action { implicit request =>
+    Ok(views.html.proveedor_add(new MyDeadboltHandler, newForm))
   }
 
   def addProveedor = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.proveedor_index(errorForm)))
+        Future.successful(Ok(views.html.proveedor_add(new MyDeadboltHandler, errorForm)))
       },
       proveedor => {
-        repo.create(proveedor.nombre, proveedor.telefono, proveedor.direccion, proveedor.contacto, proveedor.account).map { _ =>
-          Redirect(routes.ProveedorController.index)
+        repo.create(proveedor.nombre, proveedor.telefono, proveedor.direccion, proveedor.contacto, proveedor.account).map { resNew =>
+          Redirect(routes.ProveedorController.show(resNew.id))
         }
       }
     )
@@ -63,13 +71,15 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.proveedor_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.proveedor_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
   // to copy
   def profile(id: Long) = Action {
-    Ok(views.html.proveedor_show())
+    Redirect(routes.ProveedorController.show(id))
   }
 
   // update required
@@ -81,9 +91,9 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = Action.async { implicit request =>
     repo.delete(id).map { res =>
-      Ok(views.html.proveedor_index(newForm))
+      Redirect(routes.ProveedorController.index)
     }
   }
 
@@ -102,7 +112,7 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
       },
       res => {
         repo.update(res.id, res.nombre, res.telefono, res.direccion, res.contacto, res.account).map { _ =>
-          Redirect(routes.ProveedorController.index)
+          Redirect(routes.ProveedorController.show(res.id))
         }
       }
     )

@@ -1,0 +1,29 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, proveedor: Form[CreateProveedorForm])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Agregar proveedor") {
+    <div>
+        <a href="/" class="btn btn-info">Muro</a>
+        @restrict(roles = List(Array("proveedorList"))) {
+          <a href="/proveedor_list" class="btn btn-info">Lista</a> 
+        }
+    </div>
+    @form(routes.ProveedorController.addProveedor()) {
+        <div class="container">
+            <div class="col-md-6">
+                @inputText(proveedor("nombre"))
+                @inputText(proveedor("telefono"))
+                @inputText(proveedor("direccion"))
+            </div>
+            <div class="col-md-6">
+                @inputText(proveedor("contacto"))
+                @inputText(proveedor("account"))
+            </div>
+            <div class="col-md-12">
+                <input type="submit" class="btn btn-primary" value="Agregar Proveedor"/>
+                <a href="/proveedor_list" class="btn btn-info">Cancelar</a>
+            </div>
+        </div>
+    }
+}

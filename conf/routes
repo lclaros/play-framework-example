@@ -138,7 +138,8 @@ POST    /proveedor_update             	controllers.ProveedorController.updatePos
 
 POST    /proveedor                 		controllers.ProveedorController.addProveedor
 GET     /proveedores         			controllers.ProveedorController.getProveedores
-GET     /proveedore_list         		controllers.ProveedorController.index
+GET     /proveedor_list         		controllers.ProveedorController.index
+GET     /proveedor_add         			controllers.ProveedorController.addGet
 
 # Now for insumos or products
 GET     /product_show/:id 				controllers.ProductController.show(id: Long)
