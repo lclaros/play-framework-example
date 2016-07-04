@@ -17,6 +17,8 @@ import collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class TransactionController @Inject() (repo: TransactionRepository, repoVete: UserRepository, repoSto: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -32,6 +34,8 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
   }
 
   var users = getUsersMap()
+  var updatedId: Long = 0
+
   def getUsersMap(): Map[String, String] = {
     Await.result(repoVete.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
@@ -43,32 +47,32 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
     }, 3000.millis)
   }
 
-  def index = Action {
-    Ok(views.html.transaction_index())
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.transaction_index(new MyDeadboltHandler, res))
+    }
   }
 
-  def addGet = Action {
+  def addGet = Action { implicit request =>
     users = getUsersMap()
-    Ok(views.html.transaction_add(newForm, users))
+    Ok(views.html.transaction_add(new MyDeadboltHandler, newForm, users))
   }
   
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transaction_index()))
+        Future.successful(Ok(views.html.transaction_add(new MyDeadboltHandler, errorForm, users)))
       },
       res => {
         var userId = request.session.get("userId").getOrElse("0").toLong
         var userName = request.session.get("userName").getOrElse("0").toString
-        println(userId)
-        println(userName)
         repo.create(
                     res.date, res.type_1, res.description, 
                     userId, userName,
                     res.receivedBy, users(res.receivedBy.toString),
                     res.autorizedBy, users(res.autorizedBy.toString)
-                    ).map { _ =>
-          Ok(views.html.transaction_index())
+                    ).map { resNew =>
+          Redirect(routes.TransactionController.show(resNew.id))
         }
       }
     )
@@ -92,15 +96,16 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
     )(UpdateTransactionForm.apply)(UpdateTransactionForm.unapply)
   }
 
-  // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.transaction_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.transaction_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
-  // update required
   def getUpdate(id: Long) = Action.async {
     users = getUsersMap()
-    repo.getById(id).map {case (res) =>
+    repo.getById(id).map { case (res) =>
+      updatedId = res(0).id
       val anyData = Map(
                         "id" -> id.toString().toString(),
                         "date" -> res.toList(0).date.toString(),
@@ -109,14 +114,14 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
                         "receivedBy" -> res.toList(0).receivedBy.toString(),
                         "autorizedBy" -> res.toList(0).autorizedBy.toString()
                         )
-      Ok(views.html.transaction_update(updateForm.bind(anyData), users))
+      Ok(views.html.transaction_update(updatedId, updateForm.bind(anyData), users))
     }
   }
 
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.transaction_index())
+      Redirect(routes.TransactionController.index())
     }
   }
 
@@ -126,12 +131,11 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
       Ok(Json.toJson(res))
     }
   }
-
   // update required
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transaction_update(errorForm, users)))
+        Future.successful(Ok(views.html.transaction_update(updatedId, errorForm, users)))
       },
       res => {
         repo.update(
@@ -139,8 +143,8 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
                     res.description, res.receivedBy, 
                     users(res.receivedBy.toString),
                     res.autorizedBy, users(res.autorizedBy.toString)
-                    ).map { _ =>
-          Redirect(routes.TransactionController.index())
+                    ).map { resNew =>
+          Redirect(routes.TransactionController.show(res.id))
         }
       }
     )

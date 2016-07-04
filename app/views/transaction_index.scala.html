@@ -1,7 +1,8 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[Transaction])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Agregar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transaction_index.js")'></script>
     <div>
         <a href="/transaction_addGet"><span class="btn btn-primary">Registrar Asiento Diario</span></a>
     </div>
@@ -14,7 +15,6 @@
             <thead>
                 <tr>
                     <th>Fecha</th>
-                    <th>Tipo</th>
                     <th>Description</th>
                     <th>Elaborado Por</th>
                     <th>Recibido Por</th>
@@ -22,6 +22,28 @@
                     <th>-----------</th>
                 </tr>
             </thead>
+            <tbody>
+                @for(row <- rows) {
+                    <tr>
+                        <td>@row.date</td>
+                        <td>@row.description</td>
+                        <td>@row.createdByName</td>
+                        <td>@row.receivedByName</td>
+                        <td>@row.autorizedByName</td>
+                        <td>
+                           @restrict(roles = List(Array("transactionEdit"))) {
+                               <a href="/transaction_update/@row.id" class="btn btn-primary">Editar</a> 
+                           }
+                           @restrict(roles = List(Array("transactionDelete"))) {
+                               <a href="/transaction_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                           }
+                           @restrict(roles = List(Array("transactionShow"))) {
+                               <a href="/transaction_show/@row.id" class="btn btn-info">Mostrar</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 }

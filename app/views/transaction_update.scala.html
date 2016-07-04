@@ -1,4 +1,4 @@
-@(row: Form[UpdateTransactionForm], users: Map[String, String])(implicit messages: Messages)
+@(transactionId: Long, row: Form[UpdateTransactionForm], users: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -11,7 +11,7 @@
         @inputText(row("description"))
         @select(field = row("receivedBy"), options = options(users))
         @select(field = row("autorizedBy"), options = options(users))
-        <input type="submit" value="Actualizar"/>
-        <a href="/transaction_list"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+        <input type="submit" value="Actualizar" class="btn btn-primary"/>
+        <a href="/transaction_show/@transactionId" class="btn btn-primary">Cancel</a>
     }
 }

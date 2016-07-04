@@ -1,28 +1,48 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Transaction)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transaction_show.js")'></script>
-    <div>
-        <a href="/transaction_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    <div class="container">
+        @restrict(roles = List(Array("transactionList"))) {
+            <a href="/transaction_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("transactionEdit"))) {
+            <a href="/transaction_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
+        @restrict(roles = List(Array("transactionDelete"))) {
+           <a href="/transaction_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     <div class="container">
         <div>
             <div style="display: inline-block;"> Date: </div>
-            <div style="display: inline-block;" id="date">  </div>
+            <div style="display: inline-block;" id="date">@row.date</div>
         </div>
         <div>
             <div style="display: inline-block;"> Type: </div>
-            <div style="display: inline-block;" id="type_1">  </div>
+            <div style="display: inline-block;" id="type_1">@row.type_1</div>
         </div>
         <div>
             <div style="display: inline-block;"> Descripcion: </div>
-            <div style="display: inline-block;" id="description">  </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Elaborado Por: </div>
+            <div style="display: inline-block;" id="description">@row.createdByName</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Autorizado Por: </div>
+            <div style="display: inline-block;" id="description">@row.autorizedByName</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Recibido Por: </div>
+            <div style="display: inline-block;" id="description">@row.receivedByName</div>
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/transactionDetail_addGet" class="btn btn-primary">Agregar Cuentas</a> </div>
+            <div style="display: inline-block;"> <a href="/transactionDetail_addGet" class="btn btn-primary">Agregar Detalle</a> </div>
     </div>
-
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transactionDetail_index.js")'></script>
     <div>Cuentas y Detalle</div>
     <div class="table-responsive">

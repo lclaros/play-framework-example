@@ -6,13 +6,15 @@ TODO
     - generic list
         - pagination
         - show the links when we have permissions to view it
-    - list of modules - (reports, profiles)
+    - list of modules - (productRequest, requestRow, requestRowProductor, reports, profiles, reportDetail)
+    - update the update_page using and id like param
+
 PROGRESS
-    - list of modules - (transactions, )
+    - list of modules - (, transactionDetail)
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 DONE
-    - list of modules - (measures, products, productors, users, modules, accounts, proveedors, )
+    - list of modules - (measures, products, productors, users, modules, accounts, proveedors, transactions, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 
