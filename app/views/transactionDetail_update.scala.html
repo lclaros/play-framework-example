@@ -1,4 +1,4 @@
-@(row: Form[UpdateTransactionDetailForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
+@(transactionId: Long, row: Form[UpdateTransactionDetailForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -11,6 +11,6 @@
         @inputText(row("debit"))
         @inputText(row("credit"))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
-        <a href="/transaction_show/@(row)" class="btn btn-primary">Cancelar</a>
+        <a href="/transaction_show/@transactionId" class="btn btn-primary">Cancelar</a>
     }
 }

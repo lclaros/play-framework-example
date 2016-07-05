@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Transaction)(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Transaction, details: Seq[TransactionDetail])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -41,21 +41,39 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/transactionDetail_addGet" class="btn btn-primary">Agregar Detalle</a> </div>
+            <div style="display: inline-block;"> <a href="/transactionDetail_addGet/@row.id" class="btn btn-primary">Agregar Detalle</a> </div>
     </div>
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transactionDetail_index.js")'></script>
     <div>Cuentas y Detalle</div>
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>
                 <tr>
-                    <th>Transaccion</th>
                     <th>Cuenta</th>
                     <th>Debe</th>
                     <th>Haber</th>
                     <th>-----------</th>
                 </tr>
             </thead>
+            <tbody>
+                @for(detail <- details) {
+                    <tr>
+                        <td>@detail.accountName</td>
+                        <td>@detail.debit</td>
+                        <td>@detail.credit</td>
+                        <td>
+                           @restrict(roles = List(Array("transactionDetailEdit"))) {
+                               <a href="/transactionDetail_update/@detail.id" class="btn btn-primary">Editar</a> 
+                           }
+                           @restrict(roles = List(Array("transactionDetailDelete"))) {
+                               <a href="/transactionDetail_remove/@detail.id" class="btn btn-danger">Eliminar</a>
+                           }
+                           @restrict(roles = List(Array("transactionDetailShow"))) {
+                               <a href="/transactionDetail_show/@detail.id" class="btn btn-info">Mostrar</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
             <tfoot>
                 <tr>
                     <td>Total</td>

@@ -19,11 +19,14 @@ import play.api.data.format.Formats._
 
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class TransactionDetailController @Inject() (repo: TransactionDetailRepository, repoTransReport: TransactionRepository,
                                              repoAccounts: AccountRepository, val messagesApi: MessagesApi)
                                   (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
+  var transactionId: Long = 0
   val newForm: Form[CreateTransactionDetailForm] = Form {
     mapping(
       "transactionId" -> longNumber,
@@ -33,18 +36,14 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     )(CreateTransactionDetailForm.apply)(CreateTransactionDetailForm.unapply)
   }
 
-  val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
-
   def index = Action {
-    val transactionsNames = getTransactionsMap()
-    val productorsNames = getAccountsMap()
-    Ok(views.html.transactionDetail_index(newForm, transactionsNames, productorsNames))
+    Ok(views.html.transactionDetail_index())
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transactionDetail_index(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.transactionDetail_add(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
         repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { value =>
@@ -58,8 +57,8 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     )
   }
 
-  def addGet = Action {
-    val transactionsNames = getTransactionsMap()
+  def addGet(transactionId: Long) = Action {
+    val transactionsNames = getTransactionsMap(transactionId)
     val productorsNames = getAccountsMap()
     Ok(views.html.transactionDetail_add(newForm, transactionsNames, productorsNames))
   }
@@ -94,22 +93,25 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.transactionDetail_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.transactionDetail_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map {case (res) =>
+      transactionId = res(0).transactionId
       val anyData = Map("id" -> id.toString().toString(), "transactionId" -> res.toList(0).transactionId.toString(), "accountId" -> res.toList(0).accountId.toString(), "debit" -> res.toList(0).debit.toString(), "credit" -> res.toList(0).credit.toString())
-      val discountRepMap = getTransactionsMap()
+      val discountRepMap = getTransactionsMap(res.toList(0).transactionId)
       val proveeMap = getAccountsMap()
-      Ok(views.html.transactionDetail_update(updateForm.bind(anyData), discountRepMap, proveeMap))
+      Ok(views.html.transactionDetail_update(transactionId, updateForm.bind(anyData), discountRepMap, proveeMap))
     }
   }
 
-  def getTransactionsMap(): Map[String, String] = {
-    Await.result(repoTransReport.getListNames().map{ case (res1) => 
+  def getTransactionsMap(id: Long): Map[String, String] = {
+    Await.result(repoTransReport.getListNamesById(id).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -129,13 +131,16 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     cache.toMap
   }
 
+  def getTransactionIdFromDetail(id: Long): Long = {
+    Await.result(repo.getById(id).map {res => res(0).transactionId }, 1000.millis)
+  }
 
   // delete required
   def delete(id: Long) = Action.async {
+    transactionId = getTransactionIdFromDetail(id)
     repo.delete(id).map { res =>
       println(res);
-      //repoTransReport.updatediscount(res.transactionId, );
-      Ok(views.html.transactionDetail_index(newForm, Map[String, String](), Map[String, String]()))
+      Redirect(routes.TransactionController.show(transactionId))
     }
 
   }
@@ -151,7 +156,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transactionDetail_update(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.transactionDetail_update(transactionId, errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
         repo.update(res.id, res.transactionId, res.accountId, res.debit, res.credit).map { _ =>

@@ -196,7 +196,7 @@ GET     /transactionDetails         				controllers.TransactionDetailController.
 GET     /transactionDetailsByTransaction/:id		controllers.TransactionDetailController.getTransactionDetailsByTransaction(id: Long)
 GET     /transactionDetailsByAccount/:id			controllers.TransactionDetailController.getTransactionDetailsByAccount(id: Long)
 GET     /transactionDetail_list         			controllers.TransactionDetailController.index
-GET     /transactionDetail_addGet         			controllers.TransactionDetailController.addGet
+GET     /transactionDetail_addGet/:id         			controllers.TransactionDetailController.addGet(id: Long)
 
 
 

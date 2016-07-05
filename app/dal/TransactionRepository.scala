@@ -79,6 +79,10 @@ class TransactionRepository @Inject() (
     tableQ.filter(_.id < 10L).map(s => (s.id, s.date)).result
   }
 
+  def getListNamesById(id: Long): Future[Seq[(Long, String)]] = db.run {
+    tableQ.filter(_.id === id).map(s => (s.id, s.date)).result
+  }
+
   def getListPopulated(): Future[Seq[Transaction]] = db.run {
     tableQ.result
   }

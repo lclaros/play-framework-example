@@ -20,7 +20,8 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class TransactionController @Inject() (repo: TransactionRepository, repoVete: UserRepository, repoSto: UserRepository, val messagesApi: MessagesApi)
+class TransactionController @Inject() (repo: TransactionRepository, repoDetail: TransactionDetailRepository, repoVete: UserRepository,
+                                      repoSto: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateTransactionForm] = Form {
@@ -45,6 +46,12 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
       println(cache)
       cache.toMap
     }, 3000.millis)
+  }
+
+  def getTransactionDetails(id: Long): Seq[TransactionDetail] = {
+    Await.result(repoDetail.listByTransaction(id).map{ case (res) =>
+      res
+    }, 1000.millis)
   }
 
   def index = Action.async { implicit request =>
@@ -97,8 +104,9 @@ class TransactionController @Inject() (repo: TransactionRepository, repoVete: Us
   }
 
   def show(id: Long) = Action.async { implicit request =>
+    val details = getTransactionDetails(id);
     repo.getById(id).map { res =>
-      Ok(views.html.transaction_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.transaction_show(new MyDeadboltHandler, res(0), details))
     }
   }
 

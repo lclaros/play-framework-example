@@ -6,15 +6,15 @@ TODO
     - generic list
         - pagination
         - show the links when we have permissions to view it
-    - list of modules - (productRequest, requestRow, requestRowProductor, reports, profiles, reportDetail)
+    - list of modules - (requestRow, requestRowProductor, reports, profiles, reportDetail)
     - update the update_page using and id like param
 
 PROGRESS
-    - list of modules - (, transactionDetail)
+    - list of modules - (productRequest, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 DONE
-    - list of modules - (measures, products, productors, users, modules, accounts, proveedors, transactions, )
+    - list of modules - (measures, products, productors, users, modules, accounts, proveedors, transactions, transactionDetail, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 
@@ -27,12 +27,13 @@ The import work witht his command
 
 Transaccion:
 - Elaborado CI siempre por la contadora
-- 
+ 
 
 Estados de los reportes
     finalizado = pagado por pil
     enviado = esperando el pago de pil
     borrado = en construccion
+
 
 NEXT
     Loader by account
