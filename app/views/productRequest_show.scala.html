@@ -1,33 +1,44 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: ProductRequest, requestRows: Seq[RequestRow])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productRequest_show.js")'></script>
-    <div>
-        <a href="/profile"><span class="glyphicon glyphicon-plus">Cuenta</span></a>
+    <div class="container">
+        @restrict(roles = List(Array("productRequestList"))) {
+            <a href="/productRequest_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("productRequestEdit"))) {
+            <a href="/productRequest_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
+        @restrict(roles = List(Array("productRequestDelete"))) {
+           <a href="/productRequest_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
+
     <div class="container">
         <div>
             <div style="display: inline-block;"> Date: </div>
-            <div style="display: inline-block;" id="date">  </div>
+            <div style="display: inline-block;" id="date">@row.date</div>
         </div>
         <div>
             <div style="display: inline-block;"> Veterinario: </div>
-            <div style="display: inline-block;" id="veterinarioName">  </div>
+            <div style="display: inline-block;" id="veterinarioName">@row.veterinario</div>
         </div>
         <div>
             <div style="display: inline-block;"> Almacen: </div>
-            <div style="display: inline-block;" id="storekeeperName">  </div>
+            <div style="display: inline-block;" id="storekeeperName">@row.storekeeper</div>
         </div>
         <div>
             <div style="display: inline-block;"> Status: </div>
-            <div style="display: inline-block;" id="status">  </div>
+            <div style="display: inline-block;" id="status">@row.status</div>
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRow_addGet" class="btn btn-primary">Agregar Productos</a> </div>
+        @restrict(roles = List(Array("requestRowCreate"))) {
+            <div style="display: inline-block;"> <a href="/requestRow_add" class="btn btn-primary">Agregar Productos</a> </div>
+        }
     </div>
 
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowByParent.js")'></script>
     <div>Lista de Productos</div>
     <div class="table-responsive">
         <table class="table" id="rows">
@@ -42,6 +53,29 @@
                     <th>-----------</th>
                 </tr>
             </thead>
+            <tbody>
+                @for(requestRow <- requestRows) {
+                    <tr>
+                        <td>@requestRow.id</td>
+                        <td>@requestRow.requestId</td>
+                        <td>@requestRow.productName</td>
+                        <td>@requestRow.quantity</td>
+                        <td>@requestRow.precio</td>
+                        <td>@requestRow.status</td>
+                        <td>
+                           @restrict(roles = List(Array("requestRowEdit"))) {
+                               <a href="/requestRow_update/@row.id" class="btn btn-primary">Editar</a> 
+                           }
+                           @restrict(roles = List(Array("requestRowDelete"))) {
+                               <a href="/requestRow_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                           }
+                           @restrict(roles = List(Array("requestRowShow"))) {
+                               <a href="/requestRow_show/@row.id" class="btn btn-info">Mostrar</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 

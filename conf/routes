@@ -218,20 +218,20 @@ GET     /discountReport_addGet         			controllers.DiscountReportController.a
 
 # Now for Product requests
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
-GET     /productRequest_update/:id controllers.ProductRequestController.getUpdate(id: Long)
+GET     /productRequest_update/:id 				controllers.ProductRequestController.getUpdate(id: Long)
 GET     /productRequest_send/:id        		controllers.ProductRequestController.getSend(id: Long)
 GET     /productRequest_accept/:id        		controllers.ProductRequestController.getAccept(id: Long)
 GET     /productRequest_finish/:id        		controllers.ProductRequestController.getFinish(id: Long)
 GET     /productRequest_remove/:id        		controllers.ProductRequestController.delete(id: Long)
 GET     /productRequests/:id 					controllers.ProductRequestController.getById(id: Long)
-POST    /productRequest_update     controllers.ProductRequestController.updatePostVeterinaria
+POST    /productRequest_update     				controllers.ProductRequestController.updatePost
 
-POST    /productRequest      		controllers.ProductRequestController.add
-GET     /productRequests         				controllers.ProductRequestController.getProductRequests
-GET     /productRequestsByVeterinario/:id        controllers.ProductRequestController.getProductRequestsByVeterinario(id: Long)
-GET     /productRequestsByStorekeeper/:id        controllers.ProductRequestController.getProductRequestsByStorekeeper(id: Long)
-GET     /productRequest_list         			controllers.ProductRequestController.index
-GET     /productRequest_addGet     controllers.ProductRequestController.addGet
+POST    /productRequest      						controllers.ProductRequestController.add
+GET     /productRequests         					controllers.ProductRequestController.getProductRequests
+GET     /productRequestsByVeterinario/:id        	controllers.ProductRequestController.getProductRequestsByVeterinario(id: Long)
+GET     /productRequestsByStorekeeper/:id        	controllers.ProductRequestController.getProductRequestsByStorekeeper(id: Long)
+GET     /productRequest_list         				controllers.ProductRequestController.index
+GET     /productRequest_add     					controllers.ProductRequestController.addGet
 
 
 

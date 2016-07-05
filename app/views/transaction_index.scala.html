@@ -3,11 +3,11 @@
 @import helper._
 
 @main("Agregar") {
-    <div>
-        <a href="/transaction_addGet"><span class="btn btn-primary">Registrar Asiento Diario</span></a>
-    </div>
-    <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    <div class="container">
+       <a href="/"  class="btn btn-primary">Muro</a>
+        @restrict(roles = List(Array("transactionCreate"))) {
+           <a href="/transaction_add" class="btn btn-primary">Registrar Asiento Diario</a> 
+       }
     </div>
     <div>Lista de Asientos diarios</div>
     <div class="table-responsive">
