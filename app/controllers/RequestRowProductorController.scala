@@ -18,6 +18,8 @@ import scala.collection.mutable.ArrayBuffer
 import play.api.data.format.Formats._ 
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoRequestRow: RequestRowRepository, 
                                                repoInsum: ProductRepository, repoProductor: ProductorRepository,
@@ -39,33 +41,35 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   var productReqNames = getProductReqNamesMap()
   var insumoNames = getInsumoNamesMap()
   var productorNames = getProductorNamesMap()
+  var updatedRow: RequestRowProductor = new RequestRowProductor
 
-  def index = Action {
-    productReqNames = getProductReqNamesMap()
-    insumoNames = getInsumoNamesMap()
-    Ok(views.html.requestRowProductor_index(productReqNames, insumoNames))
+  def index = Action.async { implicit request => 
+    repo.list().map { res =>
+      Ok(views.html.requestRowProductor_index(new MyDeadboltHandler, res))
+    }
   }
 
-  def addGet = Action {
+  def addGet = Action { implicit request =>
     productReqNames = getProductReqNamesMap()
     insumoNames = getInsumoNamesMap()
     productorNames = getProductorNamesMap()
-    Ok(views.html.requestRowProductor_add(newForm, productReqNames, insumoNames, productorNames))
+
+    Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, newForm, productReqNames, insumoNames, productorNames))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowProductor_index(Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, newForm, productReqNames, insumoNames, productorNames)))
       },
       res => {
         repo.create(  
                       res.requestRowId, res.productId, insumoNames(res.productId.toString()),
                       res.productorId, productorNames(res.productorId.toString()),
                       res.quantity, res.precio, res.status
-                    ).map { _ =>
+                    ).map { resNew =>
           repoProductor.updateTotalDebt(res.productorId, res.precio);
-          Redirect(routes.RequestRowController.show(res.requestRowId))
+          Redirect(routes.RequestRowProductorController.show(resNew.id))
         }
       }
     )
@@ -91,12 +95,14 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.requestRowProductor_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.requestRowProductor_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map {case (res) =>
       val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> res.toList(0).requestRowId.toString(),
                                 "productId" -> res.toList(0).productId.toString(), "productorId" -> res.toList(0).productorId.toString(),
@@ -104,7 +110,11 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       productReqNames = getProductReqNamesMap()
       insumoNames = getInsumoNamesMap()
       productorNames = getProductorNamesMap()
-      Ok(views.html.requestRowProductor_update(updateForm.bind(anyData), productReqNames, insumoNames, productorNames))
+      updatedRow = res(0)
+
+      Ok(views.html.requestRowProductor_update(new MyDeadboltHandler, updatedRow,
+                updateForm.bind(anyData), productReqNames, insumoNames, productorNames))
+
     }
   }
 
@@ -166,7 +176,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.requestRowProductor_index(Map[String, String](), Map[String, String]()))
+      Redirect(routes.RequestRowProductorController.show(res(0).requestRowId))// review this to go to the requestRow view
     }
   }
 
@@ -194,11 +204,13 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowProductor_update(errorForm, Map[String, String](), Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.requestRowProductor_update(
+                                            requestRowProductor_update(new MyDeadboltHandler, updatedRow,
+                                            errorForm, productReqNames, insumoNames, productorNames))))
       },
       res => {
         repo.update(res.id, res.requestRowId, res.productId, insumoNames(res.productId.toString), res.productorId, productorNames(res.productorId.toString), res.quantity, res.precio, res.status).map { _ =>
-          Redirect(routes.RequestRowController.show(res.requestRowId))
+          Redirect(routes.RequestRowProductorController.show(res.id))
         }
       }
     )

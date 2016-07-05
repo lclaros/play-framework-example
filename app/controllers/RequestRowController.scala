@@ -18,8 +18,10 @@ import scala.collection.mutable.ArrayBuffer
 import play.api.data.format.Formats._ 
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
-class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq: ProductRequestRepository, repoUnit: UnitMeasureRepository, 
+class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProductor: RequestRowRepository, repoProductReq: ProductRequestRepository, repoUnit: UnitMeasureRepository, 
                                       repoInsum: ProductRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                       (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -38,6 +40,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
   var productsMap = getProductsMap()
   var productPrice = 0.0
   var unidades = getUnitMeasuresMap()
+  var updatedRow: RequestRow = new RequestRow
   
   def getUnitMeasuresMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map{ case (res1) => 
@@ -49,23 +52,24 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       cache.toMap
     }, 3000.millis)
   }
-  def index = Action {
-    productRequestsMap = getProductRequestsMap()
-    productsMap = getProductsMap()
-    Ok(views.html.requestRow_index(productRequestsMap, productsMap))
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.requestRow_index(new MyDeadboltHandler, res))
+    }
   }
 
-  def addGet = Action {
+  def addGet(requestId: Long) = Action { implicit request =>
     unidades = getUnitMeasuresMap()
-    productRequestsMap = getProductRequestsMap()
+    productRequestsMap = getProductRequestsMap(requestId)
     productsMap = getProductsMap()
-    Ok(views.html.requestRow_add(newForm, productRequestsMap, productsMap, unidades))
+
+    Ok(views.html.requestRow_add(new MyDeadboltHandler, newForm, productRequestsMap, productsMap, unidades))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_index(Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, newForm, productRequestsMap, productsMap, unidades)))
       },
       res => {
         var product1 = getProductById(res.productId)
@@ -73,8 +77,10 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
         var requestUnitMeasure = getUnitMeasureById(res.unitMeasure)
         var equivalent =  requestUnitMeasure.quantity.toDouble / productUnitMeasure.quantity.toDouble;
 
-        repo.create(res.requestId, res.productId, productsMap(res.productId.toString()), res.quantity, equivalent * product1.price, res.status, res.unitMeasure, res.unitMeasure.toString).map { _ =>
-          Redirect(routes.ProductRequestController.show(res.requestId))
+        repo.create(res.requestId, res.productId, productsMap(res.productId.toString()),
+                    res.quantity, equivalent * product1.price, res.status,
+                    res.unitMeasure, res.unitMeasure.toString).map { resNew =>
+          Redirect(routes.RequestRowController.show(resNew.id))
         }
       }
     )
@@ -105,13 +111,24 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     )(UpdateRequestRowForm.apply)(UpdateRequestRowForm.unapply)
   }
 
+  def getRequestRowProductos(requestRowId: Long): Seq[RequestRowProductor] = {
+    Await.result(repoRowProductor.listByParent(requestRowId).map {  res =>
+        res
+    }, 3000.millis)
+  }
+
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.requestRow_show())
+  def show(id: Long) = Action.async { implicit request =>
+    // get the productRequestRow
+    // products = getProductRequestRows(id)
+    val requestRowProductors = getRequestRowProductos(id)
+    repo.getById(id).map { res =>
+      Ok(views.html.requestRow_show(new MyDeadboltHandler, res(0), requestRowProductors))
+    }
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map {case (res) =>
       val anyData = Map(
                           "id" -> id.toString().toString(),
@@ -125,17 +142,17 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       unidades = getUnitMeasuresMap()
       productRequestsMap = getProductRequestsMap()
       productsMap = getProductsMap()
-      Ok(views.html.requestRow_update(updateForm.bind(anyData), productRequestsMap, productsMap, unidades))
+      updatedRow = res(0)
+      Ok(views.html.requestRow_update(new MyDeadboltHandler , updatedRow, updateForm.bind(anyData), productRequestsMap, productsMap, unidades))
     }
   }
 
-  def getProductRequestsMap(): Map[String, String] = {
-    Await.result(repoProductReq.getListNames().map{ case (res1) => 
+  def getProductRequestsMap(requestId: Long): Map[String, String] = {
+    Await.result(repoProductReq.getById(requestId).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
-      res1.foreach{ case (key: Long, value: String) => 
-        cache put (key.toString(), value)
+      res1.foreach{ case (res) => 
+        cache put (res.id.toString(), res.date.toString())
       }
-      println(cache)
       cache.toMap
     }, 3000.millis)
   }
@@ -221,7 +238,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_update(errorForm, Map[String, String](), Map[String, String](), unidades)))
+        Future.successful(Ok(views.html.requestRow_update(new MyDeadboltHandler, updatedRow, errorForm, Map[String, String](), Map[String, String](), unidades)))
       },
       res => {
         var new_precio = res.precio
@@ -236,7 +253,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
                       res.id, res.requestId, res.productId, productsMap(res.productId.toString),
                       res.quantity, new_precio, res.status, res.unitMeasure, res.unitMeasure.toString
                     ).map { _ =>
-          Redirect(routes.ProductRequestController.show(res.requestId))
+          Redirect(routes.RequestRowController.show(res.id))
         }
       }
     )

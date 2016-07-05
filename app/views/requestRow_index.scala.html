@@ -1,9 +1,8 @@
-@(products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[RequestRow])(implicit messages: Messages)
 
 @import helper._
 
 @main("Agregar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRow_index.js")'></script>
     <div>
         <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
     </div>
@@ -12,13 +11,32 @@
         <table class="table" id="rows">
             <thead>
                 <tr>
-                    <th>requestId</th>
                     <th>productId</th>
                     <th>quantity</th>
                     <th>status</th>
                     <th>-----------</th>
                 </tr>
             </thead>
+            <tbody>
+                @for(row <- rows) {
+                    <tr>
+                        <td>@row.productId</td>
+                        <td>@row.quantity</td>
+                        <td>@row.status</td>
+                        <td>
+                            @restrict(roles = List(Array("requestRowEdit"))) {
+                                <a href="/requestRow_update/@row.id" class="btn btn-primary">Editar</a> 
+                            }
+                            @restrict(roles = List(Array("requestRowDelete"))) {
+                                <a href="/requestRow_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                            }
+                            @restrict(roles = List(Array("requestRowShow"))) {
+                                <a href="/requestRow_show/@row.id" class="btn btn-info">Mostrar</a>
+                            }
+                        </td> 
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 }

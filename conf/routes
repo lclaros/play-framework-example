@@ -268,8 +268,7 @@ POST    /requestRow                 		controllers.RequestRowController.add
 GET     /requestRows         				controllers.RequestRowController.getRequestRows
 GET     /requestRowsByParent/:id         				controllers.RequestRowController.getRequestRowsByParent(id: Long)
 GET     /requestRow_list         			controllers.RequestRowController.index
-GET     /requestRow_addGet         			controllers.RequestRowController.addGet
-GET     /requestRowByInsumo_addGet         			controllers.RequestRowController.addGet
+GET     /requestRow_add/:requestId         			controllers.RequestRowController.addGet(requestId: Long)
 
 # Now for Product requests Rows
 GET     /requestRowByInsumo_show/:id 				controllers.RequestRowByInsumoController.show(id: Long)
