@@ -17,6 +17,8 @@ import collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVete: UserRepository,
                                           repoSto: UserRepository, repoInsUser: UserRepository,
@@ -36,14 +38,10 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
   var veterinariosNames = getVeterinarioListNamesMap()
   var storeNames = getStorekeepersNamesMap()
 
-  def index = Action { implicit request =>
-    if (request.session.get("role").getOrElse("0").toLowerCase == "veterinario") {
-      veterinariosNames = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
-    } else {
-      veterinariosNames = getVeterinarioListNamesMap()
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.productRequest_index(new MyDeadboltHandler, res))
     }
-    storeNames = getStorekeepersNamesMap()
-    Ok(views.html.productRequest_index(veterinariosNames, storeNames))
   }
 
   def addGet = Action { implicit request =>
@@ -53,17 +51,19 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
       veterinariosNames = getVeterinarioListNamesMap()
     }
     storeNames = getStorekeepersNamesMap()
-    Ok(views.html.productRequest_add(newForm, veterinariosNames, storeNames))
+    Ok(views.html.productRequest_add(new MyDeadboltHandler, newForm, veterinariosNames, storeNames))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productRequest_index(Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.productRequest_add(new MyDeadboltHandler, newForm, veterinariosNames, storeNames)))
       },
       res => {
-        repo.create(res.date, res.veterinario, veterinariosNames(res.veterinario.toString), res.storekeeper, storeNames(res.storekeeper.toString), res.status, res.detail, "veterinaria").map { _ =>
-          Redirect(routes.VeterinarioController.profile(res.veterinario))
+        repo.create(res.date, res.veterinario, veterinariosNames(res.veterinario.toString),
+                    res.storekeeper, storeNames(res.storekeeper.toString),
+                    res.status, res.detail, "veterinaria").map { resNew =>
+          Redirect(routes.VeterinarioController.show(resNew.id))
         }
       }
     )
@@ -199,7 +199,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.productRequest_index(Map[String, String](), Map[String, String]()))
+      Redirect(routes.VeterinarioController.index)
     }
   }
 

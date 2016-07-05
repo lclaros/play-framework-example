@@ -40,6 +40,9 @@
           @restrict(roles = List(Array("reportList"))) {
               <li><a href="/reporte_list">Reportes</a></li>
           }
+          @restrict(roles = List(Array("productRequestList"))) {
+              <li><a href="/productRequest_list">Product Request</a></li>
+          }
        </ul>
     </nav>
     <div><a href="/logout">Cerrar session</a>

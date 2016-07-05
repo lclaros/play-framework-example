@@ -1,5 +1,5 @@
-@(row: Form[CreateProductRequestForm], veterinarios: Map[String, String], storekeepers: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductRequestForm], vets: Map[String, String], stors: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Crear") {
@@ -8,10 +8,11 @@
     </div>
     @form(routes.ProductRequestController.add()) {
         @inputText(row("date"))
-        @select(field = row("veterinario"), options = options(veterinarios))
-        @select(field = row("storekeeper"), options = options(storekeepers))
+        @select(field = row("veterinario"), options = options(vets))
+        @select(field = row("storekeeper"), options = options(stors))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("detail"))
-        <input type="submit" value="Guardar Pedido" class="btn btn-primary"/> <a href="/" class="btn btn-primary"> Cancelar</a>
+        <input type="submit" value="Guardar Pedido" class="btn btn-primary"/>
+        <a href="/" class="btn btn-primary"> Cancelar</a>
     }
 }
