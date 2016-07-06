@@ -1,5 +1,5 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[RequestRow])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[RequestRow])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Agregar") {

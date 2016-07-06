@@ -41,7 +41,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   var productReqNames = getProductReqNamesMap()
   var insumoNames = getInsumoNamesMap()
   var productorNames = getProductorNamesMap()
-  var updatedRow: RequestRowProductor = new RequestRowProductor
+  var updatedRow: RequestRowProductor = new RequestRowProductor(0, 0, 0, "", 1, "", 1, 1, 2, "")
 
   def index = Action.async { implicit request => 
     repo.list().map { res =>
@@ -204,9 +204,8 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowProductor_update(
-                                            requestRowProductor_update(new MyDeadboltHandler, updatedRow,
-                                            errorForm, productReqNames, insumoNames, productorNames))))
+        Future.successful(Ok(views.html.requestRowProductor_update(new MyDeadboltHandler, updatedRow,
+                                            errorForm, productReqNames, insumoNames, productorNames)))
       },
       res => {
         repo.update(res.id, res.requestRowId, res.productId, insumoNames(res.productId.toString), res.productorId, productorNames(res.productorId.toString), res.quantity, res.precio, res.status).map { _ =>

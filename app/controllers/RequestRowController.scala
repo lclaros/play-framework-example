@@ -21,7 +21,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProductor: RequestRowRepository, repoProductReq: ProductRequestRepository, repoUnit: UnitMeasureRepository, 
+class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProductor: RequestRowProductorRepository, repoProductReq: ProductRequestRepository, repoUnit: UnitMeasureRepository, 
                                       repoInsum: ProductRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                       (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -36,11 +36,12 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   }
 
   //var unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
-  var productRequestsMap = getProductRequestsMap()
+  var productRequestsMap = getProductRequestsMap(0)
   var productsMap = getProductsMap()
   var productPrice = 0.0
   var unidades = getUnitMeasuresMap()
-  var updatedRow: RequestRow = new RequestRow
+  var updatedRow: RequestRow = new RequestRow(0, 0, 1, "", 2, 1, 1, "", 1, "")
+  var productRequestId: Long = 0
   
   def getUnitMeasuresMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map{ case (res1) => 
@@ -52,24 +53,25 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       cache.toMap
     }, 3000.millis)
   }
-  def index = Action.async { implicit request =>
+  def index() = Action.async { implicit request =>
+    productRequestId = 0
     repo.list().map { res =>
       Ok(views.html.requestRow_index(new MyDeadboltHandler, res))
     }
   }
-
+  var requestIdParm: Long = 0
   def addGet(requestId: Long) = Action { implicit request =>
     unidades = getUnitMeasuresMap()
     productRequestsMap = getProductRequestsMap(requestId)
     productsMap = getProductsMap()
-
-    Ok(views.html.requestRow_add(new MyDeadboltHandler, newForm, productRequestsMap, productsMap, unidades))
+    requestIdParm = requestId
+    Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, newForm, productRequestsMap, productsMap, unidades))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, newForm, productRequestsMap, productsMap, unidades)))
+        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler,requestIdParm, newForm, productRequestsMap, productsMap, unidades)))
       },
       res => {
         var product1 = getProductById(res.productId)
@@ -123,6 +125,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
     // products = getProductRequestRows(id)
     val requestRowProductors = getRequestRowProductos(id)
     repo.getById(id).map { res =>
+      productRequestId = res(0).requestId
       Ok(views.html.requestRow_show(new MyDeadboltHandler, res(0), requestRowProductors))
     }
   }
@@ -140,7 +143,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
                           "unitMeasure" -> res.toList(0).unitMeasure.toString()
                         )
       unidades = getUnitMeasuresMap()
-      productRequestsMap = getProductRequestsMap()
+      productRequestsMap = getProductRequestsMap(res(0).requestId)
       productsMap = getProductsMap()
       updatedRow = res(0)
       Ok(views.html.requestRow_update(new MyDeadboltHandler , updatedRow, updateForm.bind(anyData), productRequestsMap, productsMap, unidades))
@@ -223,7 +226,11 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.requestRow_index(Map[String, String](), Map[String, String]()))
+      if (productRequestId == 0) {
+          Redirect(routes.RequestRowController.index)
+        } else {
+          Redirect(routes.ProductRequestController.show(productRequestId))
+        }
     }
   }
 
