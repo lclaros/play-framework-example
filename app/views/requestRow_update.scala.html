@@ -1,18 +1,25 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestId: RequestRow, row: Form[UpdateRequestRowForm], requests: Map[String, String], productos: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRow: RequestRow, row: Form[UpdateRequestRowForm], requests: Map[String, String], productos: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Actualizar") {
-	<a href="/productInv_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    <div>
+        @restrict(roles = List(Array("productRequestShow"))) {
+            <a href="/productRequest_show/@requestRow.requestId" class="btn btn-primary">Request</a> 
+        }
+        @restrict(roles = List(Array("requestRowDelete"))) {
+           <a href="/requestRow_remove/@requestRow.id" class="btn btn-danger">Eliminar</a>
+        }
+    </div>
     @form(routes.RequestRowController.updatePost()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
-        @select(field = row("requestId"), options = options(requests))
+        @select(field = row("requestId"), options = options(requests), 'hidden -> "true", '_label -> "")
         @select(field = row("productId"), options = options(productos))
         @inputText(row("quantity"))
         @inputText(row("precio"))
         @inputText(row("status"))
         @select(field = row("unitMeasure"), options = options(unitMeasures))
-        <input type="submit" value="Actualizar"/>
-        <a href="/requestRow_list"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+        <input type="submit" value="Actualizar" class="btn btn-primary"/>
+        <a href="/requestRow_show/@requestRow.id" class="btn btn-primary">Cancelar</a>
     }
 }

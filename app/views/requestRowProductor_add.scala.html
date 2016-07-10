@@ -1,10 +1,21 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateRequestRowProductorForm], requests: Map[String, String], products: Map[String, String], productors: Map[String, String])(implicit messages: Messages)
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, row: Form[CreateRequestRowProductorForm], requests: Map[String, String], products: Map[String, String], productors: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
 @main("Crear") {
-    <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+        <div>
+        @restrict(roles = List(Array("requestRowList"))) {
+            <a href="/requestRow_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("productRequestShow"))) {
+            <a href="/productRequest_show/@row.requestId" class="btn btn-primary">Request</a> 
+        }
+        @restrict(roles = List(Array("requestRowEdit"))) {
+            <a href="/requestRow_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
+        @restrict(roles = List(Array("requestRowDelete"))) {
+           <a href="/requestRow_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     @form(routes.RequestRowProductorController.add()) {
         @select(field = row("requestRowId"), options = options(requests))
@@ -13,6 +24,7 @@
         @inputText(row("quantity"))
         @inputText(row("precio"))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
-        <input type="submit" value="Guardar"/>
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
+        <a href="/requestRow_show/@requestRowId" class="btn btn-primary"> Cancelar</a>
     }
 }

@@ -3,16 +3,17 @@
 @import helper._
 
 @main("Crear") {
-    <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
-    </div>
+    @restrict(roles = List(Array("productRequestShow"))) {
+        <a href="/productRequest_show/@requestId" class="btn btn-primary">Request</a> 
+    }
     @form(routes.RequestRowController.add()) {
         @select(field = row("requestId"), options = options(requests))
         @select(field = row("productId"), options = options(products))
         @inputText(row("quantity"))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @select(field = row("unitMeasure"), options = options(unitMeasures))
-        <a href="/productRequest_show/requestId" class="btn btn-primary"> Cancelar</a>
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
+        <a href="/productRequest_show/@requestId" class="btn btn-primary"> Cancelar</a>
     }
 }
 

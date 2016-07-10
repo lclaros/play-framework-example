@@ -16,7 +16,6 @@
         @restrict(roles = List(Array("requestRowDelete"))) {
            <a href="/requestRow_remove/@row.id" class="btn btn-danger">Eliminar</a>
         }
-
     </div>
     <div class="container">
         <div>
@@ -37,10 +36,9 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRowProductor_addGet"  class="btn btn-primary">Entrega de Producto</a> </div>
+            <div style="display: inline-block;"> <a href="/requestRowProductor_add/@row.id"  class="btn btn-primary">Entrega de Producto</a> </div>
     </div>
 
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowProductorsByRequestRow.js")'></script>
     <div>Lista de Productos Entregados</div>
     <div class="table-responsive">
         <table class="table" id="rows">

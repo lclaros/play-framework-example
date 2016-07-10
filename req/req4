@@ -1,4 +1,4 @@
-// July 3, 2016
+// July (3, 10) 2016
 TODO
     - transactions
         - recibe
@@ -6,15 +6,15 @@ TODO
     - generic list
         - pagination
         - show the links when we have permissions to view it
-    - list of modules - (requestRowProductor, reports, profiles, reportDetail)
+    - list of modules - (reportDetail, libro diario, sumas y saldos, , profiles)
     - update the update_page using and id like param
 
 PROGRESS
-    - list of modules - (requestRow, )
+    - list of modules - (reports, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 DONE
-    - list of modules - (measures, products, productors, users, modules, accounts, proveedors, transactions, transactionDetail, productRequest, )
+    - list of modules - (measures, products, productors, users, modules, accounts, proveedors, transactions, transactionDetail, productRequest, requestRow, requestRowProductor, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 

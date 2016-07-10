@@ -302,13 +302,13 @@ POST    /requestRowProductor                 		controllers.RequestRowProductorCo
 GET     /requestRowProductors         				controllers.RequestRowProductorController.getRequestRowProductors
 GET     /requestRowProductor_list         			controllers.RequestRowProductorController.index
 GET     /requestRowProductorsByProductor/:id    	controllers.RequestRowProductorController.requestRowProductorsByProductor(id: Long)
-GET     /requestRowProductor_addGet         		controllers.RequestRowProductorController.addGet
+GET     /requestRowProductor_add/:requestRowId		controllers.RequestRowProductorController.addGet(requestRowId: Long)
 
 
 # profiles
 GET     /Veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
-GET     /Almacen_profile/:id 			controllers.StorekeeperController.profile(id: Long)
-GET     /Insumo_profile/:id 			controllers.InsumoUserController.profile(id: Long)
+GET     /Almacen_profile/:id 				controllers.StorekeeperController.profile(id: Long)
+GET     /Insumo_profile/:id 				controllers.InsumoUserController.profile(id: Long)
 GET     /Veterinario_request         		controllers.ProductInvController.request
 GET     /productInv_request_row         	controllers.ProductInvController.request_row
 POST    /productInv_request_row             controllers.ProductInvController.add_request_row

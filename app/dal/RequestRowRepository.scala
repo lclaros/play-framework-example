@@ -66,6 +66,7 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     tableQ.filter(_.id < 10L).map(s => (s.id, s.id)).result
   }
 
+
   // update required to copy
   def update(id: Long, requestId: Long, productId: Long, productName: String,
                quantity: Int, precio: Double, status: String, unitMeasure: Long,

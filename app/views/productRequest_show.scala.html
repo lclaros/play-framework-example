@@ -35,7 +35,7 @@
     </div>
     <div>
         @restrict(roles = List(Array("requestRowCreate"))) {
-            <div style="display: inline-block;"> <a href="/requestRow_add" class="btn btn-primary">Agregar Productos</a> </div>
+            <div style="display: inline-block;"> <a href="/requestRow_add/@row.id" class="btn btn-primary">Agregar Productos</a> </div>
         }
     </div>
 
@@ -64,13 +64,13 @@
                         <td>@requestRow.status</td>
                         <td>
                            @restrict(roles = List(Array("requestRowEdit"))) {
-                               <a href="/requestRow_update/@row.id" class="btn btn-primary">Editar</a> 
+                               <a href="/requestRow_update/@requestRow.id" class="btn btn-primary">Editar</a> 
                            }
                            @restrict(roles = List(Array("requestRowDelete"))) {
-                               <a href="/requestRow_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/requestRow_remove/@requestRow.id" class="btn btn-danger">Eliminar</a>
                            }
                            @restrict(roles = List(Array("requestRowShow"))) {
-                               <a href="/requestRow_show/@row.id" class="btn btn-info">Mostrar</a>
+                               <a href="/requestRow_show/@requestRow.id" class="btn btn-info">Mostrar</a>
                            }
                        </td> 
                     </tr>
