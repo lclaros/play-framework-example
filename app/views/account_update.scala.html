@@ -4,7 +4,6 @@
 
 @main("Actualizar Cuenta") {
     @form(routes.AccountController.updatePost()) {
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("code"))
         @inputText(row("name"))
         @select(field = row("type_1"), options = options(account_type))
@@ -13,5 +12,6 @@
         @inputText(row("description"))
         <input type="submit" value="Actualizar"  class="btn btn-primary"/>
         <a href="/account_list" class="btn btn-primary">Cancel</a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
     }
 }

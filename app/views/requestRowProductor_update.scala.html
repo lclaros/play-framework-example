@@ -13,8 +13,6 @@
        <a href="/requestRowProductor_remove/@requestRow.id" class="btn btn-danger">Eliminar</a>
     }
     @form(routes.RequestRowProductorController.updatePost()) {
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
-        @select(field = row("requestRowId"), options = options(requests))
         @select(field = row("productId"), options = options(productos))
         @select(field = row("productorId"), options = options(productors))
         @inputText(row("quantity"))
@@ -22,5 +20,7 @@
         @inputText(row("status"))
         <input type="submit" value="Actualizar"  class="btn btn-primary"/>
         <a href="/requestRowProductor_show/@requestRow.id" class="btn btn-primary">Cancelar</a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @select(field = row("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")
     }
 }

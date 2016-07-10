@@ -5,7 +5,6 @@
 @main("Actualizar") {
 	<a href="/productInv_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.ProductRequestByInsumoController.updatePost()) {
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("date"))
         @select(field = row("user"), options = options(users))
         @select(field = row("modulo"), options = options(modules))
@@ -13,5 +12,6 @@
         @inputText(row("detail"))
         <input type="submit" value="Actualizar"/>
         <a href="/productInv_list"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
     }
 }

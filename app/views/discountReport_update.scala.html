@@ -5,12 +5,12 @@
 @main("Actualizar") {
 	<a href="/productInv_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.DiscountReportController.updatePost()) {
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("startDate"))
         @inputText(row("endDate"))
         @inputText(row("status"))
         @inputText(row("total"))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
         <a href="/productInv_list" class="btn btn-primary">Cancel</a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
     }
 }

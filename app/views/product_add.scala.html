@@ -8,18 +8,17 @@
     </div>
     @form(routes.ProductController.addProduct()) {
         <div class="container">
-            <div class="col-md-6">
                 @inputText(row("nombre"))
                 @inputText(row("cost"))
                 @inputText(row("percent"))
-                @textarea(row("descripcion"), 'rows -> 3, 'cols -> 100)
-            </div>
-            <div class="col-md-6">
                 @select(field = row("unitMeasure"), options = options(unitMeasures))
                 @inputText(row("currentAmount"))
-            </div>
-            <div class="col-md-12">
-                <input type="submit" class="btn btn-primary" value="Agregar Producto"/>
+                @textarea(row("descripcion"), 'rows -> 3, 'cols -> 100)
+                <br/>
+                <br/>
+                <br/>
+               <input type="submit" class="btn btn-primary" value="Agregar Producto"/>
+               <a href="/product_list" class="btn btn-info">Cancelar</a>
             </div>
         </div>
     }

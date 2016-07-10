@@ -12,8 +12,6 @@
         }
     </div>
     @form(routes.RequestRowController.updatePost()) {
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
-        @select(field = row("requestId"), options = options(requests), 'hidden -> "true", '_label -> "")
         @select(field = row("productId"), options = options(productos))
         @inputText(row("quantity"))
         @inputText(row("precio"))
@@ -21,5 +19,7 @@
         @select(field = row("unitMeasure"), options = options(unitMeasures))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
         <a href="/requestRow_show/@requestRow.id" class="btn btn-primary">Cancelar</a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @select(field = row("requestId"), options = options(requests), 'hidden -> "true", '_label -> "")
     }
 }

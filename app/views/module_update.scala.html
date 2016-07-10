@@ -4,12 +4,12 @@
 
 @main("Actualizar Modulo") {
     @form(routes.ModuleController.updatePost()) {
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("name"))
         @inputText(row("president"))
         @inputText(row("description"))
         @select(field = row("asociacion"), options = options(associations))
         <input type="submit" value="Actualizar"  class="btn btn-primary"/>
         <a href="/module_list" class="btn btn-primary">Cancel</a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
     }
 }

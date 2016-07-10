@@ -25,7 +25,8 @@ class UserSecurity(val userName: String) extends Subject
             new SecurityRole("transactionDetailCreate"), new SecurityRole("transactionDetailList"), new SecurityRole("transactionDetailShow"), new SecurityRole("transactionDetailEdit"), new SecurityRole("transactionDetailDelete"),
             new SecurityRole("productRequestCreate"), new SecurityRole("productRequestList"), new SecurityRole("productRequestShow"), new SecurityRole("productRequestEdit"), new SecurityRole("productRequestDelete"),
             new SecurityRole("requestRowCreate"), new SecurityRole("requestRowList"), new SecurityRole("requestRowShow"), new SecurityRole("requestRowEdit"), new SecurityRole("requestRowDelete"),
-            new SecurityRole("requestRowProductorCreate"), new SecurityRole("requestRowProductorList"), new SecurityRole("requestRowProductorShow"), new SecurityRole("requestRowProductorEdit"), new SecurityRole("requestRowProductorDelete")
+            new SecurityRole("requestRowProductorCreate"), new SecurityRole("requestRowProductorList"), new SecurityRole("requestRowProductorShow"), new SecurityRole("requestRowProductorEdit"), new SecurityRole("requestRowProductorDelete"),
+            new SecurityRole("discountReportCreate"), new SecurityRole("discountReportList"), new SecurityRole("discountReportShow"), new SecurityRole("discountReportEdit"), new SecurityRole("discountReportDelete")
             //new SecurityRole("reportCreate"), new SecurityRole("reportList"), new SecurityRole("reportShow"), new SecurityRole("reportEdit"), new SecurityRole("reportDelete")
           ), "Veterinario" ->
       List(

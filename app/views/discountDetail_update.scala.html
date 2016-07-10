@@ -5,12 +5,12 @@
 @main("Actualizar") {
 	<a href="/productInv_list">Lista</a>
     @form(routes.DiscountDetailController.updatePost()) {
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
-        @select(field = row("discountReport"), options = options(products))
         @select(field = row("productorId"), options = options(vendors))
         @inputText(row("status"))
         @inputText(row("discount"))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
         <a href="/ProductReport_show/1" class="btn btn-primary">Cancelar</a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @select(field = row("discountReport"), options = options(products), 'hidden -> "true", '_label -> "")
     }
 }

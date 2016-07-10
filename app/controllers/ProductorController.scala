@@ -31,7 +31,6 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
       cache.toMap
     }, 3000.millis)
   }
@@ -79,6 +78,8 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
   def search(search: String) = Action{ implicit request =>
     val productors = searchByAccount(search)
+    println("Products searched")
+    println(productors)
     modules = getModuleNamesMap()
     var total = getTotal()
     var currentPage = 1

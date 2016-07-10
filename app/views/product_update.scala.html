@@ -4,7 +4,6 @@
 
 @main("Actualizar") {
     @form(routes.ProductController.updatePost()) {
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("nombre"))
         @inputText(row("cost"))
         @inputText(row("percent"))
@@ -14,5 +13,6 @@
         @inputText(row("currentAmount"))
         <input type="submit" class="btn btn-primary" value="Actualizar"/>
         <a href="/product_list" class="btn btn-primary">Cancel</a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
     }
 }

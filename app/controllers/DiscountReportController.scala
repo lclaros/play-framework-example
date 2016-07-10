@@ -19,6 +19,8 @@ import scala.collection.mutable.ArrayBuffer
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 import play.api.data.format.Formats._ 
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 
 class DiscountReportController @Inject() (repo: DiscountReportRepository, repoProd: ProductorRepository, 
@@ -37,9 +39,10 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
 
-  def index = Action {
-    val productoresNames = getProductoresNamesMap()
-    Ok(views.html.discountReport_index(productoresNames))
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.discountReport_index(new MyDeadboltHandler, res))
+    }
   }
 
   def generarReporte(id: Long) = Action {
@@ -48,15 +51,17 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     Ok(views.html.discountReport_show(id.toString()))
   }
 
-  def addGet = Action {
-    val productoresNames = getProductoresNamesMap()
-    Ok(views.html.discountReport_add(newForm, productoresNames))
+  var productoresNames = getProductoresNamesMap()
+
+  def addGet = Action { implicit request =>
+    productoresNames = getProductoresNamesMap()
+    Ok(views.html.discountReport_add(new MyDeadboltHandler, newForm, productoresNames))
   }
   
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.discountReport_index(Map[String, String]())))
+        Future.successful(Ok(views.html.discountReport_add(new MyDeadboltHandler, newForm, productoresNames)))
       },
       res => {
         repo.create(res.startDate, res.endDate, res.status).map { _ =>
@@ -136,7 +141,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.discountReport_index(Map[String, String]()))
+      Redirect(routes.DiscountReportController.index)
     }
   }
 

@@ -1,5 +1,5 @@
-@(row: Form[CreateDiscountReportForm], productores: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateDiscountReportForm], productores: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Crear") {

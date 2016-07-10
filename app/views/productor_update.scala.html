@@ -11,7 +11,6 @@
             @inputText(row("telefono"))
             @inputText(row("direccion"))
             @select(field = row("module"), options = options(modules))
-            @inputText(row("id"), 'hidden -> "true", '_label -> "")
          </div>
         <div class="col-lg-6">
             @inputText(row("account"))
@@ -22,5 +21,6 @@
     </div>
         <input type="submit" value="Actualizar"  class="btn btn-primary"/>
         <a href="/productor_list" class="btn btn-primary">Cancel</a>
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
     }
 }
