@@ -44,9 +44,9 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
     }, 3000.millis)
   }
 
-  def addGet = Action {
+  def addGet = Action { implicit request =>
     unidades = getUnitMeasuresMap()
-    Ok(views.html.product_add(newForm, unidades))
+    Ok(views.html.product_add(new MyDeadboltHandler, newForm, unidades))
   }
 
   def index = Action.async { implicit request =>
@@ -62,7 +62,7 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
   def addProduct = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_add(errorForm, unidades)))
+        Future.successful(Ok(views.html.product_add(new MyDeadboltHandler, errorForm, unidades)))
       },
       res => {
         repo.create(
@@ -103,21 +103,24 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
     }
   }
 
+  var updatedRow: Product = _
+
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map { res =>
+      updatedRow = res(0)
       val anyData = Map(
                         "id" -> id.toString().toString(),
-                        "nombre" -> res.toList(0).nombre,
-                        "cost" -> res.toList(0).cost.toString(),
-                        "percent" -> res.toList(0).percent.toString(),
-                        "price" -> res.toList(0).price.toString(),
-                        "descripcion" -> res.toList(0).descripcion,
-                        "unitMeasure" -> res.toList(0).unitMeasure.toString(),
-                        "unitMeasureName" -> res.toList(0).unitMeasureName.toString(),
-                        "currentAmount" -> res.toList(0).currentAmount.toString()
+                        "nombre" -> updatedRow.nombre,
+                        "cost" -> updatedRow.cost.toString(),
+                        "percent" -> updatedRow.percent.toString(),
+                        "price" -> updatedRow.price.toString(),
+                        "descripcion" -> updatedRow.descripcion,
+                        "unitMeasure" -> updatedRow.unitMeasure.toString(),
+                        "unitMeasureName" -> updatedRow.unitMeasureName.toString(),
+                        "currentAmount" -> updatedRow.currentAmount.toString()
                         )
-      Ok(views.html.product_update(updateForm.bind(anyData), unidades))
+      Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), unidades))
     }
   }
 
@@ -139,7 +142,7 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_update(errorForm, unidades)))
+        Future.successful(Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, errorForm, unidades)))
       },
       res => {
         repo.update(

@@ -3,14 +3,20 @@
 @import helper._
 
 @main("Mostrar") {
-    <div>
-        <a href="/product_list">Lista de Insumos</a>
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productList"))) {
+            <a href="/product_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("productEdit"))) {
+           <a href="/product_update/@row.id" class="btn btn-primary">Editar</a>
+        }
+        @restrict(roles = List(Array("productDelete"))) {
+           <a href="/product_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     <div class="container">
-        @restrict(roles = List(Array("measureEdit"))) {
-            <a href="/product_update/@row.id" class="btn btn-primary">Editar</a> 
-        }
-        <div class="col-md-6" style="">
+        <div >
             <div>
                 <div style="display: inline-block;">Nombre: </div>
                 <div style="display: inline-block;" id="nombre">@row.nombre</div>
@@ -39,17 +45,18 @@
                 <div style="display: inline-block;">En Inventario: </div>
                 <div style="display: inline-block;" id="currentAmount">@row.currentAmount</div>
             </div>
-            <div>
-                <div style="display: inline-block;"><a href="/productInvs_addByProduct/@row.id" class="btn btn-primary">Registrar producto</a> </div>
-            </div>
+            
         </div>
-        <div class="col-md-6">
+        <div class="container">
             <img src="@routes.Assets.versioned("images/@(row.id)_product.jpg")" width="200">
             @helper.form(action = routes.ProductController.upload(row.id), 'enctype -> "multipart/form-data") {
                 <input type="file" name="picture">
                 <input type="submit">
             }
         </div>
+        <div class="container">
+                <div style="display: inline-block;"><a href="/productInvs_addByProduct/@row.id" class="btn btn-primary">Registrar producto</a> </div>
+            </div>
         <div class="col-md-12">
             <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInvByInsumo.js")'></script>
             <div class="table-responsive">

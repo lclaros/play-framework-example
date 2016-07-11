@@ -4,7 +4,9 @@
 
 @main("Crear") {
     <div>
-        <a href="/"></a>
+        restrict(roles = List(Array("discountReportList"))) {
+            <a href="/discountReport_list" class="btn btn-primary">Listar</a> 
+        }
     </div>
     @form(routes.DiscountReportController.add()) {
         @inputDate(row("startDate"))

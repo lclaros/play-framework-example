@@ -1,18 +1,27 @@
-@(row: Form[UpdateProductForm], unitMeasures: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, rowForm: Form[UpdateProductForm], unitMeasures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Actualizar") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productList"))) {
+            <a href="/product_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("productDelete"))) {
+           <a href="/product_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
+    </div>
     @form(routes.ProductController.updatePost()) {
-        @inputText(row("nombre"))
-        @inputText(row("cost"))
-        @inputText(row("percent"))
-        @inputText(row("price"))
-        @inputText(row("descripcion"))
-        @select(field = row("unitMeasure"), options = options(unitMeasures))
-        @inputText(row("currentAmount"))
+        @inputText(rowForm("nombre"))
+        @inputText(rowForm("cost"))
+        @inputText(rowForm("percent"))
+        @inputText(rowForm("price"))
+        @inputText(rowForm("descripcion"))
+        @select(field = rowForm("unitMeasure"), options = options(unitMeasures))
+        @inputText(rowForm("currentAmount"))
         <input type="submit" class="btn btn-primary" value="Actualizar"/>
-        <a href="/product_list" class="btn btn-primary">Cancel</a>
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        <a href="/product_show/@row.id" class="btn btn-primary">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

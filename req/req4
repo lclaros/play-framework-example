@@ -7,17 +7,21 @@ TODO
         - pagination
         - show the links when we have permissions to view it
     - Manage permissions
-        list of modules - (libro diario, sumas y saldos, , profiles)
+        list of modules - (productInv, libro diario, sumas y saldos, , profiles)
     - Add nav tag
-        - modules(measures, products, productors, users, modules, accounts, proveedors, transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, libro diario, sumas y saldos, , profiles)
+        - modules(products, productors, users, modules, accounts, proveedors, transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, libro diario, sumas y saldos, profiles, productInv)
 
     - update the update_page using and id like param
 
 PROGRESS
+    - Add nav tag
+        - modules(products)
     - list of modules - ()
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
 DONE
+    Add nav tag
+        - modules(measures, )
     Add permissions in the modules
     - list of modules - (measures, products, productors, users, modules, accounts, proveedors, transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
