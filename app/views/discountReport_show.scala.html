@@ -1,35 +1,41 @@
-@(rowId: String)
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: DiscountReport, children: Seq[DiscountDetail])(implicit messages: Messages, request: Request[Any])
 @import helper._
-
+@import be.objectify.deadbolt.scala.views.html._
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountReport_show.js")'></script>
     <div>
-        <a href="/discountReport_list">Lista</a>
+        @restrict(roles = List(Array("discountReportList"))) {
+            <a href="/discountReport_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("discountReportEdit"))) {
+            <a href="/discountReport_update/@row.id" class="btn btn-primary">Editar</a> 
+        }
+        @restrict(roles = List(Array("discountReportDelete"))) {
+           <a href="/discountReport_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     <div class="container">
         <div>
             <div style="display: inline-block;"> Start date: </div>
-            <div style="display: inline-block;" id="startDate">  </div>
+            <div style="display: inline-block;" id="startDate">@row.startDate</div>
         </div>
         <div>
             <div style="display: inline-block;"> End Date: </div>
-            <div style="display: inline-block;" id="endDate">  </div>
+            <div style="display: inline-block;" id="endDate">@row.endDate</div>
         </div>
         <div>
             <div style="display: inline-block;"> Estado: </div>
-            <div style="display: inline-block;" id="status">  </div>
+            <div style="display: inline-block;" id="status">@row.status</div>
         </div>
         <div>
             <div style="display: inline-block;"> Total: </div>
-            <div style="display: inline-block;" id="total">  </div>
+            <div style="display: inline-block;" id="total">@row.total</div>
         </div>
     </div>
     <div>
-        <div style="display: inline-block;"> <a href="/discountDetail_addGet" class="btn btn-primary">Agregar Productores</a> <a href="/discountReport_generarReporte/@rowId" class="btn btn-primary">Generar reporte</a> </div>
-        <a href="/discountReport_show_pdf/@rowId" class="btn btn-info">PDF</a>
+        <div style="display: inline-block;"> <a href="/discountDetail_add/@row.id" class="btn btn-primary">Agregar Productores</a> <a href="/discountReport_generarReporte/@row.id" class="btn btn-primary">Generar reporte</a> </div>
+        <a href="/discountReport_show_pdf/@row.id" class="btn btn-info">PDF</a>
     </div>
 
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetailByReport.js")'></script>
     <div style="font-size: larger; font-weight: 800;">
         Lista de Productores
     </div>
@@ -37,13 +43,32 @@
         <table class="table" id="descuentos_rows">
             <thead>
                 <tr>
-                    <th>Report</th>
                     <th>Productor</th>
                     <th>Status</th>
                     <th>Descuento</th>
                     <th>-----------</th>
                 </tr>
             </thead>
+            <tbody>
+                @for(child <- children) {
+                    <tr>
+                        <td>@child.productorName</td>
+                        <td>@child.status</td>
+                        <td>@child.discount</td>
+                        <td>
+                           @restrict(roles = List(Array("discountDetailEdit"))) {
+                               <a href="/discountDetail_update/@child.id" class="btn btn-primary">Editar</a> 
+                           }
+                           @restrict(roles = List(Array("discountDetailDelete"))) {
+                               <a href="/discountDetail_remove/@child.id" class="btn btn-danger">Eliminar</a>
+                           }
+                           @restrict(roles = List(Array("discountDetailShow"))) {
+                               <a href="/discountDetail_show/@child.id" class="btn btn-info">Mostrar</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 

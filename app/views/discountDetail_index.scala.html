@@ -1,22 +1,7 @@
-@(row: Form[CreateDiscountDetailForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
 @main("Agregar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetail_index.js")'></script>
-    <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
-    </div>
-    @form(routes.ProductInvController.add()) {
-        @select(field = row("productId"), options = options(products))
-        @select(field = row("proveedorId"), options = options(vendors))
-        @inputText(row("discount"))
-        @inputText(row("discountLeft"))
-        <input type="submit" class="btn btn-primary" value="Registrar Producto"/>
-    }
-    <div>
-        Lista de Productos
-    </div>
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>

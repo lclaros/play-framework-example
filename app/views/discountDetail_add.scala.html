@@ -1,16 +1,19 @@
-@(row: Form[CreateDiscountDetailForm], discounts: Map[String, String], productors: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, discountId: Long, row: Form[CreateDiscountDetailForm], discounts: Map[String, String], productors: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Crear") {
-    <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    <div class="container">
+        @restrict(roles = List(Array("discountReportShow"))) {
+            <a href="/discountReport_show/@discountId" class="btn btn-primary">Reporte</a> 
+        }
     </div>
     @form(routes.DiscountDetailController.add()) {
-        @select(field = row("discountReport"), options = options(discounts))
         @select(field = row("productorId"), options = options(productors))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("discount"))
-        <input type="submit" value="Guardar"/>
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
+        <a href="/discountReport_show/@discountId" class="btn btn-primary">Cancel</a>
+        @select(field = row("discountReport"), options = options(discounts), 'hidden -> "true", '_label -> "")
     }
 }

@@ -3,14 +3,20 @@
 @import helper._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div>
-        <a href="/measure_list"><span class="glyphicon glyphicon-plus">Lista de Unidades de Medida</span></a>
+        @restrict(roles = List(Array("measureList"))) {
+            <a href="/measure_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("measureEdit"))) {
+           <a href="/measure_update/@row.id" class="btn btn-primary">Editar</a>
+        }
+        @restrict(roles = List(Array("measureDelete"))) {
+           <a href="/measure_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     
     <div class="container">
-        @restrict(roles = List(Array("measureEdit"))) {
-            <a href="/measure_update/@row.id" class="btn btn-primary">Editar</a> 
-        }
         <div>
             <div style="display: inline-block;"> Nombre: </div>
             <div style="display: inline-block;" id="name">@row.name</div>

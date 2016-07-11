@@ -112,4 +112,12 @@ class DiscountReportRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     }
     tableQ.filter(_.id === id).result
   }
+    // Update the status to enviado status
+  def addToTotal(id: Long, monto: Double): Future[Seq[DiscountReport]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.total
+    getById(id).map { rows =>
+      db.run(q.update(monto + rows(0).total))
+    }
+    tableQ.filter(_.id === id).result
+  }
 }

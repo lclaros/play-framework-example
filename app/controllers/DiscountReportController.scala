@@ -48,7 +48,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   def generarReporte(id: Long) = Action {
     val productRequestRowsByProduct = getProductoByTotalDebt()
     repoDiscDetail.generarReporte(productRequestRowsByProduct, id)
-    Ok(views.html.discountReport_show(id.toString()))
+    Redirect(routes.DiscountReportController.show(id))
   }
 
   var productoresNames = getProductoresNamesMap()
@@ -64,8 +64,8 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
         Future.successful(Ok(views.html.discountReport_add(new MyDeadboltHandler, newForm, productoresNames)))
       },
       res => {
-        repo.create(res.startDate, res.endDate, res.status).map { _ =>
-          Redirect(routes.DiscountReportController.index)
+        repo.create(res.startDate, res.endDate, res.status).map { resNew =>
+          Redirect(routes.DiscountReportController.show(resNew.id))
         }
       }
     )
@@ -88,9 +88,18 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     )(UpdateDiscountReportForm.apply)(UpdateDiscountReportForm.unapply)
   }
 
+  def getChildren(id: Long): Seq[DiscountDetail] = {
+    Await.result(repoDiscDetail.listByParent(id).map { res =>
+      res
+    }, 3000.millis)
+  }
+
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.discountReport_show(id.toString()))
+  def show(id: Long) = Action.async { implicit request =>
+    val children = getChildren(id)
+    repo.getById(id).map { res => 
+      Ok(views.html.discountReport_show(new MyDeadboltHandler, res(0), children))
+    }
   }
 
   def show_pdf(id: Long) = Action {
@@ -101,12 +110,15 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     Ok(generator.toBytes(views.html.discountReport_show_pdf(values, discountReport.startDate, discountReport.endDate, discountReport.total.toString()), "http://localhost:9000/")).as("application/pdf")
   }
 
+  var updatedRow: DiscountReport = _
+
   // update required
-  def getUpdate(id: Long) = Action.async {
-    repo.getById(id).map {case (res) =>
+  def getUpdate(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
       val anyData = Map("id" -> id.toString(), "startDate" -> res.toList(0).startDate.toString(), "endDate" -> res.toList(0).endDate.toString(), "status" -> res.toList(0).status.toString(), "total" -> res.toList(0).total.toString())
       val productoresMap = getProductoresNamesMap()
-      Ok(views.html.discountReport_update(updateForm.bind(anyData), productoresMap))
+      updatedRow = res(0)
+      Ok(views.html.discountReport_update(new MyDeadboltHandler, res(0), updateForm.bind(anyData), productoresMap))
     }
   }
 
@@ -172,16 +184,15 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.discountReport_update(errorForm, Map[String, String]())))
+        Future.successful(Ok(views.html.discountReport_update(new MyDeadboltHandler, updatedRow, errorForm, Map[String, String]())))
       },
       res => {
         repo.update(res.id, res.startDate, res.endDate, res.status, res.total).map { _ =>
-          Redirect(routes.DiscountReportController.index)
+          Redirect(routes.DiscountReportController.show(res.id))
         }
       }
     )
   }
-
 }
 
 case class CreateDiscountReportForm(startDate: String, endDate: String, status: String)

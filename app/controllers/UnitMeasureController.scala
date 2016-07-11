@@ -28,8 +28,8 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
     )(CreateUnitMeasureForm.apply)(CreateUnitMeasureForm.unapply)
   }
 
-  def addGet = Action {
-    Ok(views.html.unitMeasure_add(newForm))
+  def addGet = Action { implicit request =>
+    Ok(views.html.unitMeasure_add(new MyDeadboltHandler, newForm))
   }
 
   def index = Action.async { implicit request =>
@@ -41,11 +41,11 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.unitMeasure_add(errorForm)))
+        Future.successful(Ok(views.html.unitMeasure_add(new MyDeadboltHandler, errorForm)))
       },
       res => {
-        repo.create(res.name, res.quantity, res.description).map { _ =>
-          Redirect(routes.UnitMeasureController.index)
+        repo.create(res.name, res.quantity, res.description).map { resNew =>
+          Redirect(routes.UnitMeasureController.show(resNew.id))
         }
       }
     )
@@ -80,16 +80,19 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
     }
   }
 
+  var updatedRow: UnitMeasure = _
+
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map { res =>
+      updatedRow = res(0)
       val anyData = Map(
                         "id" -> id.toString().toString(),
-                        "name" -> res.toList(0).name,
-                        "quantity" -> res.toList(0).quantity.toString(),
-                        "description" -> res.toList(0).description.toString()
+                        "name" -> updatedRow.name,
+                        "quantity" -> updatedRow.quantity.toString(),
+                        "description" -> updatedRow.description.toString()
                        )
-      Ok(views.html.unitMeasure_update(updateForm.bind(anyData)))
+      Ok(views.html.unitMeasure_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
     }
   }
 
@@ -97,7 +100,6 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
   def delete(id: Long) = Action.async { implicit request =>
     repo.delete(id).map { res =>
       Redirect(routes.UnitMeasureController.index)
-      //Ok(views.html.unitMeasure_index(new MyDeadboltHandler, Seq[UnitMeasure]()))
     }
   }
 
@@ -112,7 +114,7 @@ class UnitMeasureController @Inject() (repo: UnitMeasureRepository, val messages
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.unitMeasure_update(errorForm)))
+        Future.successful(Ok(views.html.unitMeasure_update(new MyDeadboltHandler, updatedRow, errorForm)))
       },
       res => {
         repo.update(res.id, res.name, res.quantity, res.description).map { _ =>

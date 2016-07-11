@@ -19,6 +19,8 @@ import play.api.data.format.Formats._
 
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
 class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDiscReport: DiscountReportRepository, repoProductors: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -32,34 +34,34 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
     )(CreateDiscountDetailForm.apply)(CreateDiscountDetailForm.unapply)
   }
 
-  val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
-  var discountsNames = getDiscountRepMap()
+  var discountsNames = getParentList(0)
   var productorsNames = getProductorsNamesMap()
 
   def index = Action {
-    discountsNames = getDiscountRepMap()
-    productorsNames = getProductorsNamesMap()
-    Ok(views.html.discountDetail_index(newForm, discountsNames, productorsNames))
+    Ok(views.html.discountDetail_index())
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.discountDetail_index(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, productorsNames)))
       },
       res => {
-        repo.create(res.discountReport, res.productorId, productorsNames(res.productorId.toString), res.status, res.discount).map { _ =>
-          //repoDiscReport.updatediscount(res.discountReport, res.status)
+        repo.create(res.discountReport, res.productorId, productorsNames(res.productorId.toString), res.status, res.discount).map { resNew =>
+          repoDiscReport.addToTotal(resNew.discountReport, resNew.discount);
           Redirect(routes.DiscountReportController.show(res.discountReport))
         }
       }
     )
   }
 
-  def addGet = Action {
-    discountsNames = getDiscountRepMap()
+  var discountId: Long = 0
+
+  def addGet(discountIdParam: Long) = Action { implicit request =>
+    discountsNames = getParentList(discountIdParam)
     productorsNames = getProductorsNamesMap()
-    Ok(views.html.discountDetail_add(newForm, discountsNames, productorsNames))
+    discountId = discountIdParam
+    Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, productorsNames))
   }
 
   def getDiscountDetails = Action.async {
@@ -98,29 +100,33 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.discountDetail_show())
-  }
-
-  // update required
-  def getUpdate(id: Long) = Action.async {
-    repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "discountReport" -> res.toList(0).discountReport.toString(), "productorId" -> res.toList(0).productorId.toString(), "status" -> res.toList(0).status.toString(), "discount" -> res.toList(0).discount.toString())
-      val discountRepMap = getDiscountRepMap()
-      val proveeMap = getProductorsNamesMap()
-      Ok(views.html.discountDetail_update(updateForm.bind(anyData), discountRepMap, proveeMap))
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      Ok(views.html.discountDetail_show(new MyDeadboltHandler, res(0)))
     }
   }
 
-  def getDiscountRepMap(): Map[String, String] = {
-    Await.result(repoDiscReport.getListNames().map{ case (res1) => 
+  var udpatedRow: DiscountDetail = _
+
+  // update required
+  def getUpdate(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map { res =>
+      val anyData = Map("id" -> id.toString().toString(), "discountReport" -> res.toList(0).discountReport.toString(), "productorId" -> res.toList(0).productorId.toString(), "status" -> res.toList(0).status.toString(), "discount" -> res.toList(0).discount.toString())
+      discountsNames = getParentList(res(0).discountReport)
+      productorsNames = getProductorsNamesMap()
+      udpatedRow = res(0)
+      Ok(views.html.discountDetail_update(new MyDeadboltHandler, udpatedRow, updateForm.bind(anyData), discountsNames, productorsNames))
+    }
+  }
+
+  def getParentList(parentId: Long): Map[String, String] = {
+    Await.result(repoDiscReport.getById(parentId).map{ res => 
       val cache = collection.mutable.Map[String, String]()
-      res1.foreach{ case (key: Long, value: String) => 
-        cache put (key.toString(), value)
+      res.foreach{ parent => 
+        cache put (parent.id.toString(), parent.id.toString)
       }
-      println(cache)
       cache.toMap
-    }, 3000.millis)
+    }, 100.millis)
   }
 
   def getProductorsNamesMap(): Map[String, String] = {
@@ -134,13 +140,27 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
     }, 3000.millis)
   }
 
+  def getParentId(id: Long): Long = {
+    Await.result(repo.getById(id).map { res =>
+      res(0).discountReport
+      }, 1000.millis)
+  }
+
+  def getDiscount(id: Long): Double = {
+    Await.result(repo.getById(id).map { res =>
+      res(0).discount
+      }, 1000.millis)
+  }
+
 
   // delete required
   def delete(id: Long) = Action.async {
+    val parentId = getParentId(id)
+    val discount = getDiscount(id)
     repo.delete(id).map { res =>
       println(res);
-      //repoDiscReport.updatediscount(res.discountReport, );
-      Ok(views.html.discountDetail_index(newForm, Map[String, String](), Map[String, String]()))
+      repoDiscReport.addToTotal(parentId, -discount);
+      Redirect(routes.DiscountReportController.show(parentId))
     }
 
   }
@@ -156,11 +176,13 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.discountDetail_update(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.discountDetail_update(new MyDeadboltHandler, udpatedRow, updateForm, discountsNames, productorsNames)))
       },
       res => {
+        val oldDiscount = getDiscount(res.id)
         repo.update(res.id, res.discountReport, res.productorId, productorsNames(res.productorId.toString), res.status, res.discount).map { _ =>
-          Redirect(routes.DiscountDetailController.index)
+          repoDiscReport.addToTotal(res.discountReport, res.discount - oldDiscount);
+          Redirect(routes.DiscountDetailController.show(res.id))
         }
       }
     )

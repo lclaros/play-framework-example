@@ -3,48 +3,7 @@
 @import helper._
 
 @main("Pagina Principal") {
-    <nav class="container">
-       <ul>
-          <li><a href="/profile">Profile</a></li>
-          @restrict(roles = List(Array("measureList"))) {
-              <li>
-                 <a href="/measure_list">Unidades de Medida<span class="caret"></span></a>
-                 <div>
-                    <ul>
-                       <li><a href="/measure_list">Lista</a></li>
-                    </ul>
-                 </div>
-              </li>
-          }
-          @restrict(roles = List(Array("productList"))) {
-              <li><a href="/product_list">Productos</a></li>
-          }
-          @restrict(roles = List(Array("proveedorList"))) {
-              <li><a href="/proveedor_list">Proveedores</a></li>
-          }
-          @restrict(roles = List(Array("moduleList"))) {
-              <li><a href="/module_list">Modulos</a></li>
-          }
-          @restrict(roles = List(Array("productorList"))) {
-              <li><a href="/productor_list/1">Productores</a></li>
-          }
-          @restrict(roles = List(Array("userList"))) {
-              <li><a href="/user_list">Usuarios</a></li>
-          }
-          @restrict(roles = List(Array("accountList"))) {
-              <li><a href="/account_list">Cuentas</a></li>
-          }
-          @restrict(roles = List(Array("transactionList"))) {
-              <li><a href="/transaction_list">Transacciones</a></li>
-          }
-          @restrict(roles = List(Array("reportList"))) {
-              <li><a href="/reporte_list">Reportes</a></li>
-          }
-          @restrict(roles = List(Array("productRequestList"))) {
-              <li><a href="/productRequest_list">Product Request</a></li>
-          }
-       </ul>
-    </nav>
+    @examples.templates.nav(handler)
     <div><a href="/logout">Cerrar session</a>
     </div>
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>

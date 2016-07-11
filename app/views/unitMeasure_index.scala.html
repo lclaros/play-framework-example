@@ -3,6 +3,7 @@
 @import helper._
 
 @main("Agregar") {
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("measureCreate"))) {
             <a href="/measure_add" class="btn btn-primary">Crear</a> 

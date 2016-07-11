@@ -1,16 +1,24 @@
-@(row: Form[UpdateDiscountReportForm], productos: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: DiscountReport, rowForm: Form[UpdateDiscountReportForm], productos: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Actualizar") {
-	<a href="/productInv_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    <div>
+        @restrict(roles = List(Array("discountReportList"))) {
+            <a href="/discountReport_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("discountReportDelete"))) {
+           <a href="/discountReport_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
+    </div>
+	<a href="/discountReport_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.DiscountReportController.updatePost()) {
-        @inputText(row("startDate"))
-        @inputText(row("endDate"))
-        @inputText(row("status"))
-        @inputText(row("total"))
+        @inputText(rowForm("startDate"))
+        @inputText(rowForm("endDate"))
+        @inputText(rowForm("status"))
+        @inputText(rowForm("total"))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
-        <a href="/productInv_list" class="btn btn-primary">Cancel</a>
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        <a href="/discountReport_show/@row.id" class="btn btn-primary">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }
