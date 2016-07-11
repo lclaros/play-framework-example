@@ -89,16 +89,19 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
     }
   }
 
+  var updatedRow: Module = _
+
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "name" -> res.toList(0).name,
-                        "president" -> res.toList(0).president.toString(),
-                        "description" -> res.toList(0).description.toString(),
-                        "asociacion" -> res.toList(0).asociacion.toString(),
-                        "asociacionName" -> res.toList(0).asociacionName.toString()
+      updatedRow = res(0)
+      val anyData = Map("id" -> id.toString().toString(), "name" -> updatedRow.name,
+                        "president" -> updatedRow.president.toString(),
+                        "description" -> updatedRow.description.toString(),
+                        "asociacion" -> updatedRow.asociacion.toString(),
+                        "asociacionName" -> updatedRow.asociacionName.toString()
                        )
-      Ok(views.html.module_update(updateForm.bind(anyData), asociaciones))
+      Ok(views.html.module_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), asociaciones))
     }
   }
 
@@ -120,7 +123,7 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.module_update(errorForm, asociaciones)))
+        Future.successful(Ok(views.html.module_update(new MyDeadboltHandler, updatedRow, errorForm, asociaciones)))
       },
       res => {
         repo.update(res.id, res.name, res.president, res.description, res.asociacion, asociaciones(res.asociacion.toString)).map { _ =>

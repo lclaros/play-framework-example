@@ -3,6 +3,7 @@
 @import helper._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("moduleList"))) {
             <a href="/module_list" class="btn btn-primary">Listar</a> 

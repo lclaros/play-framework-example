@@ -1,17 +1,26 @@
-@(row: Form[UpdateProveedorForm])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Proveedor, rowForm: Form[UpdateProveedorForm])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Actualizar") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("proveedorList"))) {
+            <a href="/proveedor_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("proveedorDelete"))) {
+           <a href="/proveedor_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
+    </div>
 	<a href="/proveedor_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.ProveedorController.updatePost()) {
-        @inputText(row("nombre"))
-        @inputText(row("telefono"))
-        @inputText(row("direccion"))
-        @inputText(row("contacto"))
-        @inputText(row("account"))
+        @inputText(rowForm("nombre"))
+        @inputText(rowForm("telefono"))
+        @inputText(rowForm("direccion"))
+        @inputText(rowForm("contacto"))
+        @inputText(rowForm("account"))
         <input type="submit" class="btn btn-primary" value="Actualizar"/>
         <a href="/proveedor_list" class="btn btn-primary">Cancel</a>
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

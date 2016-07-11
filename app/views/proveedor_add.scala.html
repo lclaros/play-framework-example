@@ -3,10 +3,10 @@
 @import helper._
 
 @main("Agregar proveedor") {
+    @examples.templates.nav(handler)
     <div>
-        <a href="/" class="btn btn-info">Muro</a>
         @restrict(roles = List(Array("proveedorList"))) {
-          <a href="/proveedor_list" class="btn btn-info">Lista</a> 
+            <a href="/proveedor_list" class="btn btn-primary">Listar</a> 
         }
     </div>
     @form(routes.ProveedorController.addProveedor()) {

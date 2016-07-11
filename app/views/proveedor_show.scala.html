@@ -3,17 +3,18 @@
 @import helper._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div class="container">
-        <a href="/" class="btn btn-primary">Muro</a> 
         @restrict(roles = List(Array("proveedorList"))) {
             <a href="/proveedor_list" class="btn btn-primary">Listar</a> 
         }
         @restrict(roles = List(Array("proveedorEdit"))) {
-            <a href="/proveedor_update/@row.id" class="btn btn-primary">Editar</a> 
+           <a href="/proveedor_update/@row.id" class="btn btn-primary">Editar</a>
         }
         @restrict(roles = List(Array("proveedorDelete"))) {
            <a href="/proveedor_remove/@row.id" class="btn btn-danger">Eliminar</a>
         }
+    </div>
     <div class="container">
         <div>
             <div style="display: inline-block;"> Nombre: </div>

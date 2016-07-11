@@ -82,11 +82,14 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
     Redirect(routes.ProveedorController.show(id))
   }
 
+  var updatedRow: Proveedor = _
+
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map { res =>
+      updatedRow = res(0)
       val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "contacto" -> res.toList(0).contacto, "account" -> res.toList(0).account.toString())
-      Ok(views.html.proveedor_update(updateForm.bind(anyData)))
+      Ok(views.html.proveedor_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
     }
   }
 
@@ -108,7 +111,7 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.proveedor_update(errorForm)))
+        Future.successful(Ok(views.html.proveedor_update(new MyDeadboltHandler, updatedRow, errorForm)))
       },
       res => {
         repo.update(res.id, res.nombre, res.telefono, res.direccion, res.contacto, res.account).map { _ =>

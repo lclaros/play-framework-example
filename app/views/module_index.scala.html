@@ -4,6 +4,7 @@
 
 
 @main("Agregar") {
+    @examples.templates.nav(handler)
     <div class="container">
        <a href="/"  class="btn btn-primary">Muro</a>
         @restrict(roles = List(Array("moduleCreate"))) {
