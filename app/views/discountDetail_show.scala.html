@@ -3,16 +3,16 @@
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetail_show.js")'></script>
-    <div>
-        <div class="container">
+    <div class="container">
         @restrict(roles = List(Array("discountReportShow"))) {
             <a href="/discountReport_show/@row.discountReport" class="btn btn-primary">Reporte</a> 
+        }
+        @restrict(roles = List(Array("discountDetailEdit"))) {
+           <a href="/discountDetail_update/@row.id" class="btn btn-primary">Editar</a>
         }
         @restrict(roles = List(Array("discountDetailDelete"))) {
            <a href="/discountDetail_remove/@row.id" class="btn btn-danger">Eliminar</a>
         }
-    </div>
     </div>
     <div class="container">
         <div>

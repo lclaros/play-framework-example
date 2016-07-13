@@ -1,0 +1,20 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, productId: Long, row: Form[CreateProductInvForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Agregar") {
+    <div class="container">
+        @restrict(roles = List(Array("productShow"))) {
+            <a href="/product_show/@productId" class="btn btn-primary">Product</a> 
+        }
+    </div>
+
+    @form(routes.ProductInvController.add()) {
+        @select(field = row("productId"), options = options(products))
+        @select(field = row("proveedorId"), options = options(vendors))
+        @inputText(row("amount"))
+        @inputText(row("amountLeft"))
+        <input type="submit" class="btn btn-primary" value="Guardar"/>
+        <a href="/product_show/@productId" class="btn btn-primary">Cancel</a>
+    }
+}

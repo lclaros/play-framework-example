@@ -119,5 +119,4 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
       db.run(q.update(amount + insumoObj.currentAmount))
     ))
   }
-
 }

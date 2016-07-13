@@ -163,11 +163,11 @@ GET     /productInv_remove/:id        		controllers.ProductInvController.delete(
 GET     /productInvs/:id 					controllers.ProductInvController.getById(id: Long)
 POST    /productInv_update             		controllers.ProductInvController.updatePost
 
-POST    /productInv                 		controllers.ProductInvController.add
-GET     /productInvs         				controllers.ProductInvController.getProductInvs
+POST    /productInv                 			controllers.ProductInvController.add
+GET     /productInvs         					controllers.ProductInvController.getProductInvs
 GET     /ProductInvsByInsumo/:id				controllers.ProductInvController.getProductInvsByInsumo(id: Long)
-GET     /productInv_list         			controllers.ProductInvController.index
-GET     /productInvs_addByProduct/:productId		controllers.ProductInvController.addByProduct(productId: Long)
+GET     /productInv_list         				controllers.ProductInvController.index
+GET     /productInvs_add/:productId				controllers.ProductInvController.addGet(productId: Long)
 
 
 # Now for Discount Detail

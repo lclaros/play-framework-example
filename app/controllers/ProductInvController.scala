@@ -17,8 +17,11 @@ import collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
-class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: ProductRepository, repoProvee: ProveedorRepository, val messagesApi: MessagesApi)
+
+class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: ProductRepository, repoProvee: ProveedorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateProductInvForm] = Form {
@@ -32,39 +35,42 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Pro
 
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
 
-  def index = Action {
-    val insumosNames = getInsumoNamesMap()
-    val proveeNames = getProveeNamesMap()
-    Ok(views.html.productInv_index(newForm, insumosNames, proveeNames))
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.productInv_index(new MyDeadboltHandler, res))
+    }
   }
-
-  def addByProduct(productId: Long) = Action {
-    val insumosNames = getInsumoNamesMapByProduct(productId)
-    val proveeNames = getProveeNamesMap()
-    Ok(views.html.productInv_index(newForm, insumosNames, proveeNames))
+  var insumosNames = getInsumoNamesMapByProduct(0)
+  var proveeNames = getProveeNamesMap()
+  var productId: Long = 0
+  def addGet(productId: Long) = Action { implicit request =>
+    this.productId = productId
+    insumosNames = getInsumoNamesMapByProduct(productId)
+    proveeNames = getProveeNamesMap()
+    Ok(views.html.productInv_add(new MyDeadboltHandler, productId, newForm, insumosNames, proveeNames))
   }
 
   def request = Action {
-    val insumosNames = getInsumoNamesMap()
-    val proveeNames = getProveeNamesMap()
+    insumosNames = getInsumoNamesMap()
+    proveeNames = getProveeNamesMap()
     Ok(views.html.productInv_request(newForm, insumosNames, proveeNames))
   }
 
   def request_row = Action {
-    val insumosNames = getInsumoNamesMap()
-    val proveeNames = getProveeNamesMap()
+    insumosNames = getInsumoNamesMap()
+    proveeNames = getProveeNamesMap()
     Ok(views.html.productInv_request_row(newForm, insumosNames, proveeNames))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productInv_index(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.productInv_add(new MyDeadboltHandler, productId, newForm, insumosNames, proveeNames)))
       },
       res => {
-        repo.create(res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>
-          repoInsum.updateAmount(res.productId, res.amount)
-          Redirect(routes.ProductController.show(res.productId))
+        repo.create(res.productId, res.proveedorId, res.amount, res.amountLeft).map { resNew =>
+          repoProduct.updateAmount(res.productId, res.amount)
+          Redirect(routes.ProductInvController.show(resNew.id))
         }
       }
     )
@@ -108,22 +114,27 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Pro
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.productInv_show())
+  def show(id: Long) = Action.async { implicit request =>
+    repo.getById(id). map { res =>
+      Ok(views.html.productInv_show(new MyDeadboltHandler, res(0)))
+    }
   }
 
+  var updatedRow: ProductInv = _
+
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "productId" -> res.toList(0).productId.toString(), "proveedorId" -> res.toList(0).proveedorId.toString(), "amount" -> res.toList(0).amount.toString(), "amountLeft" -> res.toList(0).amountLeft.toString())
-      val insumosMap = getInsumoNamesMap()
-      val proveeMap = getProveeNamesMap()
-      Ok(views.html.productInv_update(updateForm.bind(anyData), insumosMap, proveeMap))
+      updatedRow = res(0)
+      val anyData = Map("id" -> id.toString().toString(), "productId" -> updatedRow.productId.toString(), "proveedorId" -> updatedRow.proveedorId.toString(), "amount" -> updatedRow.amount.toString(), "amountLeft" -> updatedRow.amountLeft.toString())
+      insumosNames = getInsumoNamesMap()
+      proveeNames = getProveeNamesMap()
+      Ok(views.html.productInv_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), insumosNames, proveeNames))
     }
   }
 
   def getInsumoNamesMap(): Map[String, String] = {
-    Await.result(repoInsum.getListNames().map{ case (res1) => 
+    Await.result(repoProduct.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -134,7 +145,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Pro
   }
 
   def getInsumoNamesMapByProduct(product: Long): Map[String, String] = {
-    Await.result(repoInsum.getListNamesById(product).map{ case (res1) => 
+    Await.result(repoProduct.getListNamesById(product).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -155,15 +166,26 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Pro
     }, 3000.millis)
   }
 
+  def getParentId(id: Long): Long = {
+    Await.result(repo.getById(id).map { res =>
+      res(0).productId
+      }, 200.millis)
+  }
+
+  def getAmountLeft(id: Long): Int = {
+    Await.result(repo.getById(id).map { res =>
+      res(0).amountLeft
+      }, 1000.millis)
+  }
 
   // delete required
   def delete(id: Long) = Action.async {
+    val parentId = getParentId(id)
+    val amountLeft = getAmountLeft(id)
     repo.delete(id).map { res =>
-      println(res);
-      //repoInsum.updateAmount(res.productId, );
-      Ok(views.html.productInv_index(newForm, Map[String, String](), Map[String, String]()))
+      repoProduct.updateInventary(parentId, -amountLeft);
+      Redirect(routes.ProductController.show(parentId))
     }
-
   }
 
   // to copy
@@ -177,11 +199,13 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Pro
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productInv_update(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.productInv_update(new MyDeadboltHandler, updatedRow, updateForm, insumosNames, proveeNames)))
       },
       res => {
+        val oldAmountLeft = getAmountLeft(res.id)
         repo.update(res.id, res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>
-          Redirect(routes.ProductInvController.index)
+          repoProduct.updateInventary(res.productId, res.amountLeft - oldAmountLeft);
+          Redirect(routes.ProductInvController.show(res.id))
         }
       }
     )

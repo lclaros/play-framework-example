@@ -46,6 +46,11 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     tableQ.filter(_.productId === id).result
   }
 
+  def listByProductId(id: Long): Future[Seq[ProductInv]] = db.run {
+    tableQ.filter(_.productId === id).result
+  }
+
+
   def updateInventory() = {
 
   }

@@ -18,7 +18,8 @@ import play.api.data.format.Formats._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasureRepository, val messagesApi: MessagesApi)
+class ProductController @Inject() (repo: ProductRepository, repoProdInv: ProductInvRepository, 
+                                   repoUnit: UnitMeasureRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateProductForm] = Form {
@@ -96,12 +97,20 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
     )(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
 
+  def getChildren(id: Long): Seq[ProductInv] = {
+    Await.result(repoProdInv.listByProductId(id).map { res => 
+      res
+      } , 3000.millis)
+  }
+
   // to copy
   def show(id: Long) = Action.async { implicit request =>
+    val children = getChildren(id)
     repo.getById(id).map { res =>
-      Ok(views.html.product_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children))
     }
   }
+
 
   var updatedRow: Product = _
 

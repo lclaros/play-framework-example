@@ -161,4 +161,5 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     tableQ.filter(_.account like "%" + account + "%").drop(0).take(100).result
   }
 
+
 }

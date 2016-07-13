@@ -1,16 +1,26 @@
-@(row: Form[UpdateProductInvForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: ProductInv, rowForm: Form[UpdateProductInvForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Actualizar") {
-	<a href="/productInv_list">Lista</a>
+	<div class="container">
+      @restrict(roles = List(Array("productShow"))) {
+            <a href="/product_show/@row.productId" class="btn btn-primary">Producto</a> 
+        }
+        @restrict(roles = List(Array("productInvEdit"))) {
+           <a href="/productInv_show/@row.id" class="btn btn-info">Mostrar</a>
+        }
+        @restrict(roles = List(Array("productInvDelete"))) {
+           <a href="/productInv_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
+    </div>
     @form(routes.ProductInvController.updatePost()) {
-        @select(field = row("productId"), options = options(products))
-        @select(field = row("proveedorId"), options = options(vendors))
-        @inputText(row("amount"))
-        @inputText(row("amountLeft"))
+        @select(field = rowForm("productId"), options = options(products))
+        @select(field = rowForm("proveedorId"), options = options(vendors))
+        @inputText(rowForm("amount"))
+        @inputText(rowForm("amountLeft"))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
-        <a href="/productInv_list" class="btn btn-primary">Cancelar</a>
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        <a href="/productInv_show/@row.id" class="btn btn-primary">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

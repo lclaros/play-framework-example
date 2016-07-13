@@ -1,26 +1,35 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: ProductInv)(implicit messages: Messages, request: Request[Any])
 @import helper._
+@import be.objectify.deadbolt.scala.views.html._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInv_show.js")'></script>
-    <div>
-        <a href="/productInv_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    <div class="container">
+        @restrict(roles = List(Array("productShow"))) {
+            <a href="/product_show/@row.productId" class="btn btn-primary">Producto</a> 
+        }
+        @restrict(roles = List(Array("productInvEdit"))) {
+           <a href="/productInv_update/@row.id" class="btn btn-primary">Editar</a>
+        }
+        @restrict(roles = List(Array("productInvDelete"))) {
+           <a href="/productInv_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     <div class="container">
         <div>
             <div style="display: inline-block;"> Product: </div>
-            <div style="display: inline-block;" id="productId">  </div>
+            <div style="display: inline-block;" id="productId">@row.productId</div>
         </div>
         <div>
             <div style="display: inline-block;"> Proveedor: </div>
-            <div style="display: inline-block;" id="proveedorId">  </div>
+            <div style="display: inline-block;" id="proveedorId">@row.proveedorId</div>
         </div>
         <div>
             <div style="display: inline-block;"> Amount: </div>
-            <div style="display: inline-block;" id="amount">  </div>
+            <div style="display: inline-block;" id="amount">@row.amount</div>
         </div>
         <div>
             <div style="display: inline-block;"> Amount Left: </div>
-            <div style="display: inline-block;" id="amountLeft">  </div>
+            <div style="display: inline-block;" id="amountLeft">@row.amountLeft</div>
         </div>
     </div>
 }

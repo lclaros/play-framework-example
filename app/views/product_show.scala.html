@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product)(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, children: Seq[ProductInv])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -55,23 +55,41 @@
             }
         </div>
         <div class="container">
-                <div style="display: inline-block;"><a href="/productInvs_addByProduct/@row.id" class="btn btn-primary">Registrar producto</a> </div>
+                <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary">Registrar producto</a> </div>
             </div>
-        <div class="col-md-12">
-            <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInvByInsumo.js")'></script>
             <div class="table-responsive">
                 <table class="table" id="rows">
                     <thead>
                         <tr>
                             <th>Producto</th>
                             <th>Proveedor</th>
-                            <th>Registrado</th>
-                            <th>En Inventario</th>
+                            <th>cantidad</th>
+                            <th>En Almacen</th>
                             <th>-----------</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        @for(child <- children) {
+                            <tr>
+                                <td>@child.productId</td>
+                                <td>@child.proveedorId</td>
+                                <td>@child.amount</td>
+                                <td>@child.amountLeft</td>
+                                <td>
+                                   @restrict(roles = List(Array("productInvEdit"))) {
+                                       <a href="/productInv_update/@child.id" class="btn btn-primary">Editar</a> 
+                                   }
+                                   @restrict(roles = List(Array("productInvDelete"))) {
+                                       <a href="/productInv_remove/@child.id" class="btn btn-danger">Eliminar</a>
+                                   }
+                                   @restrict(roles = List(Array("productInvShow"))) {
+                                       <a href="/productInv_show/@child.id" class="btn btn-info">Mostrar</a>
+                                   }
+                               </td> 
+                            </tr>
+                        }
+                    </tbody>
                 </table>
             </div>
-        </div>
     </div>
 }
