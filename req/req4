@@ -7,7 +7,7 @@ TODO
         - pagination
         - show the links when we have permissions to view it
     - Manage permissions
-        list of modules - (productInv, libro diario, sumas y saldos, , profiles)
+        list of modules - (libro diario, sumas y saldos, , profiles)
     - Add nav tag
         - modules(products, productors, users, modules, accounts, proveedors, transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, libro diario, sumas y saldos, profiles, productInv)
 
@@ -16,8 +16,13 @@ TODO
 PROGRESS
     - Add nav tag
         - modules(products)
-    - list of modules - ()
+    - list of modules - (productInv, )
         - divide the add from list page(- add create to the list page - have edit in the add page)
+
+    - Update Parent after delete, update and create
+        - productInv
+        - Report Detail
+
 
 DONE
     Add nav tag
