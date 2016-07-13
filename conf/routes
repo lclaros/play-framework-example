@@ -27,6 +27,8 @@ GET     /printersRegex              	controllers.PatternController.printersRegex
 # productores routes
 GET     /productor_search/:account 		controllers.ProductorController.search(account: String)
 POST    /productor_search		 		controllers.ProductorController.searchProduct
+POST    /productor_set	 				controllers.DiscountDetailController.setProductor
+POST    /productor_setName	 			controllers.DiscountDetailController.setProductorName
 GET     /productor_show/:id 			controllers.ProductorController.show(id: Long)
 GET     /productor_update/:id        	controllers.ProductorController.getUpdate(id: Long)
 GET     /productor_remove/:id        	controllers.ProductorController.delete(id: Long)
@@ -181,7 +183,7 @@ GET     /discountDetailsByReport/:id			controllers.DiscountDetailController.getD
 GET     /discountDetailsByProductor/:id			controllers.DiscountDetailController.getDiscountDetailsByProductor(id: Long)
 GET     /discountDetailsByInsumo/:id			controllers.DiscountDetailController.getDiscountDetailsByInsumo(id: Long)
 GET     /discountDetail_list         			controllers.DiscountDetailController.index
-GET     /discountDetail_addGet         			controllers.DiscountDetailController.addGet
+GET     /discountDetail_add/:discountId			controllers.DiscountDetailController.addGet(discountId: Long)
 
 
 # Now for Transaction Detail
@@ -213,7 +215,7 @@ POST    /discountReport_update             		controllers.DiscountReportControlle
 POST    /discountReport                 		controllers.DiscountReportController.add
 GET     /discountReports         				controllers.DiscountReportController.getDiscountReports
 GET     /discountReport_list         			controllers.DiscountReportController.index
-GET     /discountReport_addGet         			controllers.DiscountReportController.addGet
+GET     /discountReport_add         			controllers.DiscountReportController.addGet
 
 
 # Now for Product requests

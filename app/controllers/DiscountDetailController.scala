@@ -169,7 +169,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
     repo.getById(id).map { res =>
       val anyData = Map("id" -> id.toString().toString(), "discountReport" -> res.toList(0).discountReport.toString(), "productorId" -> res.toList(0).productorId.toString(), "status" -> res.toList(0).status.toString(), "discount" -> res.toList(0).discount.toString())
       discountsNames = getParentList(res(0).discountReport)
-      productorsNames = getProductorsNamesMap()
+      productorsNames = getProductorsById(res(0).productorId)
       udpatedRow = res(0)
       Ok(views.html.discountDetail_update(new MyDeadboltHandler, udpatedRow, updateForm.bind(anyData), discountsNames, productorsNames))
     }
@@ -183,6 +183,16 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       }
       cache.toMap
     }, 100.millis)
+  }
+
+  def getProductorsById(productorId: Long): Map[String, String] = {
+    Await.result(repoProductors.getById(productorId).map { productors => 
+      val cache = collection.mutable.Map[String, String]()
+      productors.foreach { productor =>
+        cache put (productor.id.toString(), productor.account + ": " + productor.nombre)
+      }
+      cache.toMap
+    }, 500.millis)
   }
 
   def getProductorsNamesMap(): Map[String, String] = {
