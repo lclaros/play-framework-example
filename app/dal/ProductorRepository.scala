@@ -115,6 +115,14 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
   }
 
+  def list100Productors(): Future[Seq[Productor]] = db.run {
+    tableQ.filter(_.id < 100L).result
+  }
+
+  def searchByAccount(acc: String): Future[Seq[Productor]] = db.run {
+    tableQ.filter(_.account like "%" + acc + "%").result
+  }
+
   def getTotal(): Future[Int] = db.run {
     tableQ.length.result
   }

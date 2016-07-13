@@ -8,6 +8,12 @@
             <a href="/discountReport_show/@discountId" class="btn btn-primary">Reporte</a> 
         }
     </div>
+    @form(routes.DiscountDetailController.setProductor()) {
+        @inputText(row("account"))
+        <input type="submit" value="Buscar" class="btn btn-primary"/>
+        <a href="/discountReport_show/@discountId" class="btn btn-primary">Cancel</a>
+        @select(field = row("discountReport"), options = options(discounts), 'hidden -> "true", '_label -> "")
+    }
     @form(routes.DiscountDetailController.add()) {
         @select(field = row("productorId"), options = options(productors))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))

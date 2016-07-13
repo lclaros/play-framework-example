@@ -22,7 +22,8 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDiscReport: DiscountReportRepository, repoProductors: ProductorRepository, val messagesApi: MessagesApi)
+class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDiscReport: DiscountReportRepository,
+                                          repoProductors: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateDiscountDetailForm] = Form {
@@ -32,6 +33,12 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       "status" -> text,
       "discount" -> of[Double]
     )(CreateDiscountDetailForm.apply)(CreateDiscountDetailForm.unapply)
+  }
+
+  val setProductorForm: Form[SetProductorForm] = Form {
+    mapping(
+      "account" -> text
+    )(SetProductorForm.apply)(SetProductorForm.unapply)
   }
 
   var discountsNames = getParentList(0)
@@ -47,9 +54,31 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
         Future.successful(Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, productorsNames)))
       },
       res => {
-        repo.create(res.discountReport, res.productorId, productorsNames(res.productorId.toString), res.status, res.discount).map { resNew =>
+        repo.create(
+                      res.discountReport, res.productorId,
+                      productorsNames(res.productorId.toString).substring(0,20)/*Remove this*/,
+                      res.status, res.discount
+                    ).map { resNew =>
           repoDiscReport.addToTotal(resNew.discountReport, resNew.discount);
           Redirect(routes.DiscountReportController.show(res.discountReport))
+        }
+      }
+    )
+  }
+
+  def setProductor = Action.async{ implicit request =>
+    setProductorForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, productorsNames)))
+      },
+      res => {
+        repoProductors.searchByAccount(res.account).map { resProductors =>
+          val cache = collection.mutable.Map[String, String]()
+          resProductors.map { productor => 
+            cache put (productor.id.toString(), productor.account.toString + ": " +productor.nombre.toString)
+          }
+          cache.toMap
+          Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, cache.toMap))
         }
       }
     )
@@ -130,14 +159,13 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   }
 
   def getProductorsNamesMap(): Map[String, String] = {
-    Await.result(repoProductors.getListNames().map{ case (res1) => 
+    Await.result(repoProductors.list100Productors().map { productors => 
       val cache = collection.mutable.Map[String, String]()
-      res1.foreach{ case (key: Long, value: String) => 
-        cache put (key.toString(), value)
+      productors.foreach { productor =>
+        cache put (productor.id.toString(), productor.account + ": " + productor.nombre)
       }
-      println(cache)
       cache.toMap
-    }, 3000.millis)
+    }, 2000.millis)
   }
 
   def getParentId(id: Long): Long = {
@@ -188,6 +216,8 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
     )
   }
 }
+
+case class SetProductorForm(account: String)
 
 case class CreateDiscountDetailForm(discountReport: Long, productorId: Long, status: String, discount: Double)
 
