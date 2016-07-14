@@ -3,9 +3,10 @@
 @import helper._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionShow"))) {
-            <a href="/transaction_show/@row.transactionId" class="btn btn-primary">Asiento Diario</a> 
+            <a href="/transaction_show/@row.transactionId" class="btn btn-info">Asiento Diario</a> 
         }
         @restrict(roles = List(Array("transactionDetailEdit"))) {
             <a href="/transactionDetail_update/@row.id" class="btn btn-primary">Editar</a> 
@@ -29,11 +30,11 @@
             <div style="display: inline-block;" id="accountId">@row.accountName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> debitar</div>
+            <div style="display: inline-block;"> Deber</div>
             <div style="display: inline-block;" id="amount">@row.debit</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Acreditar</div>
+            <div style="display: inline-block;"> Haber</div>
             <div style="display: inline-block;" id="amount">@row.credit</div>
         </div>
     </div>

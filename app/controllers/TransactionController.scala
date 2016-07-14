@@ -35,7 +35,7 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
   }
 
   var users = getUsersMap()
-  var updatedId: Long = 0
+  var updatedRow: Transaction = _
 
   def getUsersMap(): Map[String, String] = {
     Await.result(repoVete.getListNames().map{ case (res1) => 
@@ -110,19 +110,19 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
     }
   }
 
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     users = getUsersMap()
-    repo.getById(id).map { case (res) =>
-      updatedId = res(0).id
+    repo.getById(id).map { res =>
+      updatedRow = res(0)
       val anyData = Map(
                         "id" -> id.toString().toString(),
-                        "date" -> res.toList(0).date.toString(),
-                        "type_1" -> res.toList(0).type_1.toString(),
-                        "description" -> res.toList(0).description.toString(),
-                        "receivedBy" -> res.toList(0).receivedBy.toString(),
-                        "autorizedBy" -> res.toList(0).autorizedBy.toString()
+                        "date" -> updatedRow.date.toString(),
+                        "type_1" -> updatedRow.type_1.toString(),
+                        "description" -> updatedRow.description.toString(),
+                        "receivedBy" -> updatedRow.receivedBy.toString(),
+                        "autorizedBy" -> updatedRow.autorizedBy.toString()
                         )
-      Ok(views.html.transaction_update(updatedId, updateForm.bind(anyData), users))
+      Ok(views.html.transaction_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), users))
     }
   }
 
@@ -143,7 +143,7 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transaction_update(updatedId, errorForm, users)))
+        Future.successful(Ok(views.html.transaction_update(new MyDeadboltHandler, updatedRow, errorForm, users)))
       },
       res => {
         repo.update(

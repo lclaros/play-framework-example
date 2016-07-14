@@ -18,22 +18,18 @@
 
     @form(routes.ProductorController.updatePost()) {
     <div class="container">
-        <div class="col-lg-6">
             @inputText(rowForm("nombre"))
             @inputText(rowForm("carnet"))
             @inputText(rowForm("telefono"))
             @inputText(rowForm("direccion"))
             @select(field = rowForm("module"), options = options(modules))
-         </div>
-        <div class="col-lg-6">
             @inputText(rowForm("account"))
             @inputText(rowForm("totalDebt"), 'readonly -> "readonly")
             @inputText(rowForm("numberPayment"))
             @inputText(rowForm("position"), 'readonly -> "readonly")
-        </div>
-    </div>
         <input type="submit" value="Actualizar"  class="btn btn-primary"/>
         <a href="/productor_show/@row.id" class="btn btn-primary">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
+    </div>
     }
 }

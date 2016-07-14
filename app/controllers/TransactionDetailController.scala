@@ -26,7 +26,9 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
                                              repoAccounts: AccountRepository, val messagesApi: MessagesApi)
                                   (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  var transactionId: Long = 0
+  var updatedRow: TransactionDetail = _
+  var parentId: Long = _
+
   val newForm: Form[CreateTransactionDetailForm] = Form {
     mapping(
       "transactionId" -> longNumber,
@@ -43,24 +45,28 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transactionDetail_add(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, errorForm, transactionMap, accountMap)))
       },
       res => {
-        repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { value =>
+        repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { resNew =>
           repoAccounts.updateParentDebitCredit(res.accountId, res.debit, res.credit);
-          repoTransReport.getById(res.transactionId).map{ res => repo.updateTransactionParams(value.id, res(0).date)}
-          repoAccounts.getById(res.accountId).map{ res => repo.updateAccountParams(value.id, res(0).code, res(0).name)}
-          
-          Redirect(routes.TransactionController.show(res.transactionId))
+          repoTransReport.getById(res.transactionId).map{ res => repo.updateTransactionParams(resNew.id, res(0).date)}
+          repoAccounts.getById(res.accountId).map{ res => repo.updateAccountParams(resNew.id, res(0).code, res(0).name)}
+          Redirect(routes.TransactionDetailController.show(resNew.id))
         }
       }
     )
   }
 
-  def addGet(transactionId: Long) = Action {
-    val transactionsNames = getTransactionsMap(transactionId)
-    val productorsNames = getAccountsMap()
-    Ok(views.html.transactionDetail_add(newForm, transactionsNames, productorsNames))
+  var transactionMap = getTransactionMap(0)
+  var accountMap = getAccountMap()
+
+
+  def addGet(transactionId: Long) = Action { implicit request =>
+    parentId = transactionId
+    transactionMap = getTransactionMap(transactionId)
+    accountMap = getAccountMap()
+    Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, newForm, transactionMap, accountMap))
   }
 
   def getTransactionDetails = Action.async {
@@ -100,17 +106,22 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map {case (res) =>
-      transactionId = res(0).transactionId
-      val anyData = Map("id" -> id.toString().toString(), "transactionId" -> res.toList(0).transactionId.toString(), "accountId" -> res.toList(0).accountId.toString(), "debit" -> res.toList(0).debit.toString(), "credit" -> res.toList(0).credit.toString())
-      val discountRepMap = getTransactionsMap(res.toList(0).transactionId)
-      val proveeMap = getAccountsMap()
-      Ok(views.html.transactionDetail_update(transactionId, updateForm.bind(anyData), discountRepMap, proveeMap))
+      updatedRow = res(0)
+      val anyData = Map(
+                          "id" -> id.toString().toString(),
+                          "transactionId" -> updatedRow.transactionId.toString(),
+                          "accountId" -> updatedRow.accountId.toString(),
+                          "debit" -> updatedRow.debit.toString(),
+                          "credit" -> updatedRow.credit.toString()
+                        )
+      accountMap = getAccountMap()
+      Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), accountMap))
     }
   }
 
-  def getTransactionsMap(id: Long): Map[String, String] = {
+  def getTransactionMap(id: Long): Map[String, String] = {
     Await.result(repoTransReport.getListNamesById(id).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -121,7 +132,17 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     }, 3000.millis)
   }
 
-  def getAccountsMap(): Map[String, String] = {
+  def getAccountMap(): Map[String, String] = {
+    val cache = collection.mutable.Map[String, String]()
+    Await.result(repoAccounts.getListObjsChild().map{ case (res1) => 
+      res1.foreach{ res2 => 
+        cache put (res2.id.toString(), res2.code + " " + res2.name)
+      }
+    }, 1000.millis)
+    cache.toMap
+  }
+  
+  def getAccountMapById(): Map[String, String] = {
     val cache = collection.mutable.Map[String, String]()
     Await.result(repoAccounts.getListObjsChild().map{ case (res1) => 
       res1.foreach{ res2 => 
@@ -131,16 +152,15 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     cache.toMap
   }
 
-  def getTransactionIdFromDetail(id: Long): Long = {
+  def getParentId(id: Long): Long = {
     Await.result(repo.getById(id).map {res => res(0).transactionId }, 1000.millis)
   }
 
   // delete required
   def delete(id: Long) = Action.async {
-    transactionId = getTransactionIdFromDetail(id)
+    parentId = getParentId(id)
     repo.delete(id).map { res =>
-      ;
-      Redirect(routes.TransactionController.show(transactionId))
+      Redirect(routes.TransactionController.show(parentId))
     }
 
   }
@@ -156,11 +176,11 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transactionDetail_update(transactionId, errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, errorForm, accountMap)))
       },
       res => {
         repo.update(res.id, res.transactionId, res.accountId, res.debit, res.credit).map { _ =>
-          Redirect(routes.TransactionController.show(res.transactionId))
+          Redirect(routes.TransactionDetailController.show(res.id))
         }
       }
     )

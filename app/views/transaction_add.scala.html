@@ -3,8 +3,8 @@
 @import helper._
 
 @main("Crear") {
-    <div>
-        <a href="/" class="btn btn-info">Muro</a>
+    @examples.templates.nav(handler)
+    <div class="container">
         @restrict(roles = List(Array("transactionList"))) {
           <a href="/transaction_list" class="btn btn-info">Lista</a> 
         }
