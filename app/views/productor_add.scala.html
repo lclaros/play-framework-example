@@ -3,16 +3,20 @@
 @import helper._
 
 @main("Agregar") {
-    <div>
-        <a href="/">Muro</a>
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productList"))) {
+            <a href="/productor_list/1" class="btn btn-primary">Listar</a> 
+        }
     </div>
     @form(routes.ProductorController.add()) {
-        @inputText(row("nombre"), '_label -> "Nombre Productor")
+        @inputText(row("nombre"), '_label -> "Nombre")
         @inputText(row("carnet"))
         @inputText(row("telefono"))
         @inputText(row("direccion"))
         @inputText(row("account"))
         @select(field = row("module"), options = options(modules))
         <input type="submit" value="Guardar" class="btn btn-primary"/>
+        <a href="productor_list/1" class="btn btn-primary">Cancelar</a>
     }
 }

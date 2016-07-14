@@ -11,13 +11,13 @@ TODO
     - Manage permissions
         list of modules - (reports, libro diario, sumas y saldos, profiles)
     - Add nav tag
-        - modules(users, modules, accounts, proveedors, transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, libro diario, sumas y saldos, profiles, productInv)
+        - modules( modules, accounts, proveedors, transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, libro diario, sumas y saldos, profiles, productInv)
 
     - update the update_page using and id like param
 
 PROGRESS
     - Add nav tag
-        - modules(productors, )
+        - modules(users, )
     - list of modules - ()
         - divide the add from list page(- add create to the list page - have edit in the add page)
 
@@ -28,7 +28,7 @@ PROGRESS
 
 DONE
     Add nav tag
-        - modules(measures, products, )
+        - modules(measures, products, productors, )
     Add permissions in the modules
     - list of modules - (measures, products, productors, users, modules, accounts, proveedors, transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, productInv, )
         - divide the add from list page(- add create to the list page - have edit in the add page)

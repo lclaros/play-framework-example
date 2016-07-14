@@ -3,8 +3,11 @@
 @import helper._
 
 @main("Agregar") {
-    <div>
-        <a href="/productInv_add" class="btn btn-primary">Crear Reporte</a>
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productInvCreate"))) {
+            <a href="/productInv_add" class="btn btn-primary">Crear</a> 
+        }
     </div>
     <div>Lista de Reportes</div>
     <div class="table-responsive">

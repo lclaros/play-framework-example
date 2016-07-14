@@ -1,26 +1,39 @@
-@(row: Form[UpdateProductorForm], modules: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Productor, rowForm: Form[UpdateProductorForm], modules: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Actualizar Productor") {
+    @examples.templates.nav(handler)
+    <div>
+        @restrict(roles = List(Array("productorList"))) {
+            <a href="/productor_list/1" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("productorShow"))) {
+            <a href="/productor_show/@row.id" class="btn btn-info">Mostrar</a> 
+        }
+        @restrict(roles = List(Array("productorDelete"))) {
+           <a href="/productor_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
+    </div>
+
     @form(routes.ProductorController.updatePost()) {
     <div class="container">
         <div class="col-lg-6">
-            @inputText(row("nombre"))
-            @inputText(row("carnet"))
-            @inputText(row("telefono"))
-            @inputText(row("direccion"))
-            @select(field = row("module"), options = options(modules))
+            @inputText(rowForm("nombre"))
+            @inputText(rowForm("carnet"))
+            @inputText(rowForm("telefono"))
+            @inputText(rowForm("direccion"))
+            @select(field = rowForm("module"), options = options(modules))
          </div>
         <div class="col-lg-6">
-            @inputText(row("account"))
-            @inputText(row("totalDebt"), 'readonly -> "readonly")
-            @inputText(row("numberPayment"))
-            @inputText(row("position"), 'readonly -> "readonly")
+            @inputText(rowForm("account"))
+            @inputText(rowForm("totalDebt"), 'readonly -> "readonly")
+            @inputText(rowForm("numberPayment"))
+            @inputText(rowForm("position"), 'readonly -> "readonly")
         </div>
     </div>
         <input type="submit" value="Actualizar"  class="btn btn-primary"/>
-        <a href="/productor_list/1" class="btn btn-primary">Cancelar</a>
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        <a href="/productor_show/@row.id" class="btn btn-primary">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

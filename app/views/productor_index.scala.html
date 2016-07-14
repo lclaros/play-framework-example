@@ -3,7 +3,8 @@
 @import helper._
 
 @main("Agregar") {
-    <div class="conatiner">
+    @examples.templates.nav(handler)
+    <div class="container">
         @restrict(roles = List(Array("productCreate"))) {
             <a href="/productor_add" class="btn btn-primary">Agregar</a> 
         }

@@ -24,6 +24,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
   var modules = getModuleNamesMap()
   var interval = 30
+  var updatedRow: Productor = _
 
   def getModuleNamesMap(): Map[String, String] = {
     Await.result(repoModule.getListNames().map{ case (res1) => 
@@ -166,22 +167,23 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
 
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     modules = getModuleNamesMap()
     repo.getById(id).map { res =>
+      updatedRow = res(0)
       val anyData = Map(
         "id" -> id.toString().toString(),
-        "nombre" -> res.toList(0).nombre,
-        "carnet" -> res.toList(0).carnet.toString(),
-        "telefono" -> res.toList(0).telefono.toString(),
-        "direccion" -> res.toList(0).direccion,
-        "account" -> res.toList(0).account.toString(),
-        "module" -> res.toList(0).module.toString(),
-        "totalDebt" -> res.toList(0).totalDebt.toString(),
-        "numberPayment" -> res.toList(0).numberPayment.toString(),
-        "position" -> res.toList(0).position.toString()
+        "nombre" -> updatedRow.nombre,
+        "carnet" -> updatedRow.carnet.toString(),
+        "telefono" -> updatedRow.telefono.toString(),
+        "direccion" -> updatedRow.direccion,
+        "account" -> updatedRow.account.toString(),
+        "module" -> updatedRow.module.toString(),
+        "totalDebt" -> updatedRow.totalDebt.toString(),
+        "numberPayment" -> updatedRow.numberPayment.toString(),
+        "position" -> updatedRow.position.toString()
         )
-      Ok(views.html.productor_update(updateForm.bind(anyData), modules))
+      Ok(views.html.productor_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), modules))
     }
   }
 
@@ -205,7 +207,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_update(errorForm, modules)))
+        Future.successful(Ok(views.html.productor_update(new MyDeadboltHandler, updatedRow,errorForm, modules)))
       },
       res => {
         repo.update(

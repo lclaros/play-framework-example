@@ -3,14 +3,20 @@
 @import helper._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div class="container">
-        <a href="/productor_list"><span class="glyphicon glyphicon-plus">Lista de Productores</span></a>
-    </div>
-    <div class="container">
-    <div class="col-lg-6">
-        @restrict(roles = List(Array("measureEdit"))) {
+    <div>
+            <div>
+        @restrict(roles = List(Array("productorList"))) {
+            <a href="/productor_list/1" class="btn btn-info">Listar</a> 
+        }
+        @restrict(roles = List(Array("productorEdit"))) {
             <a href="/productor_update/@row.id" class="btn btn-primary">Editar</a> 
         }
+        @restrict(roles = List(Array("productorDelete"))) {
+           <a href="/productor_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
+    </div>
         <div>
             <div style="display: inline-block;"> Nombre: </div>
             <div style="display: inline-block;" id="name">@row.nombre</div>
@@ -32,7 +38,7 @@
             <div style="display: inline-block;" id="moduleName">@row.moduleName</div>
         </div>
     </div>
-    <div class="col-lg-6">
+    <div>
          <div>
             <div style="display: inline-block;"> Cuenta: </div>
             <div style="display: inline-block;" id="account">@row.account</div>
@@ -52,10 +58,6 @@
     </div>
     </div>
     <div class="container">
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowProductorByProductor.js")'></script>
-        <div>
-            <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
-        </div>
         <div>Lista de Pedidos</div>
         <div class="table-responsive">
             <table class="table" id="requestRowProductors">
