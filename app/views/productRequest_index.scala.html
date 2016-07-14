@@ -2,14 +2,14 @@
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
-@main("Agregar") {
-    <div>
-        <a href="/" class="btn btn-primary">Muro</a>
+@main("Pedidos") {
+    @examples.templates.nav(handler)
+    <div class="container">
         @restrict(roles = List(Array("productRequestCreate"))) {
-            <a href="/productRequest_add" class="btn btn-primary">Agregar Product Request</a> 
+            <a href="/productRequest_add" class="btn btn-primary">Nuevo</a> 
         }
     </div>
-    <div>Lista de Pedidos</div>
+    <div class="container">Lista de Pedidos</div>
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>

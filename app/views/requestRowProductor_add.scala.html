@@ -2,23 +2,21 @@
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
-@main("Crear") {
-        <div>
-        @restrict(roles = List(Array("requestRowList"))) {
-            <a href="/requestRow_list" class="btn btn-primary">Listar</a> 
-        }
+@main("Nuevo") {
+    @examples.templates.nav(handler)
+    <div class="container">
         @restrict(roles = List(Array("requestRowShow"))) {
-            <a href="/requestRow_show/@requestRowId" class="btn btn-primary">Request Row</a> 
+            <a href="/requestRow_show/@requestRowId" class="btn btn-info">Detalle de Pedido</a> 
         }
     </div>
     @form(routes.RequestRowProductorController.add()) {
-        @select(field = row("requestRowId"), options = options(requests))
-        @select(field = row("productorId"), options = options(productors))
         @select(field = row("productId"), options = options(products))
+        @select(field = row("productorId"), options = options(productors))
         @inputText(row("quantity"))
         @inputText(row("precio"))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         <input type="submit" value="Guardar" class="btn btn-primary"/>
-        <a href="/requestRow_show/@requestRowId" class="btn btn-primary"> Cancelar</a>
+        <a href="/requestRow_show/@requestRowId" class="btn btn-primary">Cancelar</a>
+        @select(field = row("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")
     }
 }

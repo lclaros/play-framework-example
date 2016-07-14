@@ -22,7 +22,7 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
 class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoRequestRow: RequestRowRepository, 
-                                               repoInsum: ProductRepository, repoProductor: ProductorRepository,
+                                               repoProduct: ProductRepository, repoProductor: ProductorRepository,
                                                val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -38,29 +38,38 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   }
 
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
-  var productReqNames = getProductReqNamesMap(0)
-  var insumoNames = getInsumoNamesMap()
+  var productReqNames = getRequestRowMap(0)
+  var insumoNames = getProductMap(0)
   var productorNames = getProductorNamesMap()
   var updatedRow: RequestRowProductor = new RequestRowProductor(0, 0, 0, "", 1, "", 1, 1, 2, "")
-  var requestRowIdParam: Long = 0
+  var parentId: Long = _
+  var requestRow: RequestRow = _
 
   def index = Action.async { implicit request => 
     repo.list().map { res =>
       Ok(views.html.requestRowProductor_index(new MyDeadboltHandler, res))
     }
   }
+
+  def getRequestRowObj(id: Long): RequestRow = {
+    Await.result(repoRequestRow.getById(id).map { res =>
+      res(0)
+      }, 100.millis)
+  }
+
   def addGet(requestRowId: Long) = Action { implicit request =>
-    requestRowIdParam = requestRowId
-    productReqNames = getProductReqNamesMap(requestRowId)
-    insumoNames = getInsumoNamesMap()
+    parentId = requestRowId
+    requestRow = getRequestRowObj(requestRowId)
+    productReqNames = getRequestRowMap(requestRowId)
+    insumoNames = getProductMap(requestRow.productId)
     productorNames = getProductorNamesMap()
-    Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, requestRowIdParam, newForm, productReqNames, insumoNames, productorNames))
+    Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, newForm, productReqNames, insumoNames, productorNames))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, requestRowIdParam, newForm, productReqNames, insumoNames, productorNames)))
+        Future.successful(Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, newForm, productReqNames, insumoNames, productorNames)))
       },
       res => {
         repo.create(  
@@ -104,13 +113,14 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   // update required
   def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> res.toList(0).requestRowId.toString(),
-                                "productId" -> res.toList(0).productId.toString(), "productorId" -> res.toList(0).productorId.toString(),
-                                "quantity" -> res.toList(0).quantity.toString(), "precio" -> res.toList(0).precio.toString(), "status" -> res.toList(0).status.toString())
-      productReqNames = getProductReqNamesMap(res(0).requestRowId)
-      insumoNames = getInsumoNamesMap()
-      productorNames = getProductorNamesMap()
       updatedRow = res(0)
+      val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> updatedRow.requestRowId.toString(),
+                                "productId" -> updatedRow.productId.toString(), "productorId" -> updatedRow.productorId.toString(),
+                                "quantity" -> updatedRow.quantity.toString(), "precio" -> updatedRow.precio.toString(), "status" -> updatedRow.status.toString())
+      productReqNames = getRequestRowMap(updatedRow.requestRowId)
+      requestRow = getRequestRowObj(updatedRow.requestRowId)
+      insumoNames = getProductMap(requestRow.productId)
+      productorNames = getProductorNamesMap()
 
       Ok(views.html.requestRowProductor_update(new MyDeadboltHandler, updatedRow,
                 updateForm.bind(anyData), productReqNames, insumoNames, productorNames))
@@ -118,24 +128,22 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     }
   }
 
-  def getProductReqNamesMap(requestRowId: Long): Map[String, String] = {
-    Await.result(repoRequestRow.getById(requestRowId).map{ case (res1) => 
+  def getRequestRowMap(requestRowId: Long): Map[String, String] = {
+    Await.result(repoRequestRow.getById(requestRowId).map { res => 
       val cache = collection.mutable.Map[String, String]()
-      res1.foreach { requestRow => 
+      res.foreach { requestRow => 
         cache put (requestRow.id.toString, requestRow.id.toString() + ": " + requestRow.productName)
       }
-      
       cache.toMap
     }, 3000.millis)
   }
 
-  def getInsumoNamesMap(): Map[String, String] = {
-    Await.result(repoInsum.getListNames().map{ case (res1) => 
+  def getProductMap(id: Long): Map[String, String] = {
+    Await.result(repoProduct.getById(id).map { res1 => 
       val cache = collection.mutable.Map[String, String]()
-      res1.foreach{ case (key: Long, value: String) => 
-        cache put (key.toString(), value)
+      res1.foreach{ product => 
+        cache put (product.id.toString(), product.nombre)
       }
-      
       cache.toMap
     }, 3000.millis)
   }
@@ -154,7 +162,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   // update required
   def getAccept(id: Long) = Action.async {
     repo.acceptById(id).map {case (res) =>
-      repoInsum.updateAmount(res(0).productId, - res(0).quantity);
+      repoProduct.updateAmount(res(0).productId, - res(0).quantity);
       Redirect(routes.RequestRowController.show(res(0).requestRowId))
     }
   }

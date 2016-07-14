@@ -3,6 +3,7 @@
 @import helper._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestList"))) {
             <a href="/productRequest_list" class="btn btn-primary">Listar</a> 
@@ -35,17 +36,15 @@
     </div>
     <div>
         @restrict(roles = List(Array("requestRowCreate"))) {
-            <div style="display: inline-block;"> <a href="/requestRow_add/@row.id" class="btn btn-primary">Agregar Productos</a> </div>
+            <div style="display: inline-block;"> <a href="/requestRow_add/@row.id" class="btn btn-primary">Agregar Detalle</a> </div>
         }
     </div>
 
-    <div>Lista de Productos</div>
+    <div>Lista Detalle de Pedido</div>
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>RequestId</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
                     <th>Precio</th>
@@ -56,21 +55,19 @@
             <tbody>
                 @for(requestRow <- requestRows) {
                     <tr>
-                        <td>@requestRow.id</td>
-                        <td>@requestRow.requestId</td>
                         <td>@requestRow.productName</td>
                         <td>@requestRow.quantity</td>
                         <td>@requestRow.precio</td>
                         <td>@requestRow.status</td>
                         <td>
+                           @restrict(roles = List(Array("requestRowShow"))) {
+                               <a href="/requestRow_show/@requestRow.id" class="btn btn-info">Mostrar</a>
+                           }
                            @restrict(roles = List(Array("requestRowEdit"))) {
                                <a href="/requestRow_update/@requestRow.id" class="btn btn-primary">Editar</a> 
                            }
                            @restrict(roles = List(Array("requestRowDelete"))) {
                                <a href="/requestRow_remove/@requestRow.id" class="btn btn-danger">Eliminar</a>
-                           }
-                           @restrict(roles = List(Array("requestRowShow"))) {
-                               <a href="/requestRow_show/@requestRow.id" class="btn btn-info">Mostrar</a>
                            }
                        </td> 
                     </tr>

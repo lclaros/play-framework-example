@@ -1,25 +1,29 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRow: RequestRow, row: Form[UpdateRequestRowForm], requests: Map[String, String], productos: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: RequestRow, rowForm: Form[UpdateRequestRowForm], requests: Map[String, String], productos: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Actualizar") {
-    <div>
+    @examples.templates.nav(handler)
+    <div class="container">
         @restrict(roles = List(Array("productRequestShow"))) {
-            <a href="/productRequest_show/@requestRow.requestId" class="btn btn-primary">Request</a> 
+            <a href="/productRequest_show/@row.requestId" class="btn btn-primary">Pedido</a> 
+        }
+        @restrict(roles = List(Array("requestRowShow"))) {
+           <a href="/requestRow_show/@row.id" class="btn btn-info">Mostrar</a>
         }
         @restrict(roles = List(Array("requestRowDelete"))) {
-           <a href="/requestRow_remove/@requestRow.id" class="btn btn-danger">Eliminar</a>
+           <a href="/requestRow_remove/@row.id" class="btn btn-danger">Eliminar</a>
         }
     </div>
     @form(routes.RequestRowController.updatePost()) {
-        @select(field = row("productId"), options = options(productos))
-        @inputText(row("quantity"))
-        @inputText(row("precio"))
-        @inputText(row("status"))
-        @select(field = row("unitMeasure"), options = options(unitMeasures))
+        @select(field = rowForm("productId"), options = options(productos))
+        @inputText(rowForm("quantity"))
+        @inputText(rowForm("precio"))
+        @inputText(rowForm("status"))
+        @select(field = rowForm("unitMeasure"), options = options(unitMeasures))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
-        <a href="/requestRow_show/@requestRow.id" class="btn btn-primary">Cancelar</a>
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
-        @select(field = row("requestId"), options = options(requests), 'hidden -> "true", '_label -> "")
+        <a href="/requestRow_show/@row.id" class="btn btn-primary">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
+        @select(field = rowForm("requestId"), options = options(requests), 'hidden -> "true", '_label -> "")
     }
 }

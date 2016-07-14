@@ -1,11 +1,14 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestId: Long, row: Form[CreateRequestRowForm], requests: Map[String, String], products: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, parentId: Long, row: Form[CreateRequestRowForm], requests: Map[String, String], products: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Crear") {
-    @restrict(roles = List(Array("productRequestShow"))) {
-        <a href="/productRequest_show/@requestId" class="btn btn-primary">Request</a> 
-    }
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestShow"))) {
+            <a href="/productRequest_show/@parentId" class="btn btn-info">Pedido</a> 
+        }
+    </div>
     @form(routes.RequestRowController.add()) {
         @select(field = row("requestId"), options = options(requests))
         @select(field = row("productId"), options = options(products))
@@ -13,7 +16,7 @@
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @select(field = row("unitMeasure"), options = options(unitMeasures))
         <input type="submit" value="Guardar" class="btn btn-primary"/>
-        <a href="/productRequest_show/@requestId" class="btn btn-primary"> Cancelar</a>
+        <a href="/productRequest_show/@parentId" class="btn btn-primary"> Cancelar</a>
     }
 }
 

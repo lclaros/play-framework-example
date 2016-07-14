@@ -3,8 +3,11 @@
 @import helper._
 
 @main("Crear") {
-    <div>
-        <a href="/"></a>
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestList"))) {
+            <a href="/productRequest_list" class="btn btn-primary">Listar</a> 
+        }
     </div>
     @form(routes.ProductRequestController.add()) {
         @inputText(row("date"))
@@ -12,7 +15,7 @@
         @select(field = row("storekeeper"), options = options(stors))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("detail"))
-        <input type="submit" value="Guardar Pedido" class="btn btn-primary"/>
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
         <a href="/productRequest_list" class="btn btn-primary"> Cancelar</a>
     }
 }

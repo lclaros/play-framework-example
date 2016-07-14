@@ -3,15 +3,18 @@
 @import helper._
 
 @main("Actualizar") {
-	@restrict(roles = List(Array("requestRowShow"))) {
-        <a href="/requestRow_show/@requestRow.requestRowId" class="btn btn-primary">Request Row</a> 
-    }
-    @restrict(roles = List(Array("requestRowProductorEdit"))) {
-        <a href="/requestRowProductor_update/@requestRow.id" class="btn btn-primary">Editar</a> 
-    }
-    @restrict(roles = List(Array("requestRowProductorDelete"))) {
-       <a href="/requestRowProductor_remove/@requestRow.id" class="btn btn-danger">Eliminar</a>
-    }
+    @examples.templates.nav(handler)
+    <div class="container">
+    	@restrict(roles = List(Array("requestRowShow"))) {
+            <a href="/requestRow_show/@requestRow.requestRowId" class="btn btn-primary">Detalle de Pedido</a> 
+        }
+        @restrict(roles = List(Array("requestRowProductorShow"))) {
+            <a href="/requestRowProductor_show/@requestRow.id" class="btn btn-info">Mostrar</a> 
+        }
+        @restrict(roles = List(Array("requestRowProductorDelete"))) {
+           <a href="/requestRowProductor_remove/@requestRow.id" class="btn btn-danger">Eliminar</a>
+        }
+    </div>
     @form(routes.RequestRowProductorController.updatePost()) {
         @select(field = row("productId"), options = options(productos))
         @select(field = row("productorId"), options = options(productors))
