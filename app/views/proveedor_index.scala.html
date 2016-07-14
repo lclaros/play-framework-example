@@ -2,12 +2,11 @@
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
-@main("Agregar proveedor") {
+@main("Lista") {
     @examples.templates.nav(handler)
     <div class="container">
-       <a href="/"  class="btn btn-primary">Muro</a>
         @restrict(roles = List(Array("proveedorCreate"))) {
-           <a href="/proveedor_add" class="btn btn-primary">Agregar Proveedor</a> 
+           <a href="/proveedor_add" class="btn btn-primary">Nuevo</a> 
        }
     </div>
     <div class="table-responsive">

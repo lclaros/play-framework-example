@@ -8,11 +8,13 @@
         @restrict(roles = List(Array("proveedorList"))) {
             <a href="/proveedor_list" class="btn btn-primary">Listar</a> 
         }
+        @restrict(roles = List(Array("proveedorShow"))) {
+           <a href="/proveedor_show/@row.id" class="btn btn-info">Mostrar</a>
+        }
         @restrict(roles = List(Array("proveedorDelete"))) {
            <a href="/proveedor_remove/@row.id" class="btn btn-danger">Eliminar</a>
         }
     </div>
-	<a href="/proveedor_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.ProveedorController.updatePost()) {
         @inputText(rowForm("nombre"))
         @inputText(rowForm("telefono"))
@@ -20,7 +22,7 @@
         @inputText(rowForm("contacto"))
         @inputText(rowForm("account"))
         <input type="submit" class="btn btn-primary" value="Actualizar"/>
-        <a href="/proveedor_list" class="btn btn-primary">Cancel</a>
+        <a href="/proveedor_show/@row.id" class="btn btn-primary">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

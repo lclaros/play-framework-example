@@ -4,26 +4,20 @@
 
 @main("Agregar proveedor") {
     @examples.templates.nav(handler)
-    <div>
+    <div class="container">
         @restrict(roles = List(Array("proveedorList"))) {
             <a href="/proveedor_list" class="btn btn-primary">Listar</a> 
         }
     </div>
     @form(routes.ProveedorController.addProveedor()) {
         <div class="container">
-            <div class="col-md-6">
-                @inputText(proveedor("nombre"))
-                @inputText(proveedor("telefono"))
-                @inputText(proveedor("direccion"))
-            </div>
-            <div class="col-md-6">
-                @inputText(proveedor("contacto"))
-                @inputText(proveedor("account"))
-            </div>
-            <div class="col-md-12">
-                <input type="submit" class="btn btn-primary" value="Agregar Proveedor"/>
-                <a href="/proveedor_list" class="btn btn-info">Cancelar</a>
-            </div>
+            @inputText(proveedor("nombre"))
+            @inputText(proveedor("telefono"))
+            @inputText(proveedor("direccion"))
+            @inputText(proveedor("contacto"))
+            @inputText(proveedor("account"))
+            <input type="submit" class="btn btn-primary" value="Guardar"/>
+            <a href="/proveedor_list" class="btn btn-primary">Cancelar</a>
         </div>
     }
 }
