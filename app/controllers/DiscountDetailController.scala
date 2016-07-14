@@ -223,7 +223,10 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
     val parentId = getParentId(id)
     val discount = getDiscount(id)
     repo.delete(id).map { res =>
-      repoDiscReport.addToTotal(parentId, -discount);
+      repoDiscReport.addToTotal(parentId, -discount)
+      // Update the productor discount application
+      // Review when is ready to substract the discount fromt he product badge
+      // Maybe I should have a pending discount value
       Redirect(routes.DiscountReportController.show(parentId))
     }
 

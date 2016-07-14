@@ -1,22 +1,26 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: DiscountDetail, rowForm: Form[UpdateDiscountDetailForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: DiscountDetail, rowForm: Form[UpdateDiscountDetailForm], products: Map[String, String], productors: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Actualizar") {
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportShow"))) {
             <a href="/discountReport_show/@row.discountReport" class="btn btn-primary">Reporte</a> 
+        }
+        @restrict(roles = List(Array("discountDetailShow"))) {
+           <a href="/discountDetail_show/@row.id" class="btn btn-info">Mostrar</a>
         }
         @restrict(roles = List(Array("discountDetailDelete"))) {
            <a href="/discountDetail_remove/@row.id" class="btn btn-danger">Eliminar</a>
         }
     </div>
     @form(routes.DiscountDetailController.updatePost()) {
-        @select(field = rowForm("productorId"), options = options(vendors))
+        @select(field = rowForm("productorId"), options = options(productors))
         @inputText(rowForm("status"))
         @inputText(rowForm("discount"))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
-        <a href="/discountDetail_show/1" class="btn btn-primary">Cancelar</a>
+        <a href="/discountDetail_show/@row.id" class="btn btn-primary">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
         @select(field = rowForm("discountReport"), options = options(products), 'hidden -> "true", '_label -> "")
     }

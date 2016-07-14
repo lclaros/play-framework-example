@@ -3,9 +3,10 @@
 @import helper._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportShow"))) {
-            <a href="/discountReport_show/@row.discountReport" class="btn btn-primary">Reporte</a> 
+            <a href="/discountReport_show/@row.discountReport" class="btn btn-info">Reporte</a> 
         }
         @restrict(roles = List(Array("discountDetailEdit"))) {
            <a href="/discountDetail_update/@row.id" class="btn btn-primary">Editar</a>

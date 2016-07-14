@@ -2,10 +2,11 @@
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
-@main("Crear") {
+@main("Nuevo") {
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportShow"))) {
-            <a href="/discountReport_show/@discountId" class="btn btn-primary">Reporte</a> 
+            <a href="/discountReport_show/@discountId" class="btn btn-info">Reporte</a> 
         }
     </div>
     <div style="display: inline-block;">
@@ -25,7 +26,7 @@
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("discount"))
         <input type="submit" value="Guardar" class="btn btn-primary"/>
-        <a href="/discountReport_show/@discountId" class="btn btn-primary">Cancel</a>
+        <a href="/discountReport_show/@discountId" class="btn btn-primary">Cancelar</a>
         @select(field = row("discountReport"), options = options(discounts), 'hidden -> "true", '_label -> "")
     }
 }

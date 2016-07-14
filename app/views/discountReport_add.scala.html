@@ -3,8 +3,9 @@
 @import helper._
 
 @main("Crear") {
-    <div>
-        restrict(roles = List(Array("discountReportList"))) {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("discountReportList"))) {
             <a href="/discountReport_list" class="btn btn-primary">Listar</a> 
         }
     </div>
@@ -12,7 +13,7 @@
         @inputDate(row("startDate"))
         @inputDate(row("endDate"))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
-        <input type="submit" value="Guardar Descuento" class="btn btn-primary"/>
-        <a href="discountReport_list/" class="btn btn-primary"> Cancelar</a>
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
+        <a href="/discountReport_list" class="btn btn-primary"> Cancelar</a>
     }
 }

@@ -3,15 +3,18 @@
 @import helper._
 
 @main("Actualizar") {
-    <div>
+    @examples.templates.nav(handler)
+    <div class="container">
         @restrict(roles = List(Array("discountReportList"))) {
             <a href="/discountReport_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("discountReportShow"))) {
+           <a href="/discountReport_show/@row.id" class="btn btn-info">Mostrar</a>
         }
         @restrict(roles = List(Array("discountReportDelete"))) {
            <a href="/discountReport_remove/@row.id" class="btn btn-danger">Eliminar</a>
         }
     </div>
-	<a href="/discountReport_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.DiscountReportController.updatePost()) {
         @inputText(rowForm("startDate"))
         @inputText(rowForm("endDate"))

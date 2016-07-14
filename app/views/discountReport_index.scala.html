@@ -2,11 +2,14 @@
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
-@main("Agregar") {
-    <div>
-        <a href="/discountReport_add" class="btn btn-primary">Crear Reporte</a>
+@main("Nuevo") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("discountReportCreate"))) {
+            <a href="/discountReport_add" class="btn btn-primary">Nuevo</a> 
+        }
     </div>
-    <div>Lista de Reportes</div>
+    <div>Lista de Reporte de Descuentos</div>
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>
