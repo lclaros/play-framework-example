@@ -3,10 +3,10 @@
 @import helper._
 
 @main("Agregar") {
-    <div>
-        <a href="/" class="btn btn-primary">Muro</a>
+    @examples.templates.nav(handler)
+    <div class="container">
         @restrict(roles = List(Array("accountCreate"))) {
-            <a href="/account_add" class="btn btn-primary">Agregar Cuenta</a> 
+            <a href="/account_add" class="btn btn-primary">Nuevo</a> 
         }
     </div>
     

@@ -23,6 +23,7 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
 
   val yes_no = scala.collection.immutable.Map[String, String]("NO" -> "NO", "SI" -> "SI")
   val account_type = scala.collection.immutable.Map[String, String]("ACTIVO" -> "ACTIVO", "PASIVO" -> "PASIVO", "PATRIMONIO" -> "PATRIMONIO", "EGRESO" -> "EGRESO", "INGRESO" -> "INGRESO")
+  var udpatedRow: Account = _
 
   val newForm: Form[CreateAccountForm] = Form {
     mapping(
@@ -91,10 +92,20 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "code" -> res.toList(0).code, "name" -> res.toList(0).name.toString(), "negativo" -> res.toList(0).negativo.toString(), "parent" -> res.toList(0).parent.toString(), "type_1" -> res.toList(0).type_1.toString(), "negativo" -> res.toList(0).negativo.toString(), "parent" -> res.toList(0).parent.toString(), "description" -> res.toList(0).description)
-      Ok(views.html.account_update(updateForm.bind(anyData), yes_no, account_type, getAccountNamesMap()))
+      udpatedRow = res(0)
+      val anyData = Map(
+                          "id" -> id.toString().toString(), "code" -> udpatedRow.code,
+                          "name" -> udpatedRow.name.toString(),
+                          "negativo" -> udpatedRow.negativo.toString(),
+                          "parent" -> udpatedRow.parent.toString(),
+                          "type_1" -> udpatedRow.type_1.toString(),
+                          "negativo" -> udpatedRow.negativo.toString(),
+                          "parent" -> udpatedRow.parent.toString(),
+                          "description" -> udpatedRow.description
+                        )
+      Ok(views.html.account_update(new MyDeadboltHandler, udpatedRow, updateForm.bind(anyData), yes_no, account_type, getAccountNamesMap()))
     }
   }
 
@@ -123,7 +134,7 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_update(errorForm, yes_no, account_type, getAccountNamesMap())))
+        Future.successful(Ok(views.html.account_update(new MyDeadboltHandler, udpatedRow, errorForm, yes_no, account_type, getAccountNamesMap())))
       },
       res => {
         repo.update(res.id, res.code, res.name, res.type_1, res.negativo, res.parent, res.description).map { _ =>
