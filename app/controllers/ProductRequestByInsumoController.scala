@@ -143,7 +143,7 @@ class ProductRequestByInsumoController @Inject() (
       res1.foreach { user => 
         cache put (user.id.toString, user.nombre)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -154,7 +154,7 @@ class ProductRequestByInsumoController @Inject() (
       res1.foreach { user => 
         cache put (user.id.toString, user.nombre)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -165,7 +165,7 @@ class ProductRequestByInsumoController @Inject() (
       res1.foreach { user => 
         cache put (user.id.toString, user.name)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }

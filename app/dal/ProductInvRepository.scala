@@ -23,19 +23,29 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def productId = column[Long]("productId")
+    def productName = column[String]("productName")
     def proveedorId = column[Long]("proveedorId")
+    def proveedorName = column[String]("proveedorName")
+    def measureId = column[Long]("measureId")
+    def measureName = column[String]("measureName")
     def amount = column[Int]("amount")
     def amountLeft = column[Int]("amountLeft")
-    def * = (id, productId, proveedorId, amount, amountLeft) <> ((ProductInv.apply _).tupled, ProductInv.unapply)
+    def * = (id, productId, productName, proveedorId, proveedorName, measureId, measureName, amount, amountLeft) <> ((ProductInv.apply _).tupled, ProductInv.unapply)
   }
 
   private val tableQ = TableQuery[ProductInvsTable]
 
-  def create(productId: Long, proveedorId: Long, amount: Int, amountLeft: Int): Future[ProductInv] = db.run {
-    (tableQ.map(p => (p.productId, p.proveedorId, p.amount, p.amountLeft))
+  def create(productId: Long, productName: String, proveedorId: Long, proveedorName: String, measureId: Long, measureName: String, amount: Int, amountLeft: Int): Future[ProductInv] = db.run {
+    (tableQ.map(p => (
+                        p.productId, p.productName, p.proveedorId,
+                        p.proveedorName, p.measureId, p.measureName, p.amount, p.amountLeft
+                      ) )
       returning tableQ.map(_.id)
-      into ((nameAge, id) => ProductInv(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))
-    ) += (productId, proveedorId, amount, amountLeft)
+      into ((nameAge, id) => ProductInv(
+                                          id, nameAge._1, nameAge._2, nameAge._3, nameAge._4,
+                                          nameAge._5, nameAge._6, nameAge._7, nameAge._8
+                                          ))
+    ) += (productId, productName, proveedorId, proveedorName, measureId, measureName, amount, amountLeft)
   }
 
   def list(): Future[Seq[ProductInv]] = db.run {
@@ -65,11 +75,22 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
   }
 
   // update required to copy
-  def update(id: Long, productId: Long, proveedorId: Long, amount: Int, amountLeft: Int): Future[Seq[ProductInv]] = db.run {
+  def update(id: Long, productId: Long, productName: String, proveedorId: Long, proveedorName: String, measureId: Long, measureName: String, amount: Int, amountLeft: Int): Future[Seq[ProductInv]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.productId
     db.run(q.update(productId))
-    val q2 = for { c <- tableQ if c.id === id } yield c.proveedorId
-    db.run(q2.update(proveedorId))
+    val q01 = for { c <- tableQ if c.id === id } yield c.productName
+    db.run(q01.update(productName))
+
+    val q1 = for { c <- tableQ if c.id === id } yield c.proveedorId
+    db.run(q1.update(proveedorId))
+    val q11 = for { c <- tableQ if c.id === id } yield c.proveedorName
+    db.run(q11.update(proveedorName))
+
+    val q2 = for { c <- tableQ if c.id === id } yield c.measureId
+    db.run(q2.update(measureId))
+    val q21 = for { c <- tableQ if c.id === id } yield c.measureName
+    db.run(q21.update(measureName))
+
     val q3 = for { c <- tableQ if c.id === id } yield c.amount
     db.run(q3.update(amount))
     val q4 = for { c <- tableQ if c.id === id } yield c.amountLeft
@@ -83,7 +104,6 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     val res = q.result
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action);
-    affectedRowsCount.map(s=> println(s))
     res
   }
 
@@ -92,7 +112,6 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     var quantityAux = quantity
     db.run(tableQ.filter(_.amountLeft > 0).result).map { invs =>
       invs.foreach { inv => 
-        println(inv.id)
         if (quantityAux > 0) {
           if (inv.amountLeft <= quantityAux) {
             udpateAmountLeft(inv, quantityAux)

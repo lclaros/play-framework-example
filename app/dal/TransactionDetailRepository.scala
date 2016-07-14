@@ -62,7 +62,7 @@ class TransactionDetailRepository @Inject() (dbConfigProvider: DatabaseConfigPro
 
   def setTransactionDetailsList(trans: Transaction) = {
     println("Going to get the values")
-    listByTransaction(trans.id).map {res =>  trans.details = res; println("After res"); println(res); println(trans); println(trans.details);}
+    listByTransaction(trans.id).map {res =>  trans.details = res; println("After res"); ; println(trans); println(trans.details);}
   }
 
   def updateTransactionParams(id: Long, transactionDate: String) = {

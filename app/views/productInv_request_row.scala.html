@@ -7,11 +7,5 @@
     <div>
         <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
     </div>
-    @form(routes.ProductInvController.add_request_row()) {
-        @select(field = row("productId"), options = options(products))
-        @select(field = row("proveedorId"), options = options(vendors))
-        @inputText(row("amount"))
-        @inputText(row("amountLeft"))
-        <input type="submit" value="Guardar"/>
-    }
+    
 }

@@ -61,31 +61,49 @@
                 <table class="table" id="rows">
                     <thead>
                         <tr>
-                            <th>Producto</th>
                             <th>Proveedor</th>
+                            <th>Medida</th>
                             <th>cantidad</th>
                             <th>En Almacen</th>
-                            <th>-----------</th>
+                            @restrict(roles = List(Array("productInv"))) {
+                                <th>-----------</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
                         @for(child <- children) {
                             <tr>
-                                <td>@child.productId</td>
-                                <td>@child.proveedorId</td>
+                                <td>
+                                    @restrictOr(roles = List(Array("proveedorShow"))) {
+                                       <a href="/proveedor_show/@child.proveedorId">@child.proveedorName
+                                    </a> 
+                                    }{
+                                        @child.proveedorName                                    
+                                    }
+                                </td>
+                                <td>
+                                    @restrictOr(roles = List(Array("measureShow"))) {
+                                       <a href="/measure_show/@child.measureId">@child.measureName
+                                    </a> 
+                                    }{
+                                        @child.measureName                                    
+                                    }
+                                </td>
                                 <td>@child.amount</td>
                                 <td>@child.amountLeft</td>
-                                <td>
-                                   @restrict(roles = List(Array("productInvEdit"))) {
-                                       <a href="/productInv_update/@child.id" class="btn btn-primary">Editar</a> 
-                                   }
-                                   @restrict(roles = List(Array("productInvDelete"))) {
-                                       <a href="/productInv_remove/@child.id" class="btn btn-danger">Eliminar</a>
-                                   }
-                                   @restrict(roles = List(Array("productInvShow"))) {
-                                       <a href="/productInv_show/@child.id" class="btn btn-info">Mostrar</a>
-                                   }
-                               </td> 
+                                @restrict(roles = List(Array("productInv"))) {
+                                    <td>
+                                       @restrict(roles = List(Array("productInvEdit"))) {
+                                           <a href="/productInv_update/@child.id" class="btn btn-primary">Editar</a> 
+                                       }
+                                       @restrict(roles = List(Array("productInvDelete"))) {
+                                           <a href="/productInv_remove/@child.id" class="btn btn-danger">Eliminar</a>
+                                       }
+                                       @restrict(roles = List(Array("productInvShow"))) {
+                                           <a href="/productInv_show/@child.id" class="btn btn-info">Mostrar</a>
+                                       }
+                                   </td> 
+                               }
                             </tr>
                         }
                     </tbody>

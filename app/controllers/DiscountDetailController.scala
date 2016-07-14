@@ -223,7 +223,6 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
     val parentId = getParentId(id)
     val discount = getDiscount(id)
     repo.delete(id).map { res =>
-      println(res);
       repoDiscReport.addToTotal(parentId, -discount);
       Redirect(routes.DiscountReportController.show(parentId))
     }

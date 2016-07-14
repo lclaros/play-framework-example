@@ -49,7 +49,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -166,7 +166,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -195,7 +195,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }

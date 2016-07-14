@@ -114,7 +114,6 @@ def generarReporte(requestRows: Seq[Productor], discountReportId: Long) = {
     val res = q.result
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action);
-    affectedRowsCount.map(s=> println(s))
     res
   }
 }

@@ -25,11 +25,11 @@ class MyDeadboltHandler (dynamicResourceHandler: Option[DynamicResourceHandler] 
 //<<<<<<< HEAD
   override def getSubject[A](request: Request[A]): Future[Option[Subject]] = {
     // e.g. request.session.get("user")
-    println("This is called after ")
-    println(request)
+    //println("This is called after ")
+    //println(request)
     var user1 =  new UserSecurity("steve")
     user1.rol = request.session.get("role").get
-    println(user1)
+    //println(user1)
     
     Future(Some(user1))
 /*=======

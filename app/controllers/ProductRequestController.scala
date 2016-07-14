@@ -164,7 +164,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       res1.foreach { user => 
         cache put (user.id.toString, user.nombre)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -175,7 +175,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       res1.foreach { user => 
         cache put (user.id.toString, user.nombre)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -186,7 +186,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       res1.foreach { user => 
         cache put (user.id.toString, user.nombre)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -197,7 +197,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       res1.foreach { user => 
         cache put (user.id.toString, user.nombre)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }

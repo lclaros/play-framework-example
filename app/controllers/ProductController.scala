@@ -40,7 +40,7 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }

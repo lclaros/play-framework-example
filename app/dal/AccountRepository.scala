@@ -112,7 +112,7 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
       db.run(q.update(flag))
     } else {
       getByParent(id).map { res =>
-        println(res)
+        
         if (res.length == 0) {
           db.run(q.update(flag))
         } else if (res.length == 1 && res(0).id == actualId) {
@@ -140,7 +140,7 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
-    println("removed " + affectedRowsCount);
+    
     tableQ.result
   }
 

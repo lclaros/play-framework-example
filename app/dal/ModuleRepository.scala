@@ -70,7 +70,7 @@ class ModuleRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
-    println("removed " + affectedRowsCount);
+    
     tableQ.result
   }
 

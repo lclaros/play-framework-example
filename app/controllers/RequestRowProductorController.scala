@@ -124,7 +124,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       res1.foreach { requestRow => 
         cache put (requestRow.id.toString, requestRow.id.toString() + ": " + requestRow.productName)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -135,7 +135,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -146,7 +146,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }

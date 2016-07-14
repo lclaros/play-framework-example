@@ -165,7 +165,6 @@ POST    /productInv_update             		controllers.ProductInvController.update
 
 POST    /productInv                 			controllers.ProductInvController.add
 GET     /productInvs         					controllers.ProductInvController.getProductInvs
-GET     /ProductInvsByInsumo/:id				controllers.ProductInvController.getProductInvsByInsumo(id: Long)
 GET     /productInv_list         				controllers.ProductInvController.index
 GET     /productInvs_add/:productId				controllers.ProductInvController.addGet(productId: Long)
 
@@ -311,9 +310,6 @@ GET     /requestRowProductor_add/:requestRowId		controllers.RequestRowProductorC
 GET     /Veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
 GET     /Almacen_profile/:id 				controllers.StorekeeperController.profile(id: Long)
 GET     /Insumo_profile/:id 				controllers.InsumoUserController.profile(id: Long)
-GET     /Veterinario_request         		controllers.ProductInvController.request
-GET     /productInv_request_row         	controllers.ProductInvController.request_row
-POST    /productInv_request_row             controllers.ProductInvController.add_request_row
 
 
 #POST    /insumo                 		controllers.InsumoController.addInsumo

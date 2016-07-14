@@ -116,7 +116,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
+      
       cache.toMap
     }, 3000.millis)
   }
@@ -139,7 +139,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   def delete(id: Long) = Action.async {
     transactionId = getTransactionIdFromDetail(id)
     repo.delete(id).map { res =>
-      println(res);
+      ;
       Redirect(routes.TransactionController.show(transactionId))
     }
 

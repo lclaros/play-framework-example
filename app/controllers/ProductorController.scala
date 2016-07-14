@@ -37,7 +37,6 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
   def getTotal(): Int = {
     Await.result(repo.getTotal().map{ case (res1) => 
-      println(res1)
       res1
     }, 3000.millis)
   }
@@ -78,8 +77,6 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
   def search(search: String) = Action{ implicit request =>
     val productors = searchByAccount(search)
-    println("Products searched")
-    println(productors)
     modules = getModuleNamesMap()
     var total = getTotal()
     var currentPage = 1
