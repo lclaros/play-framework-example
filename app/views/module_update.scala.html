@@ -8,6 +8,9 @@
         @restrict(roles = List(Array("moduleList"))) {
             <a href="/module_list" class="btn btn-primary">Listar</a> 
         }
+        @restrict(roles = List(Array("moduleShow"))) {
+           <a href="/module_show/@row.id" class="btn btn-info">Mostrar</a>
+        }
         @restrict(roles = List(Array("moduleDelete"))) {
            <a href="/module_remove/@row.id" class="btn btn-danger">Eliminar</a>
         }
@@ -18,7 +21,7 @@
         @inputText(rowForm("description"))
         @select(field = rowForm("asociacion"), options = options(associations))
         <input type="submit" value="Actualizar"  class="btn btn-primary"/>
-        <a href="/module_list" class="btn btn-primary">Cancel</a>
+        <a href="/module_show/@row.id" class="btn btn-primary">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }
