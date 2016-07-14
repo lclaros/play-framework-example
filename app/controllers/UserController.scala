@@ -33,6 +33,8 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
     )(CreateUserForm.apply)(CreateUserForm.unapply)
   }
 
+  var updateRow: User = _
+
   val loginForm: Form[LoginForm] = Form {
     mapping(
       "user" -> nonEmptyText,
@@ -139,13 +141,17 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(),
-                        "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion,
-                        "sueldo" -> res.toList(0).sueldo.toString(), "type_1" -> res.toList(0).type_1.toString(),
-                        "login" -> res.toList(0).login.toString(), "password" -> res.toList(0).password.toString())
-      Ok(views.html.user_update(updateForm.bind(anyData), types))
+      updateRow = res(0)
+      val anyData = Map(
+                          "id" -> id.toString().toString(), "nombre" -> updateRow.nombre,
+                          "carnet" -> updateRow.carnet.toString(), "telefono" -> updateRow.telefono.toString(),
+                          "direccion" -> updateRow.direccion, "sueldo" -> updateRow.sueldo.toString(),
+                          "type_1" -> updateRow.type_1.toString(), "login" -> updateRow.login.toString(),
+                          "password" -> updateRow.password.toString()
+                        )
+      Ok(views.html.user_update(new MyDeadboltHandler, updateRow, updateForm.bind(anyData), types))
     }
   }
 
@@ -167,7 +173,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.user_update(errorForm, types)))
+        Future.successful(Ok(views.html.user_update(new MyDeadboltHandler, updateRow, errorForm, types)))
       },
       res => {
         repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>

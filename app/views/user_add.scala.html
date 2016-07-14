@@ -3,26 +3,26 @@
 @import helper._
 
 @main("Agregar") {
+    @examples.templates.nav(handler)
     <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+        @restrict(roles = List(Array("userList"))) {
+            <a href="/user_list" class="btn btn-primary">Listar</a> 
+        }
     </div>
+
     @form(routes.UserController.add()) {
         <div class="container">
-        <div class="col-md-6">
+        <div>
             @inputText(row("nombre"))
             @inputText(row("carnet"))
             @inputText(row("telefono"))
             @inputText(row("login"))
             @inputText(row("password"))
-        </div>
-        <div class="col-md-6">
             @inputText(row("direccion"))
             @inputText(row("sueldo"))
             @select(field = row("type_1"), options = options(types))
-        </div>
-        <div class="col-md-12">
-            <input type="submit" value="Agregar Usuario" class="btn btn-primary"/>
-            <a href="/user_list" class="btn btn-info">Cancelar</a>
+            <input type="submit" value="Guardar" class="btn btn-primary"/>
+            <a href="/user_list" class="btn btn-primary">Cancelar</a>
         </div>
         </div>
     }

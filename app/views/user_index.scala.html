@@ -3,14 +3,13 @@
 @import helper._
 
 @main("Agregar") {
-    <div class="container">
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
-    </div>
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("userCreate"))) {
-                                <a href="/user_add" class="btn btn-primary">Crear</a> 
+            <a href="/user_add" class="btn btn-primary">Agregar</a> 
         }
     </div>
+    
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>

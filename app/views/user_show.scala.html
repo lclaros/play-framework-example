@@ -3,13 +3,19 @@
 @import helper._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div class="container">
-        <a href="/user_list">Lista</a>
+        @restrict(roles = List(Array("userList"))) {
+            <a href="/user_list" class="btn btn-primary">Listar</a> 
+        }
+        @restrict(roles = List(Array("userEdit"))) {
+            <a href="/user_update/@row.id" class="btn btn-info">Editar</a> 
+        }
+        @restrict(roles = List(Array("userDelete"))) {
+           <a href="/user_remove/@row.id" class="btn btn-danger">Eliminar</a>
+        }
     </div>
     <div class="container">
-        @restrict(roles = List(Array("userEdit"))) {
-            <a href="/user_update/@row.id" class="btn btn-primary">Editar</a> 
-        }
         <div>
             <div style="display: inline-block;"> Nombre: </div>
             <div style="display: inline-block;" id="name">@row.nombre</div>
@@ -33,6 +39,14 @@
         <div>
             <div style="display: inline-block;"> Tipo: </div>
             <div style="display: inline-block;" id="type_1">@row.type_1</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Login: </div>
+            <div style="display: inline-block;" id="type_1">@row.login</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Password: </div>
+            <div style="display: inline-block;" id="type_1">@row.password</div>
         </div>
     </div>
 }
