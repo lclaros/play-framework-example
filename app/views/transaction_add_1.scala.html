@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateTransactionFormIngreso], users: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateTransactionFormIngreso])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -13,8 +13,6 @@
     	@inputDate(row("date"))
         @select(field = row("type_1"), options = options(Map("Ingreso" -> "Ingreso")))
         @inputText(row("description"))
-        @select(field = row("receivedBy"), options = options(users))
-        @select(field = row("autorizedBy"), options = options(users))
         <input type="submit" value="Inicial transaccion" class="btn btn-primary"/>
         <a href="/transaction_list" class="btn btn-primary">Cancelar</a>
     }

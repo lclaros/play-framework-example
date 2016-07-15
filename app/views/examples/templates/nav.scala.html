@@ -103,7 +103,8 @@
                 <ul>
                    <li><a href="/transaction_list">Lista</a></li>
                    @restrict(roles = List(Array("transactionCreate"))) {
-                    <li><a href="/transaction_add">Agregar</a></li>
+                    <li><a href="/transaction_add/1">Agregar Ingreso</a></li>
+                    <li><a href="/transaction_add/2">Agregar Egreso</a></li>
                    }
                 </ul>
              </div>

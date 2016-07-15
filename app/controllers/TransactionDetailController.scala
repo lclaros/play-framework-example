@@ -17,12 +17,11 @@ import collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import play.api.data.format.Formats._ 
 
-
 import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class TransactionDetailController @Inject() (repo: TransactionDetailRepository, repoTransReport: TransactionRepository,
+class TransactionDetailController @Inject() (repo: TransactionDetailRepository, repoTransaction: TransactionRepository,
                                              repoAccounts: AccountRepository, val messagesApi: MessagesApi)
                                   (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
@@ -50,7 +49,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
       res => {
         repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { resNew =>
           repoAccounts.updateParentDebitCredit(res.accountId, res.debit, res.credit);
-          repoTransReport.getById(res.transactionId).map{ res => repo.updateTransactionParams(resNew.id, res(0).date)}
+          repoTransaction.getById(res.transactionId).map{ res => repo.updateTransactionParams(resNew.id, res(0).date)}
           repoAccounts.getById(res.accountId).map{ res => repo.updateAccountParams(resNew.id, res(0).code, res(0).name)}
           Redirect(routes.TransactionDetailController.show(resNew.id))
         }
@@ -59,13 +58,17 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   var transactionMap = getTransactionMap(0)
-  var accountMap = getAccountMap()
+  var accountMap = getAccountMap("")
 
+  def getTransactionType(id: Long): String = {
+    Await.result(repoTransaction.getById(id).map { res => res(0).type_1} , 500.millis)
+  }
 
   def addGet(transactionId: Long) = Action { implicit request =>
     parentId = transactionId
+    var parentType = getTransactionType(transactionId)
     transactionMap = getTransactionMap(transactionId)
-    accountMap = getAccountMap()
+    accountMap = getAccountMap(parentType)
     Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, newForm, transactionMap, accountMap))
   }
 
@@ -109,6 +112,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map {case (res) =>
       updatedRow = res(0)
+      var parentType = getTransactionType(res(0).transactionId)
       val anyData = Map(
                           "id" -> id.toString().toString(),
                           "transactionId" -> updatedRow.transactionId.toString(),
@@ -116,13 +120,13 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
                           "debit" -> updatedRow.debit.toString(),
                           "credit" -> updatedRow.credit.toString()
                         )
-      accountMap = getAccountMap()
+      accountMap = getAccountMap(parentType)
       Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), accountMap))
     }
   }
 
   def getTransactionMap(id: Long): Map[String, String] = {
-    Await.result(repoTransReport.getListNamesById(id).map{ case (res1) => 
+    Await.result(repoTransaction.getListNamesById(id).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -132,9 +136,9 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     }, 3000.millis)
   }
 
-  def getAccountMap(): Map[String, String] = {
+  def getAccountMap(type_1: String): Map[String, String] = {
     val cache = collection.mutable.Map[String, String]()
-    Await.result(repoAccounts.getListObjsChild().map{ case (res1) => 
+    Await.result(repoAccounts.getChilAccountsByType(type_1).map{ case (res1) =>
       res1.foreach{ res2 => 
         cache put (res2.id.toString(), res2.code + " " + res2.name)
       }

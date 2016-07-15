@@ -45,6 +45,28 @@ class TransactionRepository @Inject() (
 
   private val tableQ = TableQuery[TransactionTable]
 
+  def createIngreso(
+              date: String, type_1: String, description: String,
+              createdBy: Long, createdByName: String
+            ): Future[Transaction] = db.run {
+    (tableQ.map(p => (
+                        p.date, p.type_1, p.description,
+                        p.createdBy, p.createdByName,
+                        p.receivedBy, p.receivedByName,
+                        p.autorizedBy, p.autorizedByName
+                      )
+                ) returning tableQ.map(_.id)
+      into ((nameAge, id) => Transaction(
+                                          id, nameAge._1, nameAge._2, nameAge._3,
+                                          nameAge._4, nameAge._5, nameAge._6, nameAge._7
+                                          , nameAge._8, nameAge._9
+                                          )
+            )
+    ) += (
+            date, type_1, description,
+            createdBy, createdByName, 0, "", 0, ""
+          )
+  }
   def create(
               date: String, type_1: String, description: String, createdBy: Long,
               createdByName: String, receivedBy: Long,
@@ -92,6 +114,21 @@ class TransactionRepository @Inject() (
     tableQ.filter(_.id === id).result
   }
 
+
+  // update required to copy
+  def updateIngreso(
+                    id: Long, date: String, type_1: String, description: String
+                    ): Future[Seq[Transaction]] = db.run {
+    
+    val q = for { c <- tableQ if c.id === id } yield c.date
+    db.run(q.update(date))
+    val q4 = for { c <- tableQ if c.id === id } yield c.type_1
+    db.run(q4.update(type_1))
+    val q5 = for { c <- tableQ if c.id === id } yield c.description
+    db.run(q5.update(description))
+
+    tableQ.filter(_.id === id).result
+  }
 
   // update required to copy
   def update(

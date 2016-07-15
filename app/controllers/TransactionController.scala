@@ -20,17 +20,18 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class TransactionController @Inject() (repo: TransactionRepository, repoDetail: TransactionDetailRepository, repoVete: UserRepository,
-                                      repoSto: UserRepository, val messagesApi: MessagesApi)
-                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport{
+class TransactionController @Inject() (
+                                        repo: TransactionRepository, repoDetail: TransactionDetailRepository,
+                                        repoVete: UserRepository, repoSto: UserRepository,
+                                        val messagesApi: MessagesApi
+                                      )
+                                      (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newFormIngreso: Form[CreateTransactionFormIngreso] = Form {
     mapping(
       "date" -> text,
       "type_1" -> text,
-      "description" -> text,
-      "receivedBy" -> longNumber,
-      "autorizedBy" -> longNumber
+      "description" -> text
     )(CreateTransactionFormIngreso.apply)(CreateTransactionFormIngreso.unapply)
   }
 
@@ -73,7 +74,7 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
   def addGet(type_t: Long) = Action { implicit request =>
     users = getUsersMap()
     if (type_t == 1) { // Ingreso
-      Ok(views.html.transaction_add_1(new MyDeadboltHandler, newFormIngreso, users))
+      Ok(views.html.transaction_add_1(new MyDeadboltHandler, newFormIngreso))
     } else {
       Ok(views.html.transaction_add_2(new MyDeadboltHandler, newFormEgreso, users))
     }
@@ -82,16 +83,14 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
   def addIngreso = Action.async { implicit request =>
     newFormIngreso.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transaction_add_1(new MyDeadboltHandler, errorForm, users)))
+        Future.successful(Ok(views.html.transaction_add_1(new MyDeadboltHandler, errorForm)))
       },
       res => {
         var userId = request.session.get("userId").getOrElse("0").toLong
         var userName = request.session.get("userName").getOrElse("0").toString
-        repo.create(
+        repo.createIngreso(
                     res.date, res.type_1, res.description, 
-                    userId, userName,
-                    res.receivedBy, users(res.receivedBy.toString),
-                    res.autorizedBy, users(res.autorizedBy.toString)
+                    userId, userName
                     ).map { resNew =>
           Redirect(routes.TransactionController.show(resNew.id))
         }
@@ -131,9 +130,7 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
       "id" -> longNumber,
       "date" -> text,
       "type_1" -> text,
-      "description" -> text,
-      "receivedBy" -> longNumber,
-      "autorizedBy" -> longNumber
+      "description" -> text
     )(UpdateTransactionFormIngreso.apply)(UpdateTransactionFormIngreso.unapply)
   }
 
@@ -168,11 +165,9 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
                           "id" -> id.toString().toString(),
                           "date" -> updatedRow.date.toString(),
                           "type_1" -> updatedRow.type_1.toString(),
-                          "description" -> updatedRow.description.toString(),
-                          "receivedBy" -> updatedRow.receivedBy.toString(),
-                          "autorizedBy" -> updatedRow.autorizedBy.toString()
+                          "description" -> updatedRow.description.toString()
                           )
-        Ok(views.html.transaction_updateIngreso(new MyDeadboltHandler, updatedRow, updateFormIngreso.bind(anyData), users))
+        Ok(views.html.transaction_updateIngreso(new MyDeadboltHandler, updatedRow, updateFormIngreso.bind(anyData)))
       } else {
         val anyData = Map(
                           "id" -> id.toString().toString(),
@@ -205,14 +200,12 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
   def updatePostIngreso = Action.async { implicit request =>
     updateFormIngreso.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transaction_updateIngreso(new MyDeadboltHandler, updatedRow, errorForm, users)))
+        Future.successful(Ok(views.html.transaction_updateIngreso(new MyDeadboltHandler, updatedRow, errorForm)))
       },
       res => {
-        repo.update(
+        repo.updateIngreso(
                     res.id, res.date, res.type_1,
-                    res.description, res.receivedBy, 
-                    users(res.receivedBy.toString),
-                    res.autorizedBy, users(res.autorizedBy.toString)
+                    res.description
                     ).map { resNew =>
           Redirect(routes.TransactionController.show(res.id))
         }
@@ -240,10 +233,10 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
 
 }
 
-case class CreateTransactionFormIngreso(date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
+case class CreateTransactionFormIngreso(date: String, type_1: String, description: String)
 
 case class CreateTransactionFormEgreso(date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
 
-case class UpdateTransactionFormIngreso(id: Long, date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
+case class UpdateTransactionFormIngreso(id: Long, date: String, type_1: String, description: String)
 
 case class UpdateTransactionFormEgreso(id: Long, date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)

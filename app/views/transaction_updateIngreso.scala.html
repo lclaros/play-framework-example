@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Transaction, rowForm: Form[UpdateTransactionFormIngreso], users: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Transaction, rowForm: Form[UpdateTransactionFormIngreso])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -19,8 +19,6 @@
         @inputDate(rowForm("date"))
         @select(field = rowForm("type_1"), options = options(Map("Ingreso" -> "Ingreso")))
         @inputText(rowForm("description"))
-        @select(field = rowForm("receivedBy"), options = options(users))
-        @select(field = rowForm("autorizedBy"), options = options(users))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
         <a href="/transaction_show/@row.id" class="btn btn-primary">Cancel</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")

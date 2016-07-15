@@ -1,14 +1,16 @@
 // July (3, 10) 2016
 TODO
+    - generic list
+        - pagination
+        - show the links when we have permissions to view it
+    
+    - review when is ready to substract the discount value to the productor
+        - 
     - transactions
         - recibe(Show, Edit)
             - FormType1
         - bauche(Show, Edit)
             - FormType1
-    - generic list
-        - pagination
-        - show the links when we have permissions to view it
-    - Manage permissions
         list of modules - (reports, libro diario, sumas y saldos, profiles)
     - Add nav tag
         - modules(libro diario, sumas y saldos, profiles, productInv)
