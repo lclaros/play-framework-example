@@ -57,7 +57,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productRequest_add(new MyDeadboltHandler, newForm, veterinariosNames, storeNames)))
+        Future.successful(Ok(views.html.productRequest_add(new MyDeadboltHandler, errorForm, veterinariosNames, storeNames)))
       },
       res => {
         repo.create(res.date, res.veterinario, veterinariosNames(res.veterinario.toString),

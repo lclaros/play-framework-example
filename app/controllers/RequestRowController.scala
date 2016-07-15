@@ -71,7 +71,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler,requestIdParm, newForm, productRequestsMap, productsMap, unidades)))
+        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler,requestIdParm, errorForm, productRequestsMap, productsMap, unidades)))
       },
       res => {
         var product1 = getProductById(res.productId)

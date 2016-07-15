@@ -1,8 +1,15 @@
-@(discounts: Seq[DiscountDetail], stardDate: String, endDate: String, total: String)
+@(discounts: Seq[DiscountDetail], stardDate: String, endDate: String, total: String, company: Company)
 @import helper._
 
 @main("Mostrar") {
     <div class="container">
+        <br />
+        <div>
+            Empresa: @company.name
+        </div>
+        <div>
+            Presidente: @company.president
+        </div>
         <div>
             <div style="display: inline-block; width: 150px;" >Fecha de Inicio: </div>
             <div style="display: inline-block; width: 150px;" id="startDate">@stardDate </div>
@@ -25,7 +32,10 @@
             </thead>
             <tbody>
             @for(discount <- discounts) {
-                <tr><td>@discount.productorId</td><td>@discount.discount</td></tr>
+                <tr>
+                <td>@discount.productorName</td>
+                <td>@discount.discount</td>
+                </tr>
             }
             </tbody>
         </table>

@@ -127,19 +127,6 @@
                </div>
             </li>
         }
-        @restrict(roles = List(Array("report"))) {
-            <li>
-               <a href="/report_list">Reportes<span class="caret"></span></a>
-               <div>
-                  <ul>
-                     <li><a href="/report_list">Lista</a></li>
-                     @restrict(roles = List(Array("reportCreate"))) {
-                      <li><a href="/report_add">Nuevo</a></li>
-                     }
-                  </ul>
-               </div>
-            </li>
-        }
         @restrict(roles = List(Array("productRequest"))) {
             <li>
                <a href="/productRequest_list">Pedidos<span class="caret"></span></a>

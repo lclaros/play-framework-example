@@ -25,7 +25,9 @@ import security.MyDeadboltHandler
 
 class DiscountReportController @Inject() (repo: DiscountReportRepository, repoProd: ProductorRepository, 
                                           repoSto: UserRepository, repoDiscDetail: DiscountDetailRepository
-                                          , repoRequestRows: RequestRowRepository, repoRequestRowProductors: RequestRowProductorRepository, 
+                                          , repoRequestRows: RequestRowRepository,
+                                          repoRequestRowProductors: RequestRowProductorRepository, 
+                                          repoCompany: CompanyRepository, 
                                           val messagesApi: MessagesApi)
                                          (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -102,12 +104,17 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     }
   }
 
+  def getCompanyInfo(): Company = {
+    Await.result(repoCompany.getFirst().map {res => res(0)}, 1000.millis)
+  }
+
   def show_pdf(id: Long) = Action {
     val generator = new PdfGenerator
     val discountReport = getDiscountReportById(id)
     val values = getDiscountDetailList(id)
+    val company = getCompanyInfo()
 
-    Ok(generator.toBytes(views.html.discountReport_show_pdf(values, discountReport.startDate, discountReport.endDate, discountReport.total.toString()), "http://localhost:9000/")).as("application/pdf")
+    Ok(generator.toBytes(views.html.discountReport_show_pdf(values, discountReport.startDate, discountReport.endDate, discountReport.total.toString(), company), "http://localhost:9000/")).as("application/pdf")
   }
 
   var updatedRow: DiscountReport = _

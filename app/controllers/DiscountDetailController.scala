@@ -58,7 +58,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, productorsNames)))
+        Future.successful(Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, errorForm, discountsNames, productorsNames)))
       },
       res => {
         var productName = productorsNames(res.productorId.toString)
