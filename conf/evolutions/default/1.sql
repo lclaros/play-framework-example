@@ -1,27 +1,26 @@
 # --- !Downs
-drop table bancos;
-drop table user;
-drop table association;
-drop table module;
-drop table account;
-drop table productor;
-drop table transaction;
-drop table transactionDetail;
-drop table proveedor;
-drop table reportes;
-drop table product;
-drop table productInv;
-drop table discountReport;
-drop table discountDetail;
-drop table requestRow;
-drop table productRequest;
-drop table requestRowProductor;
-drop table logEntry;
-drop table measure;
-drop table company;
+drop table IF EXISTS bancos;
+drop table IF EXISTS user;
+drop table IF EXISTS association;
+drop table IF EXISTS module;
+drop table IF EXISTS account;
+drop table IF EXISTS productor;
+drop table IF EXISTS transaction;
+drop table IF EXISTS transactionDetail;
+drop table IF EXISTS proveedor;
+drop table IF EXISTS reportes;
+drop table IF EXISTS product;
+drop table IF EXISTS productInv;
+drop table IF EXISTS discountReport;
+drop table IF EXISTS discountDetail;
+drop table IF EXISTS requestRow;
+drop table IF EXISTS productRequest;
+drop table IF EXISTS requestRowProductor;
+drop table IF EXISTS logEntry;
+drop table IF EXISTS measure;
+drop table IF EXISTS company;
 
 # --- !Ups
-
 create table association (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50) not null
