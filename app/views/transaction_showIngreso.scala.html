@@ -39,8 +39,8 @@
     </div>
 
     <div class="container">Cuentas y Detalle</div>
-    <div class="table-responsive">
-        <table class="table" id="rows">
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
                     <th>Cuenta</th>
@@ -50,20 +50,26 @@
                 </tr>
             </thead>
             <tbody>
-                @for(detail <- details) {
+                @for(child <- details) {
                     <tr>
-                        <td>@detail.accountName</td>
-                        <td>@detail.debit</td>
-                        <td>@detail.credit</td>
+                        <td>
+                            @restrictOr(roles = List(Array("accountShow"))) {
+                               <a href="/account_show/@child.accountId">@child.accountName</a>
+                            }{
+                                @child.accountName                                    
+                            }
+                        </td>
+                        <td>@child.debit</td>
+                        <td>@child.credit</td>
                         <td>
                            @restrict(roles = List(Array("transactionDetailEdit"))) {
-                               <a href="/transactionDetail_update/@detail.id" class="btn btn-primary">Editar</a> 
+                               <a href="/transactionDetail_update/@child.id" class="btn btn-primary">Editar</a> 
                            }
                            @restrict(roles = List(Array("transactionDetailDelete"))) {
-                               <a href="/transactionDetail_remove/@detail.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/transactionDetail_remove/@child.id" class="btn btn-danger">Eliminar</a>
                            }
                            @restrict(roles = List(Array("transactionDetailShow"))) {
-                               <a href="/transactionDetail_show/@detail.id" class="btn btn-info">Mostrar</a>
+                               <a href="/transactionDetail_show/@child.id" class="btn btn-info">Mostrar</a>
                            }
                        </td> 
                     </tr>

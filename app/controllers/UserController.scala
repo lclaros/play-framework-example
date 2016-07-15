@@ -42,7 +42,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
     )(LoginForm.apply)(LoginForm.unapply)
   }
 
-  val types = scala.collection.immutable.Map[String, String]("Veterinario" -> "Veterinario", "Insumo" -> "Insumo", "Admin" -> "Admin", "Almacen" -> "Almacen")
+  val types = scala.collection.immutable.Map[String, String]("Veterinario" -> "Veterinario", "Insumo" -> "Insumo", "Admin" -> "Admin", "Almacen" -> "Almacen", "Contabilidad" -> "Contabilidad")
 
   def index = Action.async { implicit request =>
     repo.list().map { res =>
@@ -58,14 +58,8 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   def profile() = Action { implicit request =>
     Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
         if (res2.length > 0) {
-          if (res2(0).type_1.toLowerCase == "admin") {
+          if (res2(0).type_1.length > 0) {
             Redirect("/")
-          } else if (res2(0).type_1.toLowerCase == "veterinario") {
-            Redirect(routes.VeterinarioController.profile(res2(0).id))
-          } else if (res2(0).type_1.toLowerCase == "insumo") {
-            Redirect(routes.InsumoUserController.profile(res2(0).id))
-          } else if (res2(0).type_1.toLowerCase == "almacen") {
-            Redirect(routes.StorekeeperController.profile(res2(0).id))
           } else {
             Ok(views.html.storekeeper_profile2(res2(0)))
             Redirect("/error")

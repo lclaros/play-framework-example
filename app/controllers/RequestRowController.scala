@@ -200,25 +200,16 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
     }, 3000.millis)
   }
 
-
-  // update required
-  def getAccept(id: Long) = Action.async {
-    repo.acceptById(id).map {case (res) =>
-      repoInsum.updateAmount(res(0).productId, - res(0).quantity);
-      Redirect(routes.ProductRequestController.show(res(0).requestId))
-    }
+  def getByIdObj(id: Long): RequestRow = {
+    Await.result(repo.getById(id).map { res =>
+      res(0)
+      }, 200.millis)
   }
 
 // update required
-  def getSend(id: Long) = Action.async {
-    repo.sendById(id).map {case (res) =>
-      Redirect(routes.ProductRequestController.show(res(0).requestId))
-    }
-  }
-
-// update required
-  def getFinish(id: Long) = Action.async {
-    repo.finishById(id).map {case (res) =>
+  def getFill(id: Long) = Action.async {
+    var row = getByIdObj(id)
+    repo.fillById(id, row.productId, row.quantity).map { res =>
       Redirect(routes.ProductRequestController.show(res(0).requestId))
     }
   }

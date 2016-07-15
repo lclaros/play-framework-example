@@ -132,7 +132,6 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
       }
     )
   }
-
 }
 
 case class CreateModuleForm(name: String, president: Long, description: String, asociacion: Long)

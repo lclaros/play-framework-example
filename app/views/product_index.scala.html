@@ -14,8 +14,8 @@
     <div class="container">
         Lista de Productos
     </div>
-    <div class="table-responsive">
-        <table class="table" id="rows">
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -34,6 +34,7 @@
                         <td>@row.cost</td>
                         <td>@row.percent</td>
                         <td>@row.price</td>
+                        <td>@row.unitMeasureName</td>                        
                         <td>@row.currentAmount</td>
                         <td>
                             @restrict(roles = List(Array("productEdit"))) {

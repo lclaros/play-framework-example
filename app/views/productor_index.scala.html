@@ -1,161 +1,110 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm], modules: Map[String, String], productors: Seq[Productor], searchProductors: Seq[Productor], total: Int, currentPage: Int, interval: Int)(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm],productors: Seq[Productor], total: Int, currentPage: Int, interval: Int)(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
-@main("Agregar") {
+@main("Lista") {
     @examples.templates.nav(handler)
     <div class="container">
-        @restrict(roles = List(Array("productCreate"))) {
-            <a href="/productor_add" class="btn btn-primary">Agregar</a> 
+        @restrict(roles = List(Array("productorCreate"))) {
+            <a href="/productor_add" class="btn btn-primary">Nuevo</a> 
+        }
+        @restrict(roles = List(Array("productorList"))) {
+            <a href="/productor_list/1" class="btn btn-primary">Listar</a> 
         }
     </div>
     <div class="container">
-        @form(routes.ProductorController.searchProduct()) {
-            @inputText(rowSearch("account"))
+        @form(routes.ProductorController.searchProductPost()) {
+            @inputText(rowSearch("search"))
             <input type="submit" value="Buscar" class="btn btn-primary"/>
         }   
     </div>
-    @if(searchProductors.length > 0) {
-        <div class="table-responsive">
-            <table class="table" id="searchProducts">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>Carnet</th>
-                        <th>Telefono</th>
-                        <th>Cuenta</th>
-                        <th>Modulo</th>
-                        <th>---</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for(productor <- searchProductors) {
-                    <tr>
-                        <td></td>
-                        <td>@productor.nombre</td>
-                        <td>@productor.carnet</td>
-                        <td>@productor.telefono</td>
-                        <td>@productor.account</td>
-                        <td>@productor.module</td>
-                        <td>
-                            @restrict(roles = List(Array("productEdit"))) {
-                                <a href="/productor_update/@productor.id" class="btn btn-primary">Editar</a> 
-                            }
-                            @restrict(roles = List(Array("productDelete"))) {
-                                <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
-                            }
-                            @restrict(roles = List(Array("productShow"))) {
-                                <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>
-                            }
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-            <style type="text/css">
-                body {
-                    counter-reset: Serial;
-                }
-                table {
-                    border-collapse: separate;
-                }
-                tr td:first-child:before {
-                  counter-increment: Serial;
-                  content: counter(Serial);
-                }
-            </style>
-        </div>
-    }
 
-    @if(productors.length > 0) {
-        <div class="table-responsive">
-            <table class="table" id="rows">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>Carnet</th>
-                        <th>Telefono</th>
-                        <th>Cuenta</th>
-                        <th>Modulo</th>
-                        <th>---</th>
-                    </tr>
-                    <tr>
-                        <th colspan="7">
-                            Paginas
-                            <a href="/productor_list/1">1</a>....
-                                @for(index <- (currentPage - 3) until (currentPage + 3)) {
-                                    @if(index > 1) {
-                                        @if(index == currentPage) {
-                                            - <a href="/productor_list/@index" style="color: red;"><b>@index</b></a>
-                                        }
-                                        @if(index != currentPage) {
-                                            - <a href="/productor_list/@index">@index</a>
-                                        }
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Carnet</th>
+                    <th>Telefono</th>
+                    <th>Cuenta</th>
+                    <th>Modulo</th>
+                    <th>---</th>
+                </tr>
+                <tr>
+                    <th colspan="7">
+                        Paginas
+                        <a href="/productor_list/1">1</a>....
+                            @for(index <- (currentPage - 3) until (currentPage + 3)) {
+                                @if(index > 1) {
+                                    @if(index == currentPage) {
+                                        - <a href="/productor_list/@index" style="color: red;"><b>@index</b></a>
+                                    }
+                                    @if(index != currentPage) {
+                                        - <a href="/productor_list/@index">@index</a>
                                     }
                                 }
-                            ....<a href="/productor_list/@(total/interval + 1)">@(total/interval + 1)</a>
-                            (Total: @total)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for(productor <- productors) {
-                    <tr>
-                        <td></td>
-                        <td>@productor.nombre</td>
-                        <td>@productor.carnet</td>
-                        <td>@productor.telefono</td>
-                        <td>@productor.account</td>
-                        <td>@productor.module</td>
-                        <td>
-                            @restrict(roles = List(Array("productEdit"))) {
-                                <a href="/productor_update/@productor.id" class="btn btn-primary">Editar</a> 
                             }
-                            @restrict(roles = List(Array("productDelete"))) {
-                                <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
-                            }
-                            @restrict(roles = List(Array("productShow"))) {
-                                <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>'
-                            }
-                        </td>
-                    </tr>
-                }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="7">
-                            Paginas
-                            <a href="/productor_list/1">1</a>....
-                                @for(index <- (currentPage - 3) until (currentPage + 3)) {
-                                    @if(index > 1) {
-                                        @if(index == currentPage) {
-                                            - <a href="/productor_list/@index" style="color: red;"><b>@index</b></a>
-                                        }
-                                        @if(index != currentPage) {
-                                            - <a href="/productor_list/@index">@index</a>
-                                        }
+                        ....<a href="/productor_list/@(total/interval + 1)">@(total/interval + 1)</a>
+                        (Total: @total)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(productor <- productors) {
+                <tr>
+                    <td></td>
+                    <td>@productor.nombre</td>
+                    <td>@productor.carnet</td>
+                    <td>@productor.telefono</td>
+                    <td>@productor.account</td>
+                    <td>@productor.module</td>
+                    <td>
+                        @restrict(roles = List(Array("productEdit"))) {
+                            <a href="/productor_update/@productor.id" class="btn btn-primary">Editar</a> 
+                        }
+                        @restrict(roles = List(Array("productDelete"))) {
+                            <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
+                        }
+                        @restrict(roles = List(Array("productShow"))) {
+                            <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>'
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="7">
+                        Paginas
+                        <a href="/productor_list/1">1</a>....
+                            @for(index <- (currentPage - 3) until (currentPage + 3)) {
+                                @if(index > 1) {
+                                    @if(index == currentPage) {
+                                        - <a href="/productor_list/@index" style="color: red;"><b>@index</b></a>
+                                    }
+                                    @if(index != currentPage) {
+                                        - <a href="/productor_list/@index">@index</a>
                                     }
                                 }
-                            ....<a href="/productor_list/@(total/interval + 1)">@(total/interval + 1)</a>
-                            (Total: @total)
-                        </th>
-                    </tr>
-                </tfoot>
-            </table>
-            <style type="text/css">
-                body {
-                    counter-reset: Serial;
-                }
-                table {
-                    border-collapse: separate;
-                }
-                tr td:first-child:before {
-                  counter-increment: Serial;
-                  content: counter(Serial);
-                }
-            </style>
-        </div>
-    }
+                            }
+                        ....<a href="/productor_list/@(total/interval + 1)">@(total/interval + 1)</a>
+                        (Total: @total)
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+        <style type="text/css">
+            body {
+                counter-reset: Serial;
+            }
+            table {
+                border-collapse: separate;
+            }
+            tr td:first-child:before {
+              counter-increment: Serial;
+              content: counter(Serial);
+            }
+        </style>
+    </div>
 }

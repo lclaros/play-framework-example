@@ -91,21 +91,14 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     tableQ.filter(_.id === id).result
   }
 
-  // Update the status to enviado status
-  def sendById(id: Long): Future[Seq[RequestRow]] = db.run {
+  // Update the status to finalizado status
+  def fillById(id: Long, productId: Long, quantity: Int): Future[Seq[RequestRow]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("enviado"))
+    db.run(q.update("entregado"))
+    // Update the inventory
+    repoInsum.updateInventary(productId, -quantity)
     tableQ.filter(_.id === id).result
   }
-
-  // Update the status to enviado status
-  def acceptById(id: Long): Future[Seq[RequestRow]] = db.run {
-    val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("aceptado"))
-
-    tableQ.filter(_.id === id).result
-  }
-
 
   def getByParentId(id: Long): Future[Seq[RequestRow]] = db.run {
     tableQ.filter(_.requestId === id).result
@@ -120,17 +113,12 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     tableQ.filter(_.id === id).result
   }
 
-  // Update the status to finalizado status
-  def finishById(id: Long): Future[Seq[RequestRow]] = db.run {
-    val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("finalizado"))
-    tableQ.filter(_.id === id).result
-  }
-
   // delete required
   def delete(id: Long): Future[Seq[RequestRow]] = db.run {
     getById(id).map { row =>
-      repoInsum.updateInventary(row(0).productId, row(0).quantity)
+      if (row(0).status == "entregado") {
+        repoInsum.updateInventary(row(0).productId, row(0).quantity)
+      }
       val q = tableQ.filter(_.id === id)
       val action = q.delete
       val affectedRowsCount: Future[Int] = db.run(action)

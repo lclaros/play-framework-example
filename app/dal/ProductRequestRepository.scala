@@ -97,25 +97,11 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.filter(_.id === id).result
   }
 
-  // Update the status to enviado status, review that the status == borrador or unfill
-  def acceptById(id: Long): Future[Seq[ProductRequest]] = db.run {
-    getById(id).map { pRequest => 
-      if (pRequest(0).status == "borrador" || pRequest(0).status == "enviado") {
-        val q = for { c <- tableQ if c.id === id } yield c.status
-        db.run(q.update("aceptado"))
-        runUpdateChildren(id)
-      }
-    }
-    tableQ.filter(_.id === id).result
-  }
-
   def runUpdateChildren(id: Long) = {
     Await.result(repoRequestRow.getByParentId(id).map { rowList => 
       rowList.foreach { row => 
-        if (row.status == "borrador" || row.status == "enviado") {
-          repoRequestRow.acceptById(row.id).map {case (res) =>
-            repoProduct.updateAmount(res(0).productId, - res(0).quantity);
-          }
+        if (row.status == "enviado") {
+          repoRequestRow.fillById(row.id, row.productId, row.quantity)
         }
       }
     }, 3000.millis)
@@ -124,10 +110,10 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   // Update the status to finalizado status
   def finishById(id: Long): Future[Seq[ProductRequest]] = db.run {
     getById(id).map { pRequest =>
-      if (pRequest(0).status == "borrador" || pRequest(0).status == "enviado") {
+      if (pRequest(0).status == "enviado") {
         runUpdateChildren(id)
       }
-      if (pRequest(0).status == "borrador" || pRequest(0).status == "aceptado" || pRequest(0).status == "enviado") {
+      if (pRequest(0).status == "enviado") {
         val q = for { c <- tableQ if c.id === id } yield c.status
         db.run(q.update("finalizado"))
       }
@@ -135,11 +121,23 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.filter(_.id === id).result
   }
 
+  def removeChildren(id: Long) = {
+    Await.result(repoRequestRow.getByParentId(id).map { rowList => 
+      rowList.foreach { row => 
+        repoRequestRow.delete(row.id)
+      }
+    }, 3000.millis)
+  }
+
   // delete required
   def delete(id: Long): Future[Seq[ProductRequest]] = db.run {
+    
+    removeChildren(id)
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
+    // remove all children here
+
     tableQ.result
   }
 }

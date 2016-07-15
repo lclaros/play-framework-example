@@ -19,7 +19,10 @@ import play.api.data.format.Formats._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductorController @Inject() (repo: ProductorRepository, repoModule: ModuleRepository, val messagesApi: MessagesApi)
+class ProductorController @Inject() (
+                                    repo: ProductorRepository, repoRequests: RequestRowProductorRepository,
+                                    repoModule: ModuleRepository, repoDiscount: DiscountDetailRepository,
+                                      val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   var modules = getModuleNamesMap()
@@ -37,13 +40,13 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   }
 
   def getTotal(): Int = {
-    Await.result(repo.getTotal().map{ case (res1) => 
+    Await.result(repo.getTotal().map { case (res1) => 
       res1
     }, 3000.millis)
   }
 
-  def searchByAccount(account: String): Seq[Productor] = {
-    Await.result(repo.getByAccount(account).map{ res => 
+  def searchProduct(search: String): Seq[Productor] = {
+    Await.result(repo.searchProduct(search).map{ res => 
       res
     }, 1000.millis)
   }
@@ -67,32 +70,36 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     }
   }
 
+  var total: Int = _
+  var currentPage: Int = _
+  var productors: Seq[Productor] = Seq[Productor]()
+
   def index(start: Int) = Action.async { implicit request =>
-    repo.list((start - 1) * interval, interval).map { res =>
-      modules = getModuleNamesMap()
-      var total = getTotal()
-      var currentPage = start
-      Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, res, Seq[Productor](), total, currentPage, interval))
-    }
+    if (start == 0) {
+        Future(Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, productors, total, currentPage, interval)))
+      } else {
+        repo.list((start - 1) * interval, interval).map { res =>
+          productors = res
+          total = getTotal()
+          currentPage = start
+          Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, productors, total, currentPage, interval))
+        }        
+      }
   }
 
-  def search(search: String) = Action{ implicit request =>
-    val productors = searchByAccount(search)
-    modules = getModuleNamesMap()
-    var total = getTotal()
-    var currentPage = 1
-    Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, Seq[Productor](), productors, total, currentPage, interval))
-  }
-
-  def searchProduct = Action.async { implicit request =>
+  def searchProductPost = Action.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
     searchForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, Seq[Productor](), Seq[Productor](), total, currentPage, interval)))
+        Future.successful(Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, productors, total, currentPage, interval)))
       },
       res => {
-          Future.successful(Redirect(routes.ProductorController.search(res.account)))
+        productors = searchProduct(res.search)
+        modules = getModuleNamesMap()
+        var total = getTotal()
+        var currentPage = 1
+        Future(Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, productors, total, currentPage, interval)))
       }
     )
   }
@@ -154,14 +161,29 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
   val searchForm: Form[SearchProductorForm] = Form {
     mapping(
-      "account" -> text
+      "search" -> text
     )(SearchProductorForm.apply)(SearchProductorForm.unapply)
   }
 
+  def getRequests(id: Long): Seq[RequestRowProductor] = {
+    Await.result(repoRequests.listByProductor(id).map {res => 
+      res
+      }, 1000.millis)
+  }
+
+  def getDiscounts(id: Long): Seq[DiscountDetail] = {
+    Await.result(repoDiscount.listByProductor(id).map {res => 
+      res
+      }, 1000.millis)
+  }
+
+
   // to copy
   def show(id: Long) = Action.async { implicit request =>
+    val requests = getRequests(id)
+    val discounts = getDiscounts(id)
     repo.getById(id).map { res =>
-      Ok(views.html.productor_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.productor_show(new MyDeadboltHandler, res(0), requests, discounts))
     }
   }
 
@@ -192,7 +214,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     var total = getTotal()
     var currentPage = 1
     repo.delete(id).map { res =>
-      Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, modules, Seq[Productor](), Seq[Productor](), total, currentPage, interval))
+      Redirect(routes.ProductorController.index(1))
     }
   }
 
@@ -235,4 +257,4 @@ case class UpdateProductorForm(
                                 totalDebt: Double, numberPayment: Int, position: String
                               )
 
-case class SearchProductorForm (account: String)
+case class SearchProductorForm (search: String)

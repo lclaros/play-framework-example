@@ -41,8 +41,8 @@
     <div style="font-size: larger; font-weight: 800;">
         Lista de Productores
     </div>
-    <div class="table-responsive">
-        <table class="table" id="descuentos_rows">
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="descuentos_rows">
             <thead>
                 <tr>
                     <th>Productor</th>
@@ -54,7 +54,14 @@
             <tbody>
                 @for(child <- children) {
                     <tr>
-                        <td>@child.productorName</td>
+                        <td>
+                            @restrictOr(roles = List(Array("productorShow"))) {
+                               <a href="/productor_show/@child.productorId">@child.productorName
+                            </a> 
+                            }{
+                                @child.productorName                                    
+                            }
+                        </td>
                         <td>@child.status</td>
                         <td>@child.discount</td>
                         <td>

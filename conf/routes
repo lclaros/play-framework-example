@@ -25,8 +25,7 @@ GET     /printersRegex              	controllers.PatternController.printersRegex
 
 
 # productores routes
-GET     /productor_search/:account 		controllers.ProductorController.search(account: String)
-POST    /productor_search		 		controllers.ProductorController.searchProduct
+POST    /productor_search		 		controllers.ProductorController.searchProductPost
 POST    /productor_set	 				controllers.DiscountDetailController.setProductor
 POST    /productor_setName	 			controllers.DiscountDetailController.setProductorName
 GET     /productor_show/:id 			controllers.ProductorController.show(id: Long)
@@ -221,7 +220,6 @@ GET     /discountReport_add         			controllers.DiscountReportController.addG
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
 GET     /productRequest_update/:id 				controllers.ProductRequestController.getUpdate(id: Long)
 GET     /productRequest_send/:id        		controllers.ProductRequestController.getSend(id: Long)
-GET     /productRequest_accept/:id        		controllers.ProductRequestController.getAccept(id: Long)
 GET     /productRequest_finish/:id        		controllers.ProductRequestController.getFinish(id: Long)
 GET     /productRequest_remove/:id        		controllers.ProductRequestController.delete(id: Long)
 GET     /productRequests/:id 					controllers.ProductRequestController.getById(id: Long)
@@ -240,9 +238,7 @@ GET     /productRequest_add     					controllers.ProductRequestController.addGet
 GET     /productRequestByInsumo_show/:id 				controllers.ProductRequestByInsumoController.show(id: Long)
 GET     /productRequestByInsumo_update/:id 				controllers.ProductRequestByInsumoController.getUpdate(id: Long)
 GET     /productRequestByInsumo_send/:id        		controllers.ProductRequestByInsumoController.getSend(id: Long)
-GET     /productRequestByInsumo_accept/:id        		controllers.ProductRequestByInsumoController.getAccept(id: Long)
-GET     /productRequestByInsumo_finish/:id        		controllers.ProductRequestByInsumoController.getFinish(id: Long)
-GET     /productRequestByInsumo_cancel/:id        		controllers.ProductRequestByInsumoController.getCancel(id: Long)
+GET     /productRequestByInsumo_fill/:id        		controllers.ProductRequestByInsumoController.getFill(id: Long)
 GET     /productRequestByInsumo_remove/:id        		controllers.ProductRequestByInsumoController.delete(id: Long)
 GET     /productRequestByInsumos/:id 					controllers.ProductRequestByInsumoController.getById(id: Long)
 POST    /productRequestByInsumo_update     				controllers.ProductRequestByInsumoController.updatePost
@@ -258,9 +254,7 @@ GET     /productRequestByInsumo_addGet     				controllers.ProductRequestByInsum
 # Now for Product requests Rows
 GET     /requestRow_show/:id 				controllers.RequestRowController.show(id: Long)
 GET     /requestRow_update/:id        		controllers.RequestRowController.getUpdate(id: Long)
-GET     /requestRow_send/:id        		controllers.RequestRowController.getSend(id: Long)
-GET     /requestRow_fill/:id        		controllers.RequestRowController.getAccept(id: Long)
-GET     /requestRow_finish/:id        		controllers.RequestRowController.getFinish(id: Long)
+GET     /requestRow_fill/:id        		controllers.RequestRowController.getFill(id: Long)
 GET     /requestRow_remove/:id        		controllers.RequestRowController.delete(id: Long)
 GET     /requestRows/:id 					controllers.RequestRowController.getById(id: Long)
 POST    /requestRow_update             		controllers.RequestRowController.updatePost
@@ -274,9 +268,7 @@ GET     /requestRow_add/:requestId         			controllers.RequestRowController.a
 # Now for Product requests Rows
 GET     /requestRowByInsumo_show/:id 				controllers.RequestRowByInsumoController.show(id: Long)
 GET     /requestRowByInsumo_update/:id        		controllers.RequestRowByInsumoController.getUpdate(id: Long)
-GET     /requestRowByInsumo_send/:id        		controllers.RequestRowByInsumoController.getSend(id: Long)
-GET     /requestRowByInsumo_fill/:id        		controllers.RequestRowByInsumoController.getAccept(id: Long)
-GET     /requestRowByInsumo_finish/:id        		controllers.RequestRowByInsumoController.getFinish(id: Long)
+GET     /requestRowByInsumo_fill/:id        		controllers.RequestRowByInsumoController.getFill(id: Long)
 GET     /requestRowByInsumo_remove/:id        		controllers.RequestRowByInsumoController.delete(id: Long)
 GET     /requestRowByInsumos/:id 					controllers.RequestRowByInsumoController.getById(id: Long)
 POST    /requestRowByInsumo_update             		controllers.RequestRowByInsumoController.updatePost
@@ -347,3 +339,7 @@ GET     /clientes                    	controllers.ClienteController.getClientes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+GET     /company_update 	       		controllers.CompanyController.getUpdate
+GET     /company_show 						controllers.CompanyController.show
+POST    /company_update     				controllers.CompanyController.updatePost

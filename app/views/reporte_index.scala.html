@@ -1,12 +1,15 @@
-@(banco: Form[CreateReporteForm])(implicit messages: Messages)
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
 
 @import helper._
 
 @main("Agregar réporte") {
+    @examples.templates.nav(handler)
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/reporte_index.js")'></script>
     <div>Lista de reporte de descuentos</div>
-    <div class="table-responsive">
-        <table class="table" id="reportes">
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="reportes">
             <thead>
                 <tr>
                     <th>Reporte</th>

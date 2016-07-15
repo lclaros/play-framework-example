@@ -13,6 +13,8 @@ import dal._
 
 import scala.concurrent.{ Future, ExecutionContext, Await }
 
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 import javax.inject._
 
 class ReporteController @Inject() (repo: ReporteRepository, repoAccount: AccountRepository
@@ -27,18 +29,18 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
     )(CreateReporteForm.apply)(CreateReporteForm.unapply)
   }
 
-  def index = Action {
-    Ok(views.html.reporte_index(newForm))
+  def index = Action { implicit request =>
+    Ok(views.html.reporte_index(new MyDeadboltHandler))
   }
 
-  def balance = Action {
+  def balance = Action { implicit request =>
     val activos = getByActivo()
     val pasivos = getByPasivo()
     val patrimonios = getByPatrimonio()
-    Ok(views.html.reporte_balance(activos, pasivos, patrimonios))
+    Ok(views.html.reporte_balance(new MyDeadboltHandler, activos, pasivos, patrimonios))
   }
 
-  def diary = Action {
+  def diary = Action { implicit request =>
     val transactions = getTransactions()
     transactions.foreach { transaction => 
       Await.result(repoTransDetails.listByTransaction(transaction.id).map {
@@ -47,17 +49,17 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
         transaction.details = res;
       }, 500.millis)
     }
-    Ok(views.html.reporte_diary(transactions))
+    Ok(views.html.reporte_diary(new MyDeadboltHandler, transactions))
   }
 
-  def mayor = Action {
+  def mayor = Action { implicit request =>
     val details = getTransactionDetails()
-    Ok(views.html.reporte_mayor(details))
+    Ok(views.html.reporte_mayor(new MyDeadboltHandler, details))
   }
 
-  def sumasYSaldos = Action {
+  def sumasYSaldos = Action { implicit request =>
     val accounts = getChilAccounts()
-    Ok(views.html.reporte_sumasYSaldos(accounts))
+    Ok(views.html.reporte_sumasYSaldos(new MyDeadboltHandler, accounts))
   }
 
 //  RFB = 510 - 410
@@ -70,7 +72,7 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
 //  RAI = RAIYI - ACEI
 //  RNG = RAI - 460
 
-  def resultFinance = Action {
+  def resultFinance = Action { implicit request => 
     val account510: Seq[Account] = getAccountByCode("510")
     val account410: Seq[Account] = getAccountByCode("410")
     val account540: Seq[Account] = getAccountByCode("540")
@@ -91,7 +93,7 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
         && account530.length > 0 && account430.length > 0 && accountADADC.length > 0 && account450.length > 0
         && account570.length > 0 && account470.length > 0 && account580.length > 0 && account480.length > 0 &&
          accountACEI.length > 0 && account460.length > 0) {
-      Ok(views.html.report_result(account510(0), account410(0), account540(0), account440(0), account530(0),
+      Ok(views.html.report_result(new MyDeadboltHandler, account510(0), account410(0), account540(0), account440(0), account530(0),
        account430(0), accountADADC(0), account450(0), account570(0), account470(0), account580(0), account480(0), 
        accountACEI(0), account460(0)))
     } else {
@@ -145,7 +147,7 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
   def addReporte = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.reporte_index(errorForm)))
+        Future.successful(Ok(views.html.reporte_index(new MyDeadboltHandler)))
       },
       reporte => {
         repo.create(reporte.monto, reporte.account, reporte.cliente).map { _ =>

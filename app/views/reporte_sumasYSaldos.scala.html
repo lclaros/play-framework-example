@@ -1,10 +1,16 @@
-@(accounts: Seq[Account])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, accounts: Seq[Account])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Sumas Y Saldos") {
-    <div>Balance de comprobacion de Sumas y Saldos</div>
-    <div class="table-responsive">
-        <table id="details" style="width: 100%;">
+    @examples.templates.nav(handler)
+    <div class="container">
+        <h4 class="media-heading">
+            <strong>Sumas Y Saldos</strong>
+        </h4>
+    </div>
+    <div class="table table-bordered">
+        <table id="details" style="width: 100%;" class="table table-bordered">
         <thead>
                 <tr>
                     <th>Nro</th>
@@ -15,18 +21,27 @@
                     <th>ACREEDOR</th>
                 </tr>
             </thead>
-        <tbody>
-            @for(account <- accounts) {
-                <tr>
-                    <td>#</td>
-                    <td>@account.name</td>
-                    <td>@account.debit</td>
-                    <td>@account.credit</td>
-                    <td>@(account.debit - account.credit)</td>
-                    <td>@(account.credit - account.debit)</td>
-                </tr>
-            }
-        </tbody>
+            <tbody>
+                @for(account <- accounts) {
+                    <tr>
+                        <td>#</td>
+                        <td>@account.name</td>
+                        <td>@account.debit</td>
+                        <td>@account.credit</td>
+                        <td>
+                            @if((account.debit - account.credit) > 0) {
+                                @(account.debit - account.credit)
+                            }
+                        </td>
+                        <td>
+                            @if((account.credit - account.debit) > 0) {
+                                @(account.credit - account.debit)
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 }

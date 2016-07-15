@@ -106,7 +106,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
     )(UpdateProductRequestForm.apply)(UpdateProductRequestForm.unapply)
   }
 
-  def getRequestRows(productRequestId: Long): Seq[RequestRow] = {
+  def getChildren(productRequestId: Long): Seq[RequestRow] = {
     Await.result(repoRow.listByParent(productRequestId).map { res =>
       res
     }, 3000.millis)
@@ -114,7 +114,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
 
   // to copy
   def show(id: Long) = Action.async { implicit request =>
-    val requestRows = getRequestRows(id)
+    val requestRows = getChildren(id)
     repo.getById(id).map { res =>
       Ok(views.html.productRequest_show(new MyDeadboltHandler, res(0), requestRows))
     }
@@ -139,21 +139,14 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
 // update required
   def getSend(id: Long) = Action.async { implicit request =>
     repo.sendById(id).map {case (res) =>
-      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
-    }
-  }
-
-// update required
-  def getAccept(id: Long) = Action.async { implicit request =>
-    repo.acceptById(id).map {case (res) =>
-      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
+      Redirect(routes.ProductRequestController.index())
     }
   }
 
 // update required
   def getFinish(id: Long) = Action.async { implicit request =>
     repo.finishById(id).map {case (res) =>
-      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
+      Redirect(routes.ProductRequestController.index())
     }
   }
 
@@ -204,6 +197,10 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
 
   // delete required
   def delete(id: Long) = Action.async {
+    val requestRows = getChildren(id)
+    requestRows.foreach { req => 
+      repoRow.delete(req.id)
+    }
     repo.delete(id).map { res =>
       Redirect(routes.ProductRequestController.index)
     }

@@ -22,26 +22,11 @@ class MyDeadboltHandler (dynamicResourceHandler: Option[DynamicResourceHandler] 
     Future(dynamicResourceHandler.orElse(Some(new MyDynamicResourceHandler())))
   }
 
-//<<<<<<< HEAD
   override def getSubject[A](request: Request[A]): Future[Option[Subject]] = {
-    // e.g. request.session.get("user")
-    //println("This is called after ")
-    //println(request)
-    var user1 =  new UserSecurity("steve")
-    user1.rol = request.session.get("role").get
-    //println(user1)
+    var rol: String = request.session.get("role").get
+    var user1 =  new UserSecurity("steve", rol)
     
     Future(Some(user1))
-/*=======
-  override def getSubject[A](request: AuthenticatedRequest[A]): Future[Option[Subject]] = {
-    // e.g. request.session.get("userSecurity")
-    var res1 = "someone"
-    request.session.get("userSecurity").map { res => 
-      res1 = res
-    }
-
-    Future(Some(new UserSecurity(res1)))
->>>>>>> master*/
   }
 
   def onAuthFailure[A](request: Request[A]): Future[Result] = {

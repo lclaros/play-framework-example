@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Productor)(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Productor, reqs: Seq[RequestRowProductor], discounts: Seq[DiscountDetail])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -58,14 +58,13 @@
     </div>
     </div>
     <div class="container">
-        <div>Lista de Pedidos</div>
-        <div class="table-responsive">
-            <table class="table" id="requestRowProductors">
+        <div>Productos</div>
+        <div class="table table-bordered">
+            <table class="table table-bordered" id="requestRowProductors">
                 <thead>
                     <tr>
                         <th>Pedido</th>
                         <th>Producto</th>
-                        <th>Productor</th>
                         <th>Cantidad</th>
                         <th>Precio</th>
                         <th>Precio Total</th>
@@ -73,24 +72,87 @@
                         <th>-----------</th>
                     </tr>
                 </thead>
+                <tbody>
+                    @for(req <- reqs) {
+                        <tr>
+                            <td>
+                                @restrictOr(roles = List(Array("requestRowProductorShow"))) {
+                                   <a href="/requestRowProductor_show/@req.id">@req.id
+                                </a> 
+                                }{
+                                    @req.id                                    
+                                }
+                            </td>
+                            <td>
+                                @restrictOr(roles = List(Array("productShow"))) {
+                                   <a href="/product_show/@req.productId">@req.productName
+                                </a> 
+                                }{
+                                    @req.productName                                    
+                                }
+                            </td>
+                            <td>@req.productName</td>
+                            <td>@req.quantity</td>
+                            <td>@req.precio</td>
+                            <td>@(req.precio * req.quantity)</td>
+                            <td>@req.status</td>
+                            <td>
+                               @restrict(roles = List(Array("requestRowProductorEdit"))) {
+                                   <a href="/requestRowProductor_update/@req.id" class="btn btn-primary">Editar</a> 
+                               }
+                               @restrict(roles = List(Array("requestRowProductorDelete"))) {
+                                   <a href="/requestRowProductor_remove/@req.id" class="btn btn-danger">Eliminar</a>
+                               }
+                               @restrict(roles = List(Array("requestRowProductorShow"))) {
+                                   <a href="/requestRowProductor_show/@req.id" class="btn btn-info">Mostrar</a>
+                               }
+                           </td> 
+                        </tr>
+                    }
+                </tbody>
             </table>
         </div>
     </div>
    
    <div class="container">
-       <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetailByProductor.js")'></script>
-        <div>Lista de Descuentos</div>
-        <div class="table-responsive">
-            <table class="table" id="descuentos_rows">
+        <div>Descuentos</div>
+        <div class="table table-bordered">
+            <table class="table table-bordered" id="descuentos_rows">
                 <thead>
                     <tr>
                         <th>Report</th>
-                        <th>Productor</th>
                         <th>Estado</th>
                         <th>Descuento</th>
                         <th>-----------</th>
                     </tr>
                 </thead>
+                <tbody>
+                    @for(discount <- discounts) {
+                        <tr>
+                            <td>
+                                @restrictOr(roles = List(Array("discountDetailShow"))) {
+                                   <a href="/discountDetail_show/@discount.id">@discount.id
+                                </a> 
+                                }{
+                                    @discount.id                                    
+                                }
+                            </td>
+                            <td>@discount.status</td>
+                            <td>@discount.discount</td>
+                            <td>
+                               @restrict(roles = List(Array("discountDetailEdit"))) {
+                                   <a href="/discountDetail_update/@discount.id" class="btn btn-primary">Editar</a> 
+                               }
+                               @restrict(roles = List(Array("discountDetailDelete"))) {
+                                   <a href="/discountDetail_remove/@discount.id" class="btn btn-danger">Eliminar</a>
+                               }
+                               @restrict(roles = List(Array("discountDetailShow"))) {
+                                   <a href="/discountDetail_show/@discount.id" class="btn btn-info">Mostrar</a>
+                               }
+                           </td> 
+                        </tr>
+                    }
+                </tbody>
             </table>
         </div>
    </div>

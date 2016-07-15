@@ -73,6 +73,13 @@ create table transaction (
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+create table company (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50),
+  president VARCHAR(50),
+  description VARCHAR(255)
+);
+
 
 
 create table logEntry (

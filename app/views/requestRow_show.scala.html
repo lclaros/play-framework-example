@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: RequestRow, rows: Seq[RequestRowProductor])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: RequestRow, children: Seq[RequestRowProductor])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -38,8 +38,8 @@
     </div>
 
     <div>Lista de Productos Entregados</div>
-    <div class="table-responsive">
-        <table class="table" id="rows">
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
                     <th>Producto</th>
@@ -51,22 +51,36 @@
                 </tr>
             </thead>
             <tbody>
-                @for(row_aux <- rows) {
+                @for(child <- children) {
                     <tr>
-                        <td>@row_aux.productName</td>
-                        <td>@row_aux.productorName</td>
-                        <td>@row_aux.quantity</td>
-                        <td>@row_aux.precio</td>
-                        <td>@row_aux.status</td>
+                        <td>
+                            @restrictOr(roles = List(Array("productShow"))) {
+                               <a href="/product_show/@child.productId">@child.productName
+                            </a> 
+                            }{
+                                @child.productName                                    
+                            }
+                        </td>
+                        <td>
+                            @restrictOr(roles = List(Array("productorShow"))) {
+                               <a href="/productor_show/@child.productorId">@child.productorName
+                            </a> 
+                            }{
+                                @child.productorName                                    
+                            }
+                        </td>
+                        <td>@child.quantity</td>
+                        <td>@child.precio</td>
+                        <td>@child.status</td>
                         <td>
                            @restrict(roles = List(Array("requestRowProductorEdit"))) {
-                               <a href="/requestRowProductor_update/@row_aux.id" class="btn btn-primary">Editar</a> 
+                               <a href="/requestRowProductor_update/@child.id" class="btn btn-primary">Editar</a> 
                            }
                            @restrict(roles = List(Array("requestRowProductorDelete"))) {
-                               <a href="/requestRowProductor_remove/@row_aux.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/requestRowProductor_remove/@child.id" class="btn btn-danger">Eliminar</a>
                            }
                            @restrict(roles = List(Array("requestRowProductorShow"))) {
-                               <a href="/requestRowProductor_show/@row_aux.id" class="btn btn-info">Mostrar</a>
+                               <a href="/requestRowProductor_show/@child.id" class="btn btn-info">Mostrar</a>
                            }
                        </td> 
                     </tr>

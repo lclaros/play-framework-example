@@ -18,7 +18,7 @@ import it.innove.play.pdf.PdfGenerator
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class AccountController @Inject() (repo: AccountRepository, val messagesApi: MessagesApi)
+class AccountController @Inject() (repo: AccountRepository, repoDetails: TransactionDetailRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val yes_no = scala.collection.immutable.Map[String, String]("NO" -> "NO", "SI" -> "SI")
@@ -84,10 +84,26 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
     )(UpdateAccountForm.apply)(UpdateAccountForm.unapply)
   }
 
+  def accountChildrenSeq(id: Long): Seq[Account] = {
+    Await.result(repo.getByParent(id).map { res =>
+      res
+    }, 2000.millis)
+  }
+
+
+  def accountDetailsSeq(id: Long): Seq[TransactionDetail] = {
+    Await.result(repoDetails.listByAccount(id).map { res =>
+      res
+    }, 2000.millis)
+  }
+
+
   // to copy
   def show(id: Long) = Action.async { implicit request =>
+    val children: Seq[Account] = accountChildrenSeq(id)
+    val details = accountDetailsSeq(id)
     repo.getById(id).map { res =>
-      Ok(views.html.account_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.account_show(new MyDeadboltHandler, res(0), children, details))
     }
   }
 

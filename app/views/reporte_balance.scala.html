@@ -1,10 +1,16 @@
-@(activos: Seq[Account], pasivos: Seq[Account], patrimonios: Seq[Account])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, activos: Seq[Account], pasivos: Seq[Account], patrimonios: Seq[Account])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Balance General") {
-    <div>Balance General</div>
-    <div class="table-responsive">
-    <table class="table">
+    @examples.templates.nav(handler)
+    <div class="container">
+        <h4 class="media-heading">
+            <strong>Balance General</strong>
+        </h4>
+    </div>
+    <div class="table table-bordered">
+    <table class="table table-bordered">
         <tr>
             <td>
                 <div>ACTIVOS</div>

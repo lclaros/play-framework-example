@@ -95,30 +95,11 @@ class ProductRequestByInsumoRepository @Inject() (dbConfigProvider: DatabaseConf
     tableQ.filter(_.id === id).result
   }
 
-  // Update the status to enviado status
-  def cancelById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
-    val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("cancelado"))
-    tableQ.filter(_.id === id).result
-  }
-
-  // Update the status to enviado status, review that the status == borrador or unfill
-  def acceptById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
-    getById(id).map { pRequest => 
-      if (pRequest(0).status == "borrador" || pRequest(0).status == "enviado") {
-        val q = for { c <- tableQ if c.id === id } yield c.status
-        db.run(q.update("aceptado"))
-        runUpdateChildren(id)
-      }
-    }
-    tableQ.filter(_.id === id).result
-  }
-
   def runUpdateChildren(id: Long) = {
     Await.result(repoRequestRow.getByParentId(id).map { rowList => 
       rowList.foreach { row => 
-        if (row.status == "borrador" || row.status == "enviado") {
-          repoRequestRow.acceptById(row.id).map {case (res) =>
+        if (row.status == "enviado") {
+          repoRequestRow.fillById(row.id, row.productId, row.quantity).map {case (res) =>
             repoProduct.updateAmount(res(0).productId, - res(0).quantity);
           }
         }
@@ -129,10 +110,10 @@ class ProductRequestByInsumoRepository @Inject() (dbConfigProvider: DatabaseConf
   // Update the status to finalizado status
   def finishById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
     getById(id).map { pRequest =>
-      if (pRequest(0).status == "borrador" || pRequest(0).status == "enviado") {
+      if (pRequest(0).status == "enviado") {
         runUpdateChildren(id)
       }
-      if (pRequest(0).status == "borrador" || pRequest(0).status == "aceptado" || pRequest(0).status == "enviado") {
+      if (pRequest(0).status == "enviado") {
         val q = for { c <- tableQ if c.id === id } yield c.status
         db.run(q.update("finalizado"))
       }

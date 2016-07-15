@@ -26,19 +26,7 @@ class MainController @Inject() (repo: UserRepository, val messagesApi: MessagesA
     def index = Action { implicit request =>
       Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
         if (res2.length > 0) {
-          if (res2(0).type_1 == "Admin") {
             Ok(views.html.index(new MyDeadboltHandler))
-          } else if (res2(0).type_1 == "veterinario") {
-            Redirect(routes.VeterinarioController.profile(res2(0).id))
-          } else if (res2(0).type_1 == "Insumo") {
-            Redirect(routes.InsumoUserController.profile(res2(0).id))
-          } else if (res2(0).type_1 == "Almacen") {
-            Redirect(routes.StorekeeperController.profile(res2(0).id))
-          } else {
-            Ok(views.html.storekeeper_profile2(res2(0)))
-            Redirect("/login")
-            //Ok(views.html.index(new MyDeadboltHandler))
-          }
         } else {
           Redirect("/login")
           //Ok(views.html.index(new MyDeadboltHandler))

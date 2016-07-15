@@ -46,31 +46,28 @@ class LoginController @Inject() (repo: UserRepository, val messagesApi: Messages
           if (res2.length > 0) {
             Ok("Welcome!").withSession(
                                         "userSecurity" -> res2(0).login,
-                                        "role" -> res2(0).type_1,
+                                        "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
                                         "userName" -> res2(0).nombre.toString()
                                       )
             if (res2(0).type_1.toLowerCase == "admin") {
               Redirect("/").withSession("userSecurity" -> res2(0).login,
-                                        "role" -> res2(0).type_1,
+                                        "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
                                         "userName" -> res2(0).nombre.toString())
             } else if (res2(0).type_1.toLowerCase == "veterinario") {
-              Redirect(routes.VeterinarioController.profile(res2(0).id)).withSession(
-                                        "userSecurity" -> res2(0).login,
-                                        "role" -> res2(0).type_1,
+              Redirect("/").withSession("userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
                                         "userName" -> res2(0).nombre.toString())
             } else if (res2(0).type_1.toLowerCase == "insumo") {
-              Redirect(routes.InsumoUserController.profile(res2(0).id)).withSession(
-                                        "userSecurity" -> res2(0).login,
-                                        "role" -> res2(0).type_1,
+              Redirect("/").withSession("userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
                                         "userName" -> res2(0).nombre.toString())
             } else if (res2(0).type_1.toLowerCase == "almacen") {
-              Redirect(routes.StorekeeperController.profile(res2(0).id)).withSession(
-                                        "userSecurity" -> res2(0).login,
-                                        "role" -> res2(0).type_1,
+              Redirect("/").withSession("userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
                                         "userName" -> res2(0).nombre.toString())
             } else {

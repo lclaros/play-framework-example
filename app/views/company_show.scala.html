@@ -1,0 +1,27 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Company)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Mostrar") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("companyEdit"))) {
+            <a href="/company_update" class="btn btn-primary">Editar</a> 
+        }
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Nombre: </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Presidente: </div>
+            <div style="display: inline-block;" id="president">@row.president</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Descripcion: </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
+        </div>
+    </div>
+
+}
