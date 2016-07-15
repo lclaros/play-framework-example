@@ -328,21 +328,19 @@ GET     /reportes_sumasYSaldos      	controllers.ReporteController.sumasYSaldos
 
 
 # Now for Product requests
-GET     /transaction_show/:id 				controllers.TransactionController.show(id: Long)
-GET     /transaction_update/:id        		controllers.TransactionController.getUpdate(id: Long)
-#GET     /transaction_send/:id        		controllers.TransactionController.getSend(id: Long)
-#GET     /transaction_accept/:id        		controllers.TransactionController.getAccept(id: Long)
-#GET     /transaction_finish/:id        		controllers.TransactionController.getFinish(id: Long)
-GET     /transaction_remove/:id        		controllers.TransactionController.delete(id: Long)
-GET     /transactions/:id 					controllers.TransactionController.getById(id: Long)
-POST    /transaction_update             		controllers.TransactionController.updatePost
+GET     /transaction_update/:id 	       		controllers.TransactionController.getUpdate(id: Long)
+GET     /transaction_remove/:id        				controllers.TransactionController.delete(id: Long)
+GET     /transactions/:id 							controllers.TransactionController.getById(id: Long)
 
-POST    /transaction                 		controllers.TransactionController.add
-GET     /transactions         				controllers.TransactionController.getTransactions
-#GET     /transactionsByVeterinario/:id        controllers.TransactionController.gettransactionsByVeterinario(id: Long)
-#GET     /transactionsByStorekeeper/:id        controllers.TransactionController.gettransactionsByStorekeeper(id: Long)
-GET     /transaction_list         			controllers.TransactionController.index
-GET     /transaction_addGet         			controllers.TransactionController.addGet
+GET     /transaction_show/:id 						controllers.TransactionController.show(id: Long)
+POST    /transaction_updateIngreso     				controllers.TransactionController.updatePostIngreso
+POST    /transaction_updateEgreso      				controllers.TransactionController.updatePostEgreso
+POST    /transaction_addIngreso                		controllers.TransactionController.addIngreso
+POST    /transaction_addEgreso                		controllers.TransactionController.addEgreso
+GET     /transaction_add/:type         				controllers.TransactionController.addGet(type: Long)
+
+GET     /transactions         						controllers.TransactionController.getTransactions
+GET     /transaction_list         					controllers.TransactionController.index
 
 
 GET     /clientes                    	controllers.ClienteController.getClientes

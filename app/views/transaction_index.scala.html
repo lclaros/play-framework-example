@@ -6,8 +6,11 @@
   @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionCreate"))) {
-           <a href="/transaction_add" class="btn btn-primary">Nuevo</a> 
-       }
+           <a href="/transaction_add/1" class="btn btn-primary">Registrar Ingreso</a> 
+        }
+        @restrict(roles = List(Array("transactionCreate"))) {
+           <a href="/transaction_add/2" class="btn btn-primary">Registrar Egreso</a> 
+        }
     </div>
     <div>Lista de Asientos diarios</div>
     <div class="table-responsive">
@@ -15,6 +18,7 @@
             <thead>
                 <tr>
                     <th>Fecha</th>
+                    <th>Tipo</th>
                     <th>Description</th>
                     <th>Elaborado Por</th>
                     <th>Recibido Por</th>
@@ -26,6 +30,7 @@
                 @for(row <- rows) {
                     <tr>
                         <td>@row.date</td>
+                        <td>@row.type_1</td>
                         <td>@row.description</td>
                         <td>@row.createdByName</td>
                         <td>@row.receivedByName</td>

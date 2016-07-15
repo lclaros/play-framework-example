@@ -24,14 +24,24 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
                                       repoSto: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val newForm: Form[CreateTransactionForm] = Form {
+  val newFormIngreso: Form[CreateTransactionFormIngreso] = Form {
     mapping(
       "date" -> text,
       "type_1" -> text,
       "description" -> text,
       "receivedBy" -> longNumber,
       "autorizedBy" -> longNumber
-    )(CreateTransactionForm.apply)(CreateTransactionForm.unapply)
+    )(CreateTransactionFormIngreso.apply)(CreateTransactionFormIngreso.unapply)
+  }
+
+  val newFormEgreso: Form[CreateTransactionFormEgreso] = Form {
+    mapping(
+      "date" -> text,
+      "type_1" -> text,
+      "description" -> text,
+      "receivedBy" -> longNumber,
+      "autorizedBy" -> longNumber
+    )(CreateTransactionFormEgreso.apply)(CreateTransactionFormEgreso.unapply)
   }
 
   var users = getUsersMap()
@@ -60,15 +70,39 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
     }
   }
 
-  def addGet = Action { implicit request =>
+  def addGet(type_t: Long) = Action { implicit request =>
     users = getUsersMap()
-    Ok(views.html.transaction_add(new MyDeadboltHandler, newForm, users))
+    if (type_t == 1) { // Ingreso
+      Ok(views.html.transaction_add_1(new MyDeadboltHandler, newFormIngreso, users))
+    } else {
+      Ok(views.html.transaction_add_2(new MyDeadboltHandler, newFormEgreso, users))
+    }
   }
   
-  def add = Action.async { implicit request =>
-    newForm.bindFromRequest.fold(
+  def addIngreso = Action.async { implicit request =>
+    newFormIngreso.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transaction_add(new MyDeadboltHandler, errorForm, users)))
+        Future.successful(Ok(views.html.transaction_add_1(new MyDeadboltHandler, errorForm, users)))
+      },
+      res => {
+        var userId = request.session.get("userId").getOrElse("0").toLong
+        var userName = request.session.get("userName").getOrElse("0").toString
+        repo.create(
+                    res.date, res.type_1, res.description, 
+                    userId, userName,
+                    res.receivedBy, users(res.receivedBy.toString),
+                    res.autorizedBy, users(res.autorizedBy.toString)
+                    ).map { resNew =>
+          Redirect(routes.TransactionController.show(resNew.id))
+        }
+      }
+    )
+  }
+
+  def addEgreso = Action.async { implicit request =>
+    newFormEgreso.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.transaction_add_2(new MyDeadboltHandler, errorForm, users)))
       },
       res => {
         var userId = request.session.get("userId").getOrElse("0").toLong
@@ -92,7 +126,7 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
   }
 
   // update required
-  val updateForm: Form[UpdateTransactionForm] = Form {
+  val updateFormIngreso: Form[UpdateTransactionFormIngreso] = Form {
     mapping(
       "id" -> longNumber,
       "date" -> text,
@@ -100,13 +134,28 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
       "description" -> text,
       "receivedBy" -> longNumber,
       "autorizedBy" -> longNumber
-    )(UpdateTransactionForm.apply)(UpdateTransactionForm.unapply)
+    )(UpdateTransactionFormIngreso.apply)(UpdateTransactionFormIngreso.unapply)
+  }
+
+  val updateFormEgreso: Form[UpdateTransactionFormEgreso] = Form {
+    mapping(
+      "id" -> longNumber,
+      "date" -> text,
+      "type_1" -> text,
+      "description" -> text,
+      "receivedBy" -> longNumber,
+      "autorizedBy" -> longNumber
+    )(UpdateTransactionFormEgreso.apply)(UpdateTransactionFormEgreso.unapply)
   }
 
   def show(id: Long) = Action.async { implicit request =>
     val details = getTransactionDetails(id);
     repo.getById(id).map { res =>
-      Ok(views.html.transaction_show(new MyDeadboltHandler, res(0), details))
+      if (res(0).type_1 == "Ingreso") {
+        Ok(views.html.transaction_showIngreso(new MyDeadboltHandler, res(0), details))
+      } else {
+        Ok(views.html.transaction_showEgreso(new MyDeadboltHandler, res(0), details))
+      }
     }
   }
 
@@ -114,15 +163,27 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
     users = getUsersMap()
     repo.getById(id).map { res =>
       updatedRow = res(0)
-      val anyData = Map(
-                        "id" -> id.toString().toString(),
-                        "date" -> updatedRow.date.toString(),
-                        "type_1" -> updatedRow.type_1.toString(),
-                        "description" -> updatedRow.description.toString(),
-                        "receivedBy" -> updatedRow.receivedBy.toString(),
-                        "autorizedBy" -> updatedRow.autorizedBy.toString()
-                        )
-      Ok(views.html.transaction_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), users))
+      if (updatedRow.type_1 == "Ingreso") {
+        val anyData = Map(
+                          "id" -> id.toString().toString(),
+                          "date" -> updatedRow.date.toString(),
+                          "type_1" -> updatedRow.type_1.toString(),
+                          "description" -> updatedRow.description.toString(),
+                          "receivedBy" -> updatedRow.receivedBy.toString(),
+                          "autorizedBy" -> updatedRow.autorizedBy.toString()
+                          )
+        Ok(views.html.transaction_updateIngreso(new MyDeadboltHandler, updatedRow, updateFormIngreso.bind(anyData), users))
+      } else {
+        val anyData = Map(
+                          "id" -> id.toString().toString(),
+                          "date" -> updatedRow.date.toString(),
+                          "type_1" -> updatedRow.type_1.toString(),
+                          "description" -> updatedRow.description.toString(),
+                          "receivedBy" -> updatedRow.receivedBy.toString(),
+                          "autorizedBy" -> updatedRow.autorizedBy.toString()
+                          )
+        Ok(views.html.transaction_updateEgreso(new MyDeadboltHandler, updatedRow, updateFormEgreso.bind(anyData), users))
+      }
     }
   }
 
@@ -139,11 +200,12 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
       Ok(Json.toJson(res))
     }
   }
+  
   // update required
-  def updatePost = Action.async { implicit request =>
-    updateForm.bindFromRequest.fold(
+  def updatePostIngreso = Action.async { implicit request =>
+    updateFormIngreso.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transaction_update(new MyDeadboltHandler, updatedRow, errorForm, users)))
+        Future.successful(Ok(views.html.transaction_updateIngreso(new MyDeadboltHandler, updatedRow, errorForm, users)))
       },
       res => {
         repo.update(
@@ -157,8 +219,31 @@ class TransactionController @Inject() (repo: TransactionRepository, repoDetail: 
       }
     )
   }
+  
+  def updatePostEgreso = Action.async { implicit request =>
+    updateFormEgreso.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.transaction_updateEgreso(new MyDeadboltHandler, updatedRow, errorForm, users)))
+      },
+      res => {
+        repo.update(
+                    res.id, res.date, res.type_1,
+                    res.description, res.receivedBy, 
+                    users(res.receivedBy.toString),
+                    res.autorizedBy, users(res.autorizedBy.toString)
+                    ).map { resNew =>
+          Redirect(routes.TransactionController.show(res.id))
+        }
+      }
+    )
+  }
+
 }
 
-case class CreateTransactionForm(date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
+case class CreateTransactionFormIngreso(date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
 
-case class UpdateTransactionForm(id: Long, date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
+case class CreateTransactionFormEgreso(date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
+
+case class UpdateTransactionFormIngreso(id: Long, date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
+
+case class UpdateTransactionFormEgreso(id: Long, date: String, type_1: String, description: String, receivedBy: Long, autorizedBy: Long)
