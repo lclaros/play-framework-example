@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productInvCreate"))) {
-            <a href="/productInv_add" class="btn btn-primary">Crear</a> 
+            <a href="/productInv_add" class="btn btn-primary btn-sm">Crear</a> 
         }
     </div>
     <div>Lista de Reportes</div>
@@ -30,13 +30,13 @@
                         <td>@row.amountLeft</td>
                         <td>
                            @restrict(roles = List(Array("productInvEdit"))) {
-                               <a href="/productInv_update/@row.id" class="btn btn-primary">Editar</a> 
+                               <a href="/productInv_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
                            @restrict(roles = List(Array("productInvDelete"))) {
-                               <a href="/productInv_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/productInv_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
                            @restrict(roles = List(Array("productInvShow"))) {
-                               <a href="/productInv_show/@row.id" class="btn btn-info">Mostrar</a>
+                               <a href="/productInv_show/@row.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
                        </td> 
                     </tr>

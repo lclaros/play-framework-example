@@ -5,13 +5,13 @@
 @main("Actualizar") {
 	<div class="container">
       @restrict(roles = List(Array("productShow"))) {
-            <a href="/product_show/@row.productId" class="btn btn-primary">Producto</a> 
+            <a href="/product_show/@row.productId" class="btn btn-primary btn-sm">Producto</a> 
         }
         @restrict(roles = List(Array("productInvEdit"))) {
-           <a href="/productInv_show/@row.id" class="btn btn-info">Mostrar</a>
+           <a href="/productInv_show/@row.id" class="btn btn-info btn-sm">Mostrar</a>
         }
         @restrict(roles = List(Array("productInvDelete"))) {
-           <a href="/productInv_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/productInv_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     @form(routes.ProductInvController.updatePost()) {
@@ -20,8 +20,8 @@
         @select(field = rowForm("measureId"), options = options(measures))
         @inputText(rowForm("amount"))
         @inputText(rowForm("amountLeft"))
-        <input type="submit" value="Actualizar" class="btn btn-primary"/>
-        <a href="/productInv_show/@row.id" class="btn btn-primary">Cancelar</a>
+        <input type="submit" value="Actualizar" class="btn btn-primary btn-sm"/>
+        <a href="/productInv_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

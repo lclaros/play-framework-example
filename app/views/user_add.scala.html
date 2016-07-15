@@ -6,14 +6,14 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("userList"))) {
-            <a href="/user_list" class="btn btn-primary">Listar</a> 
+            <a href="/user_list" class="btn btn-primary btn-sm">Listar</a> 
         }
     </div>
 
     @form(routes.UserController.add()) {
         <div class="container">
         <div>
-            @inputText(row("nombre"))
+            @inputText(row("name"))
             @inputText(row("carnet"))
             @inputText(row("telefono"))
             @inputText(row("login"))
@@ -21,8 +21,8 @@
             @inputText(row("direccion"))
             @inputText(row("sueldo"))
             @select(field = row("type_1"), options = options(types))
-            <input type="submit" value="Guardar" class="btn btn-primary"/>
-            <a href="/user_list" class="btn btn-primary">Cancelar</a>
+            <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+            <a href="/user_list" class="btn btn-primary btn-sm">Cancelar</a>
         </div>
         </div>
     }

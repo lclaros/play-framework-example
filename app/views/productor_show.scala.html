@@ -8,18 +8,18 @@
     <div>
             <div>
         @restrict(roles = List(Array("productorList"))) {
-            <a href="/productor_list/1" class="btn btn-info">Listar</a> 
+            <a href="/productor_list/1" class="btn btn-info btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("productorEdit"))) {
-            <a href="/productor_update/@row.id" class="btn btn-primary">Editar</a> 
+            <a href="/productor_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
         }
         @restrict(roles = List(Array("productorDelete"))) {
-           <a href="/productor_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/productor_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
         <div>
             <div style="display: inline-block;"> Nombre: </div>
-            <div style="display: inline-block;" id="name">@row.nombre</div>
+            <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
             <div style="display: inline-block;"> Carnet: </div>
@@ -93,18 +93,18 @@
                             </td>
                             <td>@req.productName</td>
                             <td>@req.quantity</td>
-                            <td>@req.precio</td>
-                            <td>@(req.precio * req.quantity)</td>
+                            <td>@req.price</td>
+                            <td>@(req.price * req.quantity)</td>
                             <td>@req.status</td>
                             <td>
                                @restrict(roles = List(Array("requestRowProductorEdit"))) {
-                                   <a href="/requestRowProductor_update/@req.id" class="btn btn-primary">Editar</a> 
+                                   <a href="/requestRowProductor_update/@req.id" class="btn btn-primary btn-sm">Editar</a> 
                                }
                                @restrict(roles = List(Array("requestRowProductorDelete"))) {
-                                   <a href="/requestRowProductor_remove/@req.id" class="btn btn-danger">Eliminar</a>
+                                   <a href="/requestRowProductor_remove/@req.id" class="btn btn-danger btn-sm">Eliminar</a>
                                }
                                @restrict(roles = List(Array("requestRowProductorShow"))) {
-                                   <a href="/requestRowProductor_show/@req.id" class="btn btn-info">Mostrar</a>
+                                   <a href="/requestRowProductor_show/@req.id" class="btn btn-info btn-sm">Mostrar</a>
                                }
                            </td> 
                         </tr>
@@ -141,13 +141,13 @@
                             <td>@discount.discount</td>
                             <td>
                                @restrict(roles = List(Array("discountDetailEdit"))) {
-                                   <a href="/discountDetail_update/@discount.id" class="btn btn-primary">Editar</a> 
+                                   <a href="/discountDetail_update/@discount.id" class="btn btn-primary btn-sm">Editar</a> 
                                }
                                @restrict(roles = List(Array("discountDetailDelete"))) {
-                                   <a href="/discountDetail_remove/@discount.id" class="btn btn-danger">Eliminar</a>
+                                   <a href="/discountDetail_remove/@discount.id" class="btn btn-danger btn-sm">Eliminar</a>
                                }
                                @restrict(roles = List(Array("discountDetailShow"))) {
-                                   <a href="/discountDetail_show/@discount.id" class="btn btn-info">Mostrar</a>
+                                   <a href="/discountDetail_show/@discount.id" class="btn btn-info btn-sm">Mostrar</a>
                                }
                            </td> 
                         </tr>

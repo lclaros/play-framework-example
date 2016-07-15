@@ -6,10 +6,10 @@
   @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionCreate"))) {
-           <a href="/transaction_add/1" class="btn btn-primary">Registrar Ingreso</a> 
+           <a href="/transaction_add/1" class="btn btn-primary btn-sm">Registrar Ingreso</a> 
         }
         @restrict(roles = List(Array("transactionCreate"))) {
-           <a href="/transaction_add/2" class="btn btn-primary">Registrar Egreso</a> 
+           <a href="/transaction_add/2" class="btn btn-primary btn-sm">Registrar Egreso</a> 
         }
     </div>
     <div>Lista de Asientos diarios</div>
@@ -37,13 +37,13 @@
                         <td>@row.autorizedByName</td>
                         <td>
                            @restrict(roles = List(Array("transactionEdit"))) {
-                               <a href="/transaction_update/@row.id" class="btn btn-primary">Editar</a> 
+                               <a href="/transaction_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
                            @restrict(roles = List(Array("transactionDelete"))) {
-                               <a href="/transaction_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/transaction_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
                            @restrict(roles = List(Array("transactionShow"))) {
-                               <a href="/transaction_show/@row.id" class="btn btn-info">Mostrar</a>
+                               <a href="/transaction_show/@row.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
                        </td> 
                     </tr>

@@ -23,21 +23,21 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   private class ProveedoresTable(tag: Tag) extends Table[Proveedor](tag, "proveedor") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def nombre = column[String]("nombre")
+    def name = column[String]("name")
     def telefono = column[Int]("telefono")
     def direccion = column[String]("direccion")
     def contacto = column[String]("contacto")
     def account = column[Long]("account")
-    def * = (id, nombre, telefono, direccion, contacto, account) <> ((Proveedor.apply _).tupled, Proveedor.unapply)
+    def * = (id, name, telefono, direccion, contacto, account) <> ((Proveedor.apply _).tupled, Proveedor.unapply)
   }
 
   private val tableQ = TableQuery[ProveedoresTable]
 
-  def create(nombre: String, telefono: Int, direccion: String, contacto: String, account: Long): Future[Proveedor] = db.run {
-    (tableQ.map(p => (p.nombre, p.telefono, p.direccion, p.contacto, p.account))
+  def create(name: String, telefono: Int, direccion: String, contacto: String, account: Long): Future[Proveedor] = db.run {
+    (tableQ.map(p => (p.name, p.telefono, p.direccion, p.contacto, p.account))
       returning tableQ.map(_.id)
       into ((nameAge, id) => Proveedor(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
-    ) += (nombre, telefono, direccion, contacto, account)
+    ) += (name, telefono, direccion, contacto, account)
   }
 
   def list(): Future[Seq[Proveedor]] = db.run {
@@ -50,9 +50,9 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   }
 
   // update required to copy
-  def update(id: Long, nombre: String, telefono: Int, direccion: String, contacto: String, account: Long): Future[Seq[Proveedor]] = db.run {
-    val q = for { c <- tableQ if c.id === id } yield c.nombre
-    db.run(q.update(nombre))
+  def update(id: Long, name: String, telefono: Int, direccion: String, contacto: String, account: Long): Future[Seq[Proveedor]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.name
+    db.run(q.update(name))
     val q3 = for { c <- tableQ if c.id === id } yield c.telefono
     db.run(q3.update(telefono))
     val q2 = for { c <- tableQ if c.id === id } yield c.direccion
@@ -75,6 +75,6 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
 
   // get list of names
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.name)).result
   }
 }

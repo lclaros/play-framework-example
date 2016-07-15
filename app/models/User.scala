@@ -4,7 +4,7 @@ import play.libs.Scala
 
 import play.api.libs.json._
 
-case class User(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String) extends Subject {
+case class User(id: Long, name: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String) extends Subject {
   def getRoles: java.util.List[SecurityRole] = {
     Scala.asJava(List(new SecurityRole("foo"),
                       new SecurityRole("bar")))
@@ -14,7 +14,7 @@ case class User(id: Long, nombre: String, carnet: Int, telefono: Int, direccion:
     Scala.asJava(List(new UserPermission("printers.edit")))
   }
 
-  def getIdentifier: String = nombre
+  def getIdentifier: String = name
 }
 
 object User {

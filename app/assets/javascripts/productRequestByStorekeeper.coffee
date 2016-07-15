@@ -13,10 +13,10 @@ $ ->
       editar1 = ''
 
       if row.status == "borrador" or row.status == "enviado"
-        finalizado1 = '<a href="/productRequest_finish/' + row.id + '" class="btn btn-primary">Finalizar</a>'
-        editar1 = '<a href="/productRequest_update/' + row.id + '" class="btn btn-primary">Editar</a>'
-        eliminar1 = '<a href="/productRequest_remove/' + row.id + '" class="btn btn-danger">Eliminar</a>'
+        finalizado1 = '<a href="/productRequest_finish/' + row.id + '" class="btn btn-primary btn-sm">Finalizar</a>'
+        editar1 = '<a href="/productRequest_update/' + row.id + '" class="btn btn-primary btn-sm">Editar</a>'
+        eliminar1 = '<a href="/productRequest_remove/' + row.id + '" class="btn btn-danger btn-sm">Eliminar</a>'
 
 
-      links = $("<td>").html finalizado1 + editar1 + eliminar1 + '<a href="/productRequest_show/' + row.id + '" class="btn btn-info">Mostrar</a>'
+      links = $("<td>").html finalizado1 + editar1 + eliminar1 + '<a href="/productRequest_show/' + row.id + '" class="btn btn-info btn-sm">Mostrar</a>'
       $("#rows").append $("<tr>").append(date).append(veterinario).append(storekeeper).append(status).append(detail).append(links)

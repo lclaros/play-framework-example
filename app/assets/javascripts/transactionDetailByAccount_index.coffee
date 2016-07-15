@@ -8,7 +8,7 @@ $ ->
       accountId = $("<td>").text row.accountId
       debit = $("<td>").text row.debit
       credit = $("<td>").text row.credit
-      links = $("<td>").html '<a href="/transactionDetail_update/' + row.id + '" class="btn btn-primary">Editar</a>' + '<a href="/transactionDetail_remove/' + row.id + '" class="btn btn-danger">Eliminar</a>' + '<a href="/transactionDetail_show/' + row.id + '" class="btn btn-info">Mostrar</a>'
+      links = $("<td>").html '<a href="/transactionDetail_update/' + row.id + '" class="btn btn-primary btn-sm">Editar</a>' + '<a href="/transactionDetail_remove/' + row.id + '" class="btn btn-danger btn-sm">Eliminar</a>' + '<a href="/transactionDetail_show/' + row.id + '" class="btn btn-info btn-sm">Mostrar</a>'
       $("#rows").append $("<tr>").append(transactionId).append(accountId).append(debit).append(credit).append(links)
       totalDebit += row.debit
       totalCredit += row.credit

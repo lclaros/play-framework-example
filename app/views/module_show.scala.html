@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("moduleList"))) {
-            <a href="/module_list" class="btn btn-primary">Listar</a> 
+            <a href="/module_list" class="btn btn-primary btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("moduleEdit"))) {
-            <a href="/module_update/@row.id" class="btn btn-primary">Editar</a> 
+            <a href="/module_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
         }
         @restrict(roles = List(Array("moduleDelete"))) {
-           <a href="/module_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/module_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">

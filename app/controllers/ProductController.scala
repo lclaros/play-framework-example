@@ -19,22 +19,22 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
 class ProductController @Inject() (repo: ProductRepository, repoProdInv: ProductInvRepository, 
-                                   repoUnit: UnitMeasureRepository, val messagesApi: MessagesApi)
+                                   repoUnit: MeasureRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateProductForm] = Form {
     mapping(
-      "nombre" -> nonEmptyText,
+      "name" -> nonEmptyText,
       "cost" -> of[Double],
       "percent" -> of[Double],
-      "descripcion" -> text,
-      "unitMeasure" -> longNumber,
+      "description" -> text,
+      "measureId" -> longNumber,
       "currentAmount" -> number
     )(CreateProductForm.apply)(CreateProductForm.unapply)
   }
 
-  var unidades = getUnitMeasuresMap()
-  def getUnitMeasuresMap(): Map[String, String] = {
+  var unidades = getMeasureMap()
+  def getMeasureMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -46,7 +46,7 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
   }
 
   def addGet = Action { implicit request =>
-    unidades = getUnitMeasuresMap()
+    unidades = getMeasureMap()
     Ok(views.html.product_add(new MyDeadboltHandler, newForm, unidades))
   }
 
@@ -67,8 +67,8 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       },
       res => {
         repo.create(
-                      res.nombre, res.cost, res.percent,res.cost + res.cost * res.percent, res.descripcion,
-                      res.unitMeasure, unidades(res.unitMeasure.toString),
+                      res.name, res.cost, res.percent,res.cost + res.cost * res.percent, res.description,
+                      res.measureId, unidades(res.measureId.toString),
                       res.currentAmount
                     ).map { resNew =>
           Redirect(routes.ProductController.show(resNew.id))
@@ -87,12 +87,12 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
   val updateForm: Form[UpdateProductForm] = Form {
     mapping(
       "id" -> longNumber,
-      "nombre" -> nonEmptyText,
+      "name" -> nonEmptyText,
       "cost" -> of[Double],
       "percent" -> of[Double],
       "price" -> of[Double],
-      "descripcion" -> text,
-      "unitMeasure" -> longNumber,
+      "description" -> text,
+      "measureId" -> longNumber,
       "currentAmount" -> number
     )(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
@@ -120,13 +120,13 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       updatedRow = res(0)
       val anyData = Map(
                         "id" -> id.toString().toString(),
-                        "nombre" -> updatedRow.nombre,
+                        "name" -> updatedRow.name,
                         "cost" -> updatedRow.cost.toString(),
                         "percent" -> updatedRow.percent.toString(),
                         "price" -> updatedRow.price.toString(),
-                        "descripcion" -> updatedRow.descripcion,
-                        "unitMeasure" -> updatedRow.unitMeasure.toString(),
-                        "unitMeasureName" -> updatedRow.unitMeasureName.toString(),
+                        "description" -> updatedRow.description,
+                        "measureId" -> updatedRow.measureId.toString(),
+                        "measureName" -> updatedRow.measureName.toString(),
                         "currentAmount" -> updatedRow.currentAmount.toString()
                         )
       Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), unidades))
@@ -155,8 +155,8 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       },
       res => {
         repo.update(
-                      res.id, res.nombre, res.cost, res.percent, res.price,
-                      res.descripcion, res.unitMeasure, unidades(res.unitMeasure.toString),
+                      res.id, res.name, res.cost, res.percent, res.price,
+                      res.description, res.measureId, unidades(res.measureId.toString),
                       res.currentAmount
                     ).map { _ =>
           Redirect(routes.ProductController.show(res.id))
@@ -189,12 +189,12 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
 }
 
 case class CreateProductForm(
-                              nombre: String, cost: Double, percent: Double,
-                              descripcion: String, unitMeasure: Long, currentAmount: Int
+                              name: String, cost: Double, percent: Double,
+                              description: String, measureId: Long, currentAmount: Int
                             )
 
 case class UpdateProductForm(
-                              id: Long, nombre: String, cost: Double,
-                              percent: Double, price: Double, descripcion: String,
-                              unitMeasure: Long, currentAmount: Int
+                              id: Long, name: String, cost: Double,
+                              percent: Double, price: Double, description: String,
+                              measureId: Long, currentAmount: Int
                             )

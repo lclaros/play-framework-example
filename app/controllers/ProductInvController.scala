@@ -22,7 +22,7 @@ import security.MyDeadboltHandler
 
 
 class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: ProductRepository,
-                                      repoMeasure: UnitMeasureRepository,
+                                      repoMeasure: MeasureRepository,
                                       repoProvee: ProveedorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 

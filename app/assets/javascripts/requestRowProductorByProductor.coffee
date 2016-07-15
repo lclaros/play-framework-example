@@ -6,8 +6,8 @@ $ ->
       productId = $("<td>").text row.productId
       productorId = $("<td>").text row.productorId
       quantity = $("<td>").text row.quantity
-      precio = $("<td>").text row.precio
-      totalPrice = $("<td>").text (row.quantity * row.precio)
+      price = $("<td>").text row.price
+      totalPrice = $("<td>").text (row.quantity * row.price)
       status = $("<td>").text row.status
-      links = $("<td>").html '<a href="/requestRow_show/' + row.id + '" class="btn btn-info">Mostrar</a>'
-      $("#requestRowProductors").append $("<tr>").append(requestRowId).append(productId).append(productorId).append(quantity).append(precio).append(totalPrice).append(status).append(links)
+      links = $("<td>").html '<a href="/requestRow_show/' + row.id + '" class="btn btn-info btn-sm">Mostrar</a>'
+      $("#requestRowProductors").append $("<tr>").append(requestRowId).append(productId).append(productorId).append(quantity).append(price).append(totalPrice).append(status).append(links)

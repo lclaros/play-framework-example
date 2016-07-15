@@ -1,6 +1,6 @@
 $ ->
   $.get "/productor_report", (rows) ->
     $.each rows, (index, row) ->
-      nombre = $("<td>").text row.nombre
+      name = $("<td>").text row.name
       cuenta = $("<td>").text row.cuenta
-      $("#rows").append $("<tr>").append(nombre).append(cuenta)
+      $("#rows").append $("<tr>").append(name).append(cuenta)

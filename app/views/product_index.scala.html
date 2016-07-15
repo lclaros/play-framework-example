@@ -7,7 +7,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productCreate"))) {
-                                <a href="/product_add" class="btn btn-primary">Crear</a> 
+                                <a href="/product_add" class="btn btn-primary btn-sm">Crear</a> 
         }
     </div>
     
@@ -30,21 +30,21 @@
             <tbody>
                 @for(row <- rows) {
                     <tr>
-                        <td>@row.nombre</td>
+                        <td>@row.name</td>
                         <td>@row.cost</td>
                         <td>@row.percent</td>
                         <td>@row.price</td>
-                        <td>@row.unitMeasureName</td>                        
+                        <td>@row.measureName</td>                        
                         <td>@row.currentAmount</td>
                         <td>
                             @restrict(roles = List(Array("productEdit"))) {
-                                <a href="/product_update/@row.id" class="btn btn-primary">Editar</a> 
+                                <a href="/product_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
                             }
                             @restrict(roles = List(Array("productDelete"))) {
-                                <a href="/product_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                                <a href="/product_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
                             }
                             @restrict(roles = List(Array("productShow"))) {
-                                <a href="/product_show/@row.id" class="btn btn-info">Mostrar</a>
+                                <a href="/product_show/@row.id" class="btn btn-info btn-sm">Mostrar</a>
                             }
                         </td>
                     </tr>

@@ -5,13 +5,13 @@
 @main("Mostrar") {
     <div class="container">
         @restrict(roles = List(Array("productShow"))) {
-            <a href="/product_show/@row.productId" class="btn btn-primary">Producto</a> 
+            <a href="/product_show/@row.productId" class="btn btn-primary btn-sm">Producto</a> 
         }
         @restrict(roles = List(Array("productInvEdit"))) {
-           <a href="/productInv_update/@row.id" class="btn btn-primary">Editar</a>
+           <a href="/productInv_update/@row.id" class="btn btn-primary btn-sm">Editar</a>
         }
         @restrict(roles = List(Array("productInvDelete"))) {
-           <a href="/productInv_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/productInv_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">

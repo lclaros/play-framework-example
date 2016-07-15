@@ -69,16 +69,16 @@ GET     /module_list         		controllers.ModuleController.index
 GET     /module_add         		controllers.ModuleController.addGet
 
 # unit Measure routes
-GET     /measure_show/:id 			controllers.UnitMeasureController.show(id: Long)
-GET     /measure_update/:id        	controllers.UnitMeasureController.getUpdate(id: Long)
-GET     /measure_remove/:id        	controllers.UnitMeasureController.delete(id: Long)
-GET     /measures/:id 				controllers.UnitMeasureController.getById(id: Long)
-POST    /measure_update             controllers.UnitMeasureController.updatePost
+GET     /measure_show/:id 			controllers.MeasureController.show(id: Long)
+GET     /measure_update/:id        	controllers.MeasureController.getUpdate(id: Long)
+GET     /measure_remove/:id        	controllers.MeasureController.delete(id: Long)
+GET     /measures/:id 				controllers.MeasureController.getById(id: Long)
+POST    /measure_update             controllers.MeasureController.updatePost
 
-POST    /unitMeasure                 	controllers.UnitMeasureController.add
-GET     /measure         			controllers.UnitMeasureController.getUnitMeasures
-GET     /measure_list         		controllers.UnitMeasureController.index
-GET     /measure_add         		controllers.UnitMeasureController.addGet
+POST    /unitMeasure                 controllers.MeasureController.add
+GET     /measure         			controllers.MeasureController.getMeasures
+GET     /measure_list         		controllers.MeasureController.index
+GET     /measure_add         		controllers.MeasureController.addGet
 
 # Now for veterinarios
 GET     /veterinario_show/:id 			controllers.VeterinarioController.show(id: Long)
@@ -147,8 +147,8 @@ GET     /product_show/:id 				controllers.ProductController.show(id: Long)
 GET     /product_update/:id        		controllers.ProductController.getUpdate(id: Long)
 GET     /product_remove/:id        		controllers.ProductController.delete(id: Long)
 GET     /products/:id 					controllers.ProductController.getById(id: Long)
-POST    /product_update             		controllers.ProductController.updatePost
-POST    /productUpload/:id             		controllers.ProductController.upload(id: Long)
+POST    /product_update             	controllers.ProductController.updatePost
+POST    /productUpload/:id             	controllers.ProductController.upload(id: Long)
 
 POST    /product                 		controllers.ProductController.addProduct
 GET     /products         				controllers.ProductController.getProducts

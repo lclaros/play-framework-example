@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[UnitMeasure])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[Measure])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("measureCreate"))) {
-            <a href="/measure_add" class="btn btn-primary">Crear</a> 
+            <a href="/measure_add" class="btn btn-primary btn-sm">Crear</a> 
         }
     </div>
     <div>
@@ -32,13 +32,13 @@
                         <td>@row.description</td>
                         <td>
                             @restrict(roles = List(Array("measureEdit"))) {
-                                <a href="/measure_update/@row.id" class="btn btn-primary">Editar</a> 
+                                <a href="/measure_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
                             }
                             @restrict(roles = List(Array("measureDelete"))) {
-                                <a href="/measure_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                                <a href="/measure_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
                             }
                             @restrict(roles = List(Array("measureShow"))) {
-                                <a href="/measure_show/@row.id" class="btn btn-info">Mostrar</a>'
+                                <a href="/measure_show/@row.id" class="btn btn-info btn-sm">Mostrar</a>'
                             }
                         </td>
                     </tr>

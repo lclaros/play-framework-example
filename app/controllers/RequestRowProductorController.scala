@@ -32,7 +32,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       "productId" -> longNumber,
       "productorId" -> longNumber,
       "quantity" -> number,
-      "precio" -> of[Double],
+      "price" -> of[Double],
       "status" -> text
     )(CreateRequestRowProductorForm.apply)(CreateRequestRowProductorForm.unapply)
   }
@@ -75,9 +75,9 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
         repo.create(  
                       res.requestRowId, res.productId, insumoNames(res.productId.toString()),
                       res.productorId, productorNames(res.productorId.toString()),
-                      res.quantity, res.precio, res.status
+                      res.quantity, res.price, res.status
                     ).map { resNew =>
-          repoProductor.updateTotalDebt(res.productorId, res.precio);
+          repoProductor.updateTotalDebt(res.productorId, res.price);
           Redirect(routes.RequestRowProductorController.show(resNew.id))
         }
       }
@@ -98,7 +98,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       "productId" -> longNumber,
       "productorId" -> longNumber,
       "quantity" -> number,
-      "precio" -> of[Double],
+      "price" -> of[Double],
       "status" -> text
     )(UpdateRequestRowProductorForm.apply)(UpdateRequestRowProductorForm.unapply)
   }
@@ -116,7 +116,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       updatedRow = res(0)
       val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> updatedRow.requestRowId.toString(),
                                 "productId" -> updatedRow.productId.toString(), "productorId" -> updatedRow.productorId.toString(),
-                                "quantity" -> updatedRow.quantity.toString(), "precio" -> updatedRow.precio.toString(), "status" -> updatedRow.status.toString())
+                                "quantity" -> updatedRow.quantity.toString(), "price" -> updatedRow.price.toString(), "status" -> updatedRow.status.toString())
       productReqNames = getRequestRowMap(updatedRow.requestRowId)
       requestRow = getRequestRowObj(updatedRow.requestRowId)
       insumoNames = getProductMap(requestRow.productId)
@@ -142,7 +142,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     Await.result(repoProduct.getById(id).map { res1 => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ product => 
-        cache put (product.id.toString(), product.nombre)
+        cache put (product.id.toString(), product.name)
       }
       cache.toMap
     }, 3000.millis)
@@ -223,7 +223,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
                                             errorForm, productReqNames, insumoNames, productorNames)))
       },
       res => {
-        repo.update(res.id, res.requestRowId, res.productId, insumoNames(res.productId.toString), res.productorId, productorNames(res.productorId.toString), res.quantity, res.precio, res.status).map { _ =>
+        repo.update(res.id, res.requestRowId, res.productId, insumoNames(res.productId.toString), res.productorId, productorNames(res.productorId.toString), res.quantity, res.price, res.status).map { _ =>
           Redirect(routes.RequestRowProductorController.show(res.id))
         }
       }
@@ -232,6 +232,6 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
 
 }
 
-case class CreateRequestRowProductorForm(requestRowId: Long, productId: Long, productorId: Long, quantity: Int, precio: Double, status: String)
+case class CreateRequestRowProductorForm(requestRowId: Long, productId: Long, productorId: Long, quantity: Int, price: Double, status: String)
 
-case class UpdateRequestRowProductorForm(id: Long, requestRowId: Long, productId: Long, productorId: Long, quantity: Int, precio: Double, status: String)
+case class UpdateRequestRowProductorForm(id: Long, requestRowId: Long, productId: Long, productorId: Long, quantity: Int, price: Double, status: String)

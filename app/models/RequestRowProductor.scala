@@ -6,7 +6,7 @@ import play.api.libs.json._
 */
 case class RequestRowProductor(id: Long, requestRowId: Long, productId: Long, productName: String,
 								productorId: Long, productorName: String, quantity: Int,
-								precio: Double, paid: Double, status: String)
+								price: Double, paid: Double, status: String)
 
 object RequestRowProductor {
   implicit val RequestRowProductorFormat = Json.format[RequestRowProductor]

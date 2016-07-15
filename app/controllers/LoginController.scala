@@ -48,28 +48,28 @@ class LoginController @Inject() (repo: UserRepository, val messagesApi: Messages
                                         "userSecurity" -> res2(0).login,
                                         "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
-                                        "userName" -> res2(0).nombre.toString()
+                                        "userName" -> res2(0).name.toString()
                                       )
             if (res2(0).type_1.toLowerCase == "admin") {
               Redirect("/").withSession("userSecurity" -> res2(0).login,
                                         "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
-                                        "userName" -> res2(0).nombre.toString())
+                                        "userName" -> res2(0).name.toString())
             } else if (res2(0).type_1.toLowerCase == "veterinario") {
               Redirect("/").withSession("userSecurity" -> res2(0).login,
                                         "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
-                                        "userName" -> res2(0).nombre.toString())
+                                        "userName" -> res2(0).name.toString())
             } else if (res2(0).type_1.toLowerCase == "insumo") {
               Redirect("/").withSession("userSecurity" -> res2(0).login,
                                         "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
-                                        "userName" -> res2(0).nombre.toString())
+                                        "userName" -> res2(0).name.toString())
             } else if (res2(0).type_1.toLowerCase == "almacen") {
               Redirect("/").withSession("userSecurity" -> res2(0).login,
                                         "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
-                                        "userName" -> res2(0).nombre.toString())
+                                        "userName" -> res2(0).name.toString())
             } else {
               Redirect("/error")
             }

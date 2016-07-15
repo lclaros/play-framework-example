@@ -1,4 +1,4 @@
-@(row: Form[CreateRequestRowByInsumoForm], requests: Map[String, String], products: Map[String, String], unitMeasures: Map[String, String])(implicit messages: Messages)
+@(row: Form[CreateRequestRowByInsumoForm], requests: Map[String, String], products: Map[String, String], measures: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -11,7 +11,7 @@
         @select(field = row("productId"), options = options(products))
         @inputText(row("quantity"))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
-        @select(field = row("unitMeasure"), options = options(unitMeasures))
+        @select(field = row("measureId"), options = options(measures))
         <input type="submit" value="Guardar"/>
     }
 }

@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestShow"))) {
-            <a href="/productRequest_show/@row.requestId" class="btn btn-info">Pedido</a>
+            <a href="/productRequest_show/@row.requestId" class="btn btn-info btn-sm">Pedido</a>
         }
         @restrict(roles = List(Array("requestRowEdit"))) {
-            <a href="/requestRow_update/@row.id" class="btn btn-primary">Editar</a> 
+            <a href="/requestRow_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
         }
         @restrict(roles = List(Array("requestRowDelete"))) {
-           <a href="/requestRow_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/requestRow_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">
@@ -34,7 +34,7 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRowProductor_add/@row.id"  class="btn btn-primary">Entrega de Producto</a> </div>
+            <div style="display: inline-block;"> <a href="/requestRowProductor_add/@row.id"  class="btn btn-primary btn-sm">Entrega de Producto</a> </div>
     </div>
 
     <div>Lista de Productos Entregados</div>
@@ -70,17 +70,17 @@
                             }
                         </td>
                         <td>@child.quantity</td>
-                        <td>@child.precio</td>
+                        <td>@child.price</td>
                         <td>@child.status</td>
                         <td>
                            @restrict(roles = List(Array("requestRowProductorEdit"))) {
-                               <a href="/requestRowProductor_update/@child.id" class="btn btn-primary">Editar</a> 
+                               <a href="/requestRowProductor_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
                            @restrict(roles = List(Array("requestRowProductorDelete"))) {
-                               <a href="/requestRowProductor_remove/@child.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/requestRowProductor_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
                            @restrict(roles = List(Array("requestRowProductorShow"))) {
-                               <a href="/requestRowProductor_show/@child.id" class="btn btn-info">Mostrar</a>
+                               <a href="/requestRowProductor_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
                        </td> 
                     </tr>

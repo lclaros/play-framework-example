@@ -32,13 +32,13 @@ class ClienteRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
     /** The name column */
-    def nombre = column[String]("nombre")
+    def name = column[String]("name")
 
     /** The name column */
     def carnet = column[Int]("carnet")
 
     /** The age column */
-    def id_asociacion = column[Int]("id_asociacion")
+    def id_association = column[Int]("id_association")
 
     /**
      * This is the tables default "projection".
@@ -48,7 +48,7 @@ class ClienteRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
      * In this case, we are simply passing the id, name and page parameters to the Cliente case classes
      * apply and unapply methods.
      */
-    def * = (id, nombre, carnet, id_asociacion) <> ((Cliente.apply _).tupled, Cliente.unapply)
+    def * = (id, name, carnet, id_association) <> ((Cliente.apply _).tupled, Cliente.unapply)
   }
 
   /**
@@ -62,16 +62,16 @@ class ClienteRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
    * This is an asynchronous operation, it will return a future of the created person, which can be used to obtain the
    * id for that person.
    */
-  def create(nombre: String, carnet: Int, id_asociacion: Int): Future[Cliente] = db.run {
+  def create(name: String, carnet: Int, id_association: Int): Future[Cliente] = db.run {
     // We create a projection of just the name and age columns, since we're not inserting a value for the id column
-    (clientes.map(p => (p.nombre, p.carnet, p.id_asociacion))
+    (clientes.map(p => (p.name, p.carnet, p.id_association))
       // Now define it to return the id, because we want to know what id was generated for the person
       returning clientes.map(_.id)
       // And we define a transformation for the returned value, which combines our original parameters with the
       // returned id
       into ((nameAge, id) => Cliente(id, nameAge._1, nameAge._2, nameAge._3))
     // And finally, insert the person into the database
-    ) += (nombre, carnet, id_asociacion)
+    ) += (name, carnet, id_association)
   }
 
   /**

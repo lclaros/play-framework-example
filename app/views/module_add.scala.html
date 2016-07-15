@@ -7,15 +7,15 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("moduleList"))) {
-          <a href="/module_list" class="btn btn-primary">Lista</a> 
+          <a href="/module_list" class="btn btn-primary btn-sm">Lista</a> 
         }
     </div>
     @form(routes.ModuleController.add()) {
         @inputText(row("name"))
         @inputText(row("president"))
         @inputText(row("description"))
-        @select(field = row("asociacion"), options = options(associations))
-        <input type="submit" value="Agregar Modulo" class="btn btn-primary"/>
-        <a href="/module_list" class="btn btn-primary">Cancelar</a>
+        @select(field = row("association"), options = options(associations))
+        <input type="submit" value="Agregar Modulo" class="btn btn-primary btn-sm"/>
+        <a href="/module_list" class="btn btn-primary btn-sm">Cancelar</a>
     }
 }

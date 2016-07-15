@@ -54,7 +54,7 @@ class ProductorController @Inject() (
 
   val newForm: Form[CreateProductorForm] = Form {
     mapping(
-      "nombre" -> nonEmptyText,
+      "name" -> nonEmptyText,
       "carnet" -> number.verifying(min(0), max(9999999)),
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
@@ -117,7 +117,7 @@ class ProductorController @Inject() (
         Future.successful(Ok(views.html.productor_add(new MyDeadboltHandler, errorForm, modules)))
       },
       res => {
-        repo.create (res.nombre, res.carnet, res.telefono, res.direccion,
+        repo.create (res.name, res.carnet, res.telefono, res.direccion,
                     res.account, res.module, modules(res.module.toString)).map { resNew =>
           Redirect(routes.ProductorController.show(resNew.id))
         }
@@ -147,7 +147,7 @@ class ProductorController @Inject() (
   val updateForm: Form[UpdateProductorForm] = Form {
     mapping(
       "id" -> longNumber,
-      "nombre" -> nonEmptyText,
+      "name" -> nonEmptyText,
       "carnet" -> number,
       "telefono" -> number,
       "direccion" -> nonEmptyText,
@@ -195,7 +195,7 @@ class ProductorController @Inject() (
       updatedRow = res(0)
       val anyData = Map(
         "id" -> id.toString().toString(),
-        "nombre" -> updatedRow.nombre,
+        "name" -> updatedRow.name,
         "carnet" -> updatedRow.carnet.toString(),
         "telefono" -> updatedRow.telefono.toString(),
         "direccion" -> updatedRow.direccion,
@@ -233,9 +233,9 @@ class ProductorController @Inject() (
       },
       res => {
         repo.update(
-                      res.id, res.nombre, res.carnet, res.telefono,
+                      res.id, res.name, res.carnet, res.telefono,
                       res.direccion, res.account, res.module,
-                      modules(res.module.toString()), "Asociacion Name",
+                      modules(res.module.toString()), "Association Name",
                       res.totalDebt, res.numberPayment,
                       res.position
                     ).map { _ =>
@@ -247,12 +247,12 @@ class ProductorController @Inject() (
 }
 
 case class CreateProductorForm(
-                                nombre: String, carnet: Int, telefono: Int,
+                                name: String, carnet: Int, telefono: Int,
                                 direccion: String, account: String, module: Long
                               )
 
 case class UpdateProductorForm(
-                                id: Long, nombre: String, carnet: Int, telefono: Int,
+                                id: Long, name: String, carnet: Int, telefono: Int,
                                 direccion: String, account: String, module: Long,
                                 totalDebt: Double, numberPayment: Int, position: String
                               )

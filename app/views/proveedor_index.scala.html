@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("proveedorCreate"))) {
-           <a href="/proveedor_add" class="btn btn-primary">Nuevo</a> 
+           <a href="/proveedor_add" class="btn btn-primary btn-sm">Nuevo</a> 
        }
     </div>
     <div class="table table-bordered">
@@ -24,20 +24,20 @@
             <tbody>
                 @for(row <- rows) {
                     <tr>
-                        <td>@row.nombre</td>
+                        <td>@row.name</td>
                         <td>@row.telefono</td>
                         <td>@row.direccion</td>
                         <td>@row.contacto</td>
                         <td>@row.account</td>
                        <td>
                            @restrict(roles = List(Array("proveedorEdit"))) {
-                               <a href="/proveedor_update/@row.id" class="btn btn-primary">Editar</a> 
+                               <a href="/proveedor_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
                            @restrict(roles = List(Array("proveedorDelete"))) {
-                               <a href="/proveedor_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/proveedor_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
                            @restrict(roles = List(Array("proveedorShow"))) {
-                               <a href="/proveedor_show/@row.id" class="btn btn-info">Mostrar</a>
+                               <a href="/proveedor_show/@row.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
                        </td> 
                     </tr>

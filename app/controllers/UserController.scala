@@ -22,7 +22,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
 
   val newForm: Form[CreateUserForm] = Form {
     mapping(
-      "nombre" -> nonEmptyText,
+      "name" -> nonEmptyText,
       "carnet" -> number,
       "telefono" -> number,
       "direccion" -> text,
@@ -99,7 +99,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
         Future.successful(Ok(views.html.user_add(new MyDeadboltHandler, errorForm, types)))
       },
       res => {
-        repo.create(res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
+        repo.create(res.name, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
           Redirect(routes.UserController.index)
         }
       }
@@ -116,7 +116,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   val updateForm: Form[UpdateUserForm] = Form {
     mapping(
       "id" -> longNumber,
-      "nombre" -> nonEmptyText,
+      "name" -> nonEmptyText,
       "carnet" -> number.verifying(min(0), max(9999999)),
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
@@ -139,7 +139,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
     repo.getById(id).map { res =>
       updateRow = res(0)
       val anyData = Map(
-                          "id" -> id.toString().toString(), "nombre" -> updateRow.nombre,
+                          "id" -> id.toString().toString(), "name" -> updateRow.name,
                           "carnet" -> updateRow.carnet.toString(), "telefono" -> updateRow.telefono.toString(),
                           "direccion" -> updateRow.direccion, "sueldo" -> updateRow.sueldo.toString(),
                           "type_1" -> updateRow.type_1.toString(), "login" -> updateRow.login.toString(),
@@ -170,7 +170,7 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
         Future.successful(Ok(views.html.user_update(new MyDeadboltHandler, updateRow, errorForm, types)))
       },
       res => {
-        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
+        repo.update(res.id, res.name, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
           Redirect(routes.UserController.show(res.id))
         }
       }
@@ -178,6 +178,6 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   }
 }
 
-case class CreateUserForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)
+case class CreateUserForm(name: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)
 
-case class UpdateUserForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)
+case class UpdateUserForm(id: Long, name: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)

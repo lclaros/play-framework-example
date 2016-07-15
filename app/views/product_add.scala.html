@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductForm], unitMeasures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductForm], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -6,22 +6,22 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("productList"))) {
-            <a href="/product_list" class="btn btn-primary">Listar</a> 
+            <a href="/product_list" class="btn btn-primary btn-sm">Listar</a> 
         }
     </div>
     @form(routes.ProductController.addProduct()) {
         <div class="container">
-                @inputText(row("nombre"))
+                @inputText(row("name"))
                 @inputText(row("cost"))
                 @inputText(row("percent"))
-                @select(field = row("unitMeasure"), options = options(unitMeasures))
+                @select(field = row("measureId"), options = options(measures))
                 @inputText(row("currentAmount"))
-                @textarea(row("descripcion"), 'rows -> 3, 'cols -> 100)
+                @textarea(row("description"), 'rows -> 3, 'cols -> 100)
                 <br/>
                 <br/>
                 <br/>
-               <input type="submit" class="btn btn-primary" value="Agregar Producto"/>
-               <a href="/product_list" class="btn btn-info">Cancelar</a>
+               <input type="submit" class="btn btn-primary btn-sm" value="Agregar Producto"/>
+               <a href="/product_list" class="btn btn-info btn-sm">Cancelar</a>
             </div>
         </div>
     }

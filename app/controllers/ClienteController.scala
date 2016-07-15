@@ -22,9 +22,9 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
    */
   val clienteForm: Form[CreateClienteForm] = Form {
     mapping(
-      "nombre" -> nonEmptyText,
+      "name" -> nonEmptyText,
       "carnet" -> number.verifying(min(0), max(9999999)),
-      "id_asociacion" -> number.verifying(min(0), max(140))
+      "id_association" -> number.verifying(min(0), max(140))
     )(CreateClienteForm.apply)(CreateClienteForm.unapply)
   }
 
@@ -61,4 +61,4 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
  * in a different way to your models.  In this case, it doesn't make sense to have an id parameter in the form, since
  * that is generated once it's created.
  */
-case class CreateClienteForm(nombre: String, carnet: Int, id_asociacion: Int)
+case class CreateClienteForm(name: String, carnet: Int, id_association: Int)

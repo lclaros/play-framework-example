@@ -155,7 +155,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
     Await.result(repoVete.getById(id).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
-        cache put (user.id.toString, user.nombre)
+        cache put (user.id.toString, user.name)
       }
       
       cache.toMap
@@ -166,7 +166,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
     Await.result(repoVete.listVeterinarios().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
-        cache put (user.id.toString, user.nombre)
+        cache put (user.id.toString, user.name)
       }
       
       cache.toMap
@@ -177,7 +177,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
     Await.result(repoInsUser.listInsumoUsers().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
-        cache put (user.id.toString, user.nombre)
+        cache put (user.id.toString, user.name)
       }
       
       cache.toMap
@@ -188,7 +188,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
     Await.result(repoSto.listStorekeepers().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
-        cache put (user.id.toString, user.nombre)
+        cache put (user.id.toString, user.name)
       }
       
       cache.toMap

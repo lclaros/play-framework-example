@@ -81,7 +81,7 @@ def generarReporte(requestRows: Seq[Productor], discountReportId: Long) = {
           (tableQ.map(discountDetail => (discountDetail.discountReport, discountDetail.productorId, discountDetail.productorName, discountDetail.status, discountDetail.discount, discountDetail.requestRow))
             returning tableQ.map(_.id)
             into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
-          ) += (discountReportId, productor.id, productor.nombre, "borrador", productor.totalDebt / productor.numberPayment, 0)
+          ) += (discountReportId, productor.id, productor.name, "borrador", productor.totalDebt / productor.numberPayment, 0)
         };
         // after insert it we need to decrease the number payment of the productor
         insertResult.map(insertResultRow => repoProductor.updateNumberPayment(productor.id, -1).map(mm => println("DONE")));

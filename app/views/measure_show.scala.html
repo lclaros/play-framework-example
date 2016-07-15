@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: UnitMeasure)(implicit request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Measure)(implicit request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("measureList"))) {
-            <a href="/measure_list" class="btn btn-primary">Listar</a> 
+            <a href="/measure_list" class="btn btn-primary btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("measureEdit"))) {
-           <a href="/measure_update/@row.id" class="btn btn-primary">Editar</a>
+           <a href="/measure_update/@row.id" class="btn btn-primary btn-sm">Editar</a>
         }
         @restrict(roles = List(Array("measureDelete"))) {
-           <a href="/measure_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/measure_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     

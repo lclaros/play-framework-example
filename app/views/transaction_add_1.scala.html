@@ -6,14 +6,14 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionList"))) {
-          <a href="/transaction_list" class="btn btn-info">Lista</a> 
+          <a href="/transaction_list" class="btn btn-info btn-sm">Lista</a> 
         }
     </div>
     @form(routes.TransactionController.addIngreso()) {
     	@inputDate(row("date"))
         @select(field = row("type_1"), options = options(Map("Ingreso" -> "Ingreso")))
         @inputText(row("description"))
-        <input type="submit" value="Inicial transaccion" class="btn btn-primary"/>
-        <a href="/transaction_list" class="btn btn-primary">Cancelar</a>
+        <input type="submit" value="Inicial transaccion" class="btn btn-primary btn-sm"/>
+        <a href="/transaction_list" class="btn btn-primary btn-sm">Cancelar</a>
     }
 }

@@ -27,21 +27,21 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     def productId = column[Long]("productId")
     def productName = column[String]("productName")
     def quantity = column[Int]("quantity")
-    def precio = column[Double]("precio")
+    def price = column[Double]("price")
     def paid = column[Int]("paid")
     def status = column[String]("status")
-    def unitMeasure = column[Long]("unitMeasure")
-    def unitMeasureName = column[String]("unitMeasureName")
-    def * = (id, requestId, productId, productName, quantity, precio, paid, status, unitMeasure, unitMeasureName) <> ((RequestRow.apply _).tupled, RequestRow.unapply)
+    def measureId = column[Long]("measureId")
+    def measureName = column[String]("measureName")
+    def * = (id, requestId, productId, productName, quantity, price, paid, status, measureId, measureName) <> ((RequestRow.apply _).tupled, RequestRow.unapply)
   }
 
   private val tableQ = TableQuery[RequestRowTable]
 
-  def create(requestId: Long, productId: Long, productName: String, quantity: Int, precio: Double, status: String, unitMeasure: Long, unitMeasureName: String): Future[RequestRow] = db.run {
-    (tableQ.map(p => (p.requestId, p.productId, p.productName, p.quantity, p.precio, p.paid, p.status, p.unitMeasure, p.unitMeasureName))
+  def create(requestId: Long, productId: Long, productName: String, quantity: Int, price: Double, status: String, measureId: Long, measureName: String): Future[RequestRow] = db.run {
+    (tableQ.map(p => (p.requestId, p.productId, p.productName, p.quantity, p.price, p.paid, p.status, p.measureId, p.measureName))
       returning tableQ.map(_.id)
       into ((nameAge, id) => RequestRow(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8, nameAge._9))
-    ) += (requestId, productId, productName, quantity, precio, 0, status, unitMeasure, unitMeasureName)
+    ) += (requestId, productId, productName, quantity, price, 0, status, measureId, measureName)
   }
 
   def list(): Future[Seq[RequestRow]] = db.run {
@@ -69,8 +69,8 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
 
   // update required to copy
   def update(id: Long, requestId: Long, productId: Long, productName: String,
-               quantity: Int, precio: Double, status: String, unitMeasure: Long,
-               unitMeasureName: String
+               quantity: Int, price: Double, status: String, measureId: Long,
+               measureName: String
              ): Future[Seq[RequestRow]] = db.run {
     val q2 = for { c <- tableQ if c.id === id } yield c.requestId
     db.run(q2.update(requestId))
@@ -80,14 +80,14 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     db.run(q31.update(productName))
     val q4 = for { c <- tableQ if c.id === id } yield c.quantity
     db.run(q4.update(quantity))
-    val q5 = for { c <- tableQ if c.id === id } yield c.precio
-    db.run(q5.update(precio))
+    val q5 = for { c <- tableQ if c.id === id } yield c.price
+    db.run(q5.update(price))
     val q6 = for { c <- tableQ if c.id === id } yield c.status
     db.run(q6.update(status))
-    val q7 = for { c <- tableQ if c.id === id } yield c.unitMeasure
-    db.run(q7.update(unitMeasure))
-    val q8 = for { c <- tableQ if c.id === id } yield c.unitMeasureName
-    db.run(q8.update(unitMeasureName))
+    val q7 = for { c <- tableQ if c.id === id } yield c.measureId
+    db.run(q7.update(measureId))
+    val q8 = for { c <- tableQ if c.id === id } yield c.measureName
+    db.run(q8.update(measureName))
     tableQ.filter(_.id === id).result
   }
 

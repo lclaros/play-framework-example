@@ -9,7 +9,7 @@
         <a href="/">Muro</a>
     </div>
     @form(routes.StorekeeperController.add()) {
-        @inputText(row("nombre"))
+        @inputText(row("name"))
         @inputText(row("carnet"))
         @inputText(row("telefono"))
         @inputText(row("direccion"))
@@ -17,7 +17,7 @@
         @inputText(row("type_1"))
         @inputText(row("login"))
         @inputText(row("password"))
-        <input type="submit" value="Agregar" class="btn btn-primary"/>
+        <input type="submit" value="Agregar" class="btn btn-primary btn-sm"/>
     }
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">

@@ -6,27 +6,27 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportShow"))) {
-            <a href="/discountReport_show/@discountId" class="btn btn-info">Reporte</a> 
+            <a href="/discountReport_show/@discountId" class="btn btn-info btn-sm">Reporte</a> 
         }
     </div>
     <div style="display: inline-block;">
         @form(routes.DiscountDetailController.setProductor()) {
             @inputText(row("account"))
-            <input type="submit" value="Buscar Por Cuenta" class="btn btn-primary"/>
+            <input type="submit" value="Buscar Por Cuenta" class="btn btn-primary btn-sm"/>
         }        
     </div>
     <div style="display: inline-block;">
         @form(routes.DiscountDetailController.setProductorName()) {
             @inputText(row("name"))
-            <input type="submit" value="Buscar Por Nombre" class="btn btn-primary"/>
+            <input type="submit" value="Buscar Por Nombre" class="btn btn-primary btn-sm"/>
         }
     </div>
     @form(routes.DiscountDetailController.add()) {
         @select(field = row("productorId"), options = options(productors))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("discount"))
-        <input type="submit" value="Guardar" class="btn btn-primary"/>
-        <a href="/discountReport_show/@discountId" class="btn btn-primary">Cancelar</a>
+        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        <a href="/discountReport_show/@discountId" class="btn btn-primary btn-sm">Cancelar</a>
         @select(field = row("discountReport"), options = options(discounts), 'hidden -> "true", '_label -> "")
     }
 }

@@ -10,7 +10,7 @@
     @form(routes.VeterinarioController.add()) {
         <div class="container">
         <div class="col-md-6">
-            @inputText(row("nombre"))
+            @inputText(row("name"))
             @inputText(row("carnet"))
             @inputText(row("telefono"))
             @inputText(row("login"))
@@ -22,7 +22,7 @@
             @inputText(row("type_1"))
         </div>
         <div class="col-md-12">
-            <input type="submit" value="Agregar Veterinario"class="btn btn-primary"/>
+            <input type="submit" value="Agregar Veterinario"class="btn btn-primary btn-sm"/>
         </div>
         </div>
     }

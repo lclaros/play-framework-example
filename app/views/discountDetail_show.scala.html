@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportShow"))) {
-            <a href="/discountReport_show/@row.discountReport" class="btn btn-info">Reporte</a> 
+            <a href="/discountReport_show/@row.discountReport" class="btn btn-info btn-sm">Reporte</a> 
         }
         @restrict(roles = List(Array("discountDetailEdit"))) {
-           <a href="/discountDetail_update/@row.id" class="btn btn-primary">Editar</a>
+           <a href="/discountDetail_update/@row.id" class="btn btn-primary btn-sm">Editar</a>
         }
         @restrict(roles = List(Array("discountDetailDelete"))) {
-           <a href="/discountDetail_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/discountDetail_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">

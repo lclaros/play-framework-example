@@ -7,5 +7,5 @@ $ ->
       parent = $("<td>").text row.parent
       description = $("<td>").text row.description
       child = $("<td>").text row.child
-      link = $("<td>").html '<a href="/account_update/' + row.id + '" class="btn btn-primary">Editar</a>' + '<a href="/account_remove/' + row.id + '" class="btn btn-danger">Eliminar</a>' + '<a href="/account_show/' + row.id + '" class="btn btn-info">Mostrar</a>'
+      link = $("<td>").html '<a href="/account_update/' + row.id + '" class="btn btn-primary btn-sm">Editar</a>' + '<a href="/account_remove/' + row.id + '" class="btn btn-danger btn-sm">Eliminar</a>' + '<a href="/account_show/' + row.id + '" class="btn btn-info btn-sm">Mostrar</a>'
       $("#rows").append $("<tr>").append(code).append(name).append(type_1).append(parent).append(description).append(child).append(link)

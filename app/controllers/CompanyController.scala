@@ -20,7 +20,7 @@ import security.MyDeadboltHandler
 class CompanyController @Inject() (repo: CompanyRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val asociaciones = scala.collection.immutable.Map[String, String]("0" -> "Ninguno", "1" -> "Asociacion 1", "2" -> "Asociacion 2")
+  val associationes = scala.collection.immutable.Map[String, String]("0" -> "Ninguno", "1" -> "Association 1", "2" -> "Association 2")
 
   // update required
   val updateForm: Form[UpdateCompanyForm] = Form {

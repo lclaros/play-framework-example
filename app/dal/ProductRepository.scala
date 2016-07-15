@@ -23,28 +23,28 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   private class ProductsTable(tag: Tag) extends Table[Product](tag, "product") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def nombre = column[String]("nombre")
+    def name = column[String]("name")
     def cost = column[Double]("cost")
     def percent = column[Double]("percent")
     def price = column[Double]("price")
-    def descripcion = column[String]("descripcion")
-    def unitMeasure = column[Long]("unitMeasure")
-    def unitMeasureName = column[String]("unitMeasureName")
+    def description = column[String]("description")
+    def measureId = column[Long]("measureId")
+    def measureName = column[String]("measureName")
     def currentAmount = column[Int]("currentAmount")
-    def * = (id, nombre, cost, percent, price, descripcion, unitMeasure, unitMeasureName, currentAmount) <> ((Product.apply _).tupled, Product.unapply)
+    def * = (id, name, cost, percent, price, description, measureId, measureName, currentAmount) <> ((Product.apply _).tupled, Product.unapply)
   }
 
   private val tableQ = TableQuery[ProductsTable]
 
   def create( 
-              nombre: String, cost: Double, percent: Double, price: Double,
-              descripcion: String, unitMeasure: Long, unitMeasureName: String,
+              name: String, cost: Double, percent: Double, price: Double,
+              description: String, measureId: Long, measureName: String,
               currentAmount: Int
             ): Future[Product] = db.run {
     (tableQ.map(
                   p => (
-                          p.nombre, p.cost, p.percent, p.price, p.descripcion,
-                          p.unitMeasure, p.unitMeasureName, p.currentAmount
+                          p.name, p.cost, p.percent, p.price, p.description,
+                          p.measureId, p.measureName, p.currentAmount
                         ) 
                 ) returning tableQ.map(_.id) into (
                                                     (nameAge, id) => Product(
@@ -53,7 +53,7 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
                                                                               nameAge._7, nameAge._8
                                                                               )
                                                   )
-                ) += (nombre, cost, percent, cost + cost * percent, descripcion, unitMeasure, unitMeasureName, currentAmount)
+                ) += (name, cost, percent, cost + cost * percent, description, measureId, measureName, currentAmount)
   }
 
   def list(): Future[Seq[Product]] = db.run {
@@ -61,11 +61,11 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.name)).result
   }
 
   def getListNamesById(id: Long): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.id === id).map(s => (s.id, s.nombre)).result
+    tableQ.filter(_.id === id).map(s => (s.id, s.name)).result
   }
 
     // to cpy
@@ -74,24 +74,24 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   // update required to copy
-  def update( id: Long, nombre: String, cost: Double, percent: Double, price: Double,
-              descripcion: String, unitMeasure: Long, unitMeasureName: String,
+  def update( id: Long, name: String, cost: Double, percent: Double, price: Double,
+              description: String, measureId: Long, measureName: String,
               currentAmount: Int
             ): Future[Seq[Product]] = db.run {
-    val q = for { c <- tableQ if c.id === id } yield c.nombre
-    db.run(q.update(nombre))
+    val q = for { c <- tableQ if c.id === id } yield c.name
+    db.run(q.update(name))
     val q2 = for { c <- tableQ if c.id === id } yield c.percent
     db.run(q2.update(percent))
     val q3 = for { c <- tableQ if c.id === id } yield c.cost
     db.run(q3.update(cost))
     val q31 = for { c <- tableQ if c.id === id } yield c.price
     db.run(q31.update(cost + cost * percent))
-    val q4 = for { c <- tableQ if c.id === id } yield c.descripcion
-    db.run(q4.update(descripcion))
-    val q5 = for { c <- tableQ if c.id === id } yield c.unitMeasure
-    db.run(q5.update(unitMeasure))
-    val q51 = for { c <- tableQ if c.id === id } yield c.unitMeasureName
-    db.run(q51.update(unitMeasureName))
+    val q4 = for { c <- tableQ if c.id === id } yield c.description
+    db.run(q4.update(description))
+    val q5 = for { c <- tableQ if c.id === id } yield c.measureId
+    db.run(q5.update(measureId))
+    val q51 = for { c <- tableQ if c.id === id } yield c.measureName
+    db.run(q51.update(measureName))
     val q6 = for { c <- tableQ if c.id === id } yield c.currentAmount
     db.run(q6.update(currentAmount))
     tableQ.filter(_.id === id).result

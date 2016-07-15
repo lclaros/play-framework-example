@@ -6,16 +6,16 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productorCreate"))) {
-            <a href="/productor_add" class="btn btn-primary">Nuevo</a> 
+            <a href="/productor_add" class="btn btn-primary btn-sm">Nuevo</a> 
         }
         @restrict(roles = List(Array("productorList"))) {
-            <a href="/productor_list/1" class="btn btn-primary">Listar</a> 
+            <a href="/productor_list/1" class="btn btn-primary btn-sm">Listar</a> 
         }
     </div>
     <div class="container">
         @form(routes.ProductorController.searchProductPost()) {
             @inputText(rowSearch("search"))
-            <input type="submit" value="Buscar" class="btn btn-primary"/>
+            <input type="submit" value="Buscar" class="btn btn-primary btn-sm"/>
         }   
     </div>
 
@@ -54,20 +54,20 @@
             @for(productor <- productors) {
                 <tr>
                     <td></td>
-                    <td>@productor.nombre</td>
+                    <td>@productor.name</td>
                     <td>@productor.carnet</td>
                     <td>@productor.telefono</td>
                     <td>@productor.account</td>
                     <td>@productor.module</td>
                     <td>
                         @restrict(roles = List(Array("productEdit"))) {
-                            <a href="/productor_update/@productor.id" class="btn btn-primary">Editar</a> 
+                            <a href="/productor_update/@productor.id" class="btn btn-primary btn-sm">Editar</a> 
                         }
                         @restrict(roles = List(Array("productDelete"))) {
-                            <a href="/productor_remove/@productor.id" class="btn btn-danger">Eliminar</a>
+                            <a href="/productor_remove/@productor.id" class="btn btn-danger btn-sm">Eliminar</a>
                         }
                         @restrict(roles = List(Array("productShow"))) {
-                            <a href="/productor_show/@productor.id" class="btn btn-info">Mostrar</a>'
+                            <a href="/productor_show/@productor.id" class="btn btn-info btn-sm">Mostrar</a>'
                         }
                     </td>
                 </tr>

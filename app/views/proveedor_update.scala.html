@@ -6,23 +6,23 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("proveedorList"))) {
-            <a href="/proveedor_list" class="btn btn-primary">Listar</a> 
+            <a href="/proveedor_list" class="btn btn-primary btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("proveedorShow"))) {
-           <a href="/proveedor_show/@row.id" class="btn btn-info">Mostrar</a>
+           <a href="/proveedor_show/@row.id" class="btn btn-info btn-sm">Mostrar</a>
         }
         @restrict(roles = List(Array("proveedorDelete"))) {
-           <a href="/proveedor_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/proveedor_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     @form(routes.ProveedorController.updatePost()) {
-        @inputText(rowForm("nombre"))
+        @inputText(rowForm("name"))
         @inputText(rowForm("telefono"))
         @inputText(rowForm("direccion"))
         @inputText(rowForm("contacto"))
         @inputText(rowForm("account"))
-        <input type="submit" class="btn btn-primary" value="Actualizar"/>
-        <a href="/proveedor_show/@row.id" class="btn btn-primary">Cancelar</a>
+        <input type="submit" class="btn btn-primary btn-sm" value="Actualizar"/>
+        <a href="/proveedor_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

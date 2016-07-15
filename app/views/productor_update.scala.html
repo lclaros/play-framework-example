@@ -6,19 +6,19 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("productorList"))) {
-            <a href="/productor_list/1" class="btn btn-primary">Listar</a> 
+            <a href="/productor_list/1" class="btn btn-primary btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("productorShow"))) {
-            <a href="/productor_show/@row.id" class="btn btn-info">Mostrar</a> 
+            <a href="/productor_show/@row.id" class="btn btn-info btn-sm">Mostrar</a> 
         }
         @restrict(roles = List(Array("productorDelete"))) {
-           <a href="/productor_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/productor_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
 
     @form(routes.ProductorController.updatePost()) {
     <div class="container">
-            @inputText(rowForm("nombre"))
+            @inputText(rowForm("name"))
             @inputText(rowForm("carnet"))
             @inputText(rowForm("telefono"))
             @inputText(rowForm("direccion"))
@@ -27,8 +27,8 @@
             @inputText(rowForm("totalDebt"), 'readonly -> "readonly")
             @inputText(rowForm("numberPayment"))
             @inputText(rowForm("position"), 'readonly -> "readonly")
-        <input type="submit" value="Actualizar"  class="btn btn-primary"/>
-        <a href="/productor_show/@row.id" class="btn btn-primary">Cancelar</a>
+        <input type="submit" value="Actualizar"  class="btn btn-primary btn-sm"/>
+        <a href="/productor_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     </div>
     }

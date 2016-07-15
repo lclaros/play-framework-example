@@ -23,26 +23,26 @@
 //  private class VeterinariosTable(tag: Tag) extends Table[User](tag, "user") {
 //
 //    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-//    def nombre = column[String]("nombre")
+//    def name = column[String]("name")
 //    def carnet = column[Int]("carnet")
 //    def telefono = column[Int]("telefono")
 //    def direccion = column[String]("direccion")
 //    def sueldo = column[Int]("sueldo")
 //    def type_1 = column[String]("type")
-//    def * = (id, nombre, carnet, telefono, direccion, sueldo, type_1) <> ((User.apply _).tupled, User.unapply)
+//    def * = (id, name, carnet, telefono, direccion, sueldo, type_1) <> ((User.apply _).tupled, User.unapply)
 //  }
 //
 //  private val tableQ = TableQuery[VeterinariosTable]
 //
-//  def create(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[User] = db.run {
-//    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1))
+//  def create(name: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[User] = db.run {
+//    (tableQ.map(p => (p.name, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1))
 //      returning tableQ.map(_.id)
 //      into ((nameAge, id) => User(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
-//    ) += (nombre, carnet, telefono, direccion, sueldo, "Almacen")
+//    ) += (name, carnet, telefono, direccion, sueldo, "Almacen")
 //  }
 //
 //  def getListNames(): Future[Seq[(Long, String)]] = db.run {
-//    tableQ.filter(_.type_1 === "Almacen").map(s => (s.id, s.nombre)).result
+//    tableQ.filter(_.type_1 === "Almacen").map(s => (s.id, s.name)).result
 //  }
 //
 //  def list(): Future[Seq[User]] = db.run {
@@ -55,9 +55,9 @@
 //  }
 //
 //  // update required to copy
-//  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[Seq[User]] = db.run {
-//    val q = for { c <- tableQ if c.id === id } yield c.nombre
-//    db.run(q.update(nombre))
+//  def update(id: Long, name: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[Seq[User]] = db.run {
+//    val q = for { c <- tableQ if c.id === id } yield c.name
+//    db.run(q.update(name))
 //    val q2 = for { c <- tableQ if c.id === id } yield c.carnet
 //    db.run(q2.update(carnet))
 //    val q3 = for { c <- tableQ if c.id === id } yield c.telefono

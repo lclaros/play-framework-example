@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportCreate"))) {
-            <a href="/discountReport_add" class="btn btn-primary">Nuevo</a> 
+            <a href="/discountReport_add" class="btn btn-primary btn-sm">Nuevo</a> 
         }
     </div>
     <div>Lista de Reporte de Descuentos</div>
@@ -30,16 +30,16 @@
                         <td>@row.total</td>
                         <td>
                            @restrict(roles = List(Array("discountReportEdit"))) {
-                               <a href="/discountReport_update/@row.id" class="btn btn-primary">Editar</a> 
+                               <a href="/discountReport_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
                            @restrict(roles = List(Array("discountReportDelete"))) {
-                               <a href="/discountReport_remove/@row.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/discountReport_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
                            @restrict(roles = List(Array("discountReportShow"))) {
-                               <a href="/discountReport_show/@row.id" class="btn btn-info">Mostrar</a>
+                               <a href="/discountReport_show/@row.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
                            @restrict(roles = List(Array("discountReportFinalize"))) {
-                            <a href="/discountReport_finalize/@row.id" class="btn btn-primary">Finalizar</a>
+                            <a href="/discountReport_finalize/@row.id" class="btn btn-primary btn-sm">Finalizar</a>
                            }
                        </td> 
                     </tr>

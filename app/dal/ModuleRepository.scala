@@ -26,18 +26,18 @@ class ModuleRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     def name = column[String]("name")
     def president = column[Long]("president")
     def description = column[String]("description")
-    def asociacion = column[Long]("asociacion")
-    def asociacionName = column[String]("asociacionName")
-    def * = (id, name, president, description, asociacion, asociacionName) <> ((Module.apply _).tupled, Module.unapply)
+    def association = column[Long]("association")
+    def associationName = column[String]("associationName")
+    def * = (id, name, president, description, association, associationName) <> ((Module.apply _).tupled, Module.unapply)
   }
 
   private val tableQ = TableQuery[ModulesTable]
 
-  def create(name: String, president: Long, description: String, asociacion: Long, asociacionName: String): Future[Module] = db.run {
-    (tableQ.map(p => (p.name, p.president, p.description, p.asociacion, p.asociacionName))
+  def create(name: String, president: Long, description: String, association: Long, associationName: String): Future[Module] = db.run {
+    (tableQ.map(p => (p.name, p.president, p.description, p.association, p.associationName))
       returning tableQ.map(_.id)
       into ((nameAge, id) => Module(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
-    ) += (name, president, description, asociacion, asociacionName)
+    ) += (name, president, description, association, associationName)
   }
 
   def list(): Future[Seq[Module]] = db.run {
@@ -50,18 +50,18 @@ class ModuleRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
   }
 
   // update required to copy
-  def update(id: Long, name: String, president: Long, description: String, asociacion: Long, 
-             asociacionName: String): Future[Seq[Module]] = db.run {
+  def update(id: Long, name: String, president: Long, description: String, association: Long, 
+             associationName: String): Future[Seq[Module]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.name
     db.run(q.update(name))
     val q2 = for { c <- tableQ if c.id === id } yield c.president
     db.run(q2.update(president))
     val q3 = for { c <- tableQ if c.id === id } yield c.description
     db.run(q3.update(description))
-    val q4 = for { c <- tableQ if c.id === id } yield c.asociacion
-    db.run(q4.update(asociacion))
-    val q5 = for { c <- tableQ if c.id === id } yield c.asociacionName
-    db.run(q5.update(asociacionName))
+    val q4 = for { c <- tableQ if c.id === id } yield c.association
+    db.run(q4.update(association))
+    val q5 = for { c <- tableQ if c.id === id } yield c.associationName
+    db.run(q5.update(associationName))
     tableQ.filter(_.id === id).result
   }
 

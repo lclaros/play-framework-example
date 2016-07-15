@@ -6,20 +6,20 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productList"))) {
-            <a href="/product_list" class="btn btn-primary">Listar</a> 
+            <a href="/product_list" class="btn btn-primary btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("productEdit"))) {
-           <a href="/product_update/@row.id" class="btn btn-primary">Editar</a>
+           <a href="/product_update/@row.id" class="btn btn-primary btn-sm">Editar</a>
         }
         @restrict(roles = List(Array("productDelete"))) {
-           <a href="/product_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/product_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">
         <div >
             <div>
                 <div style="display: inline-block;">Nombre: </div>
-                <div style="display: inline-block;" id="nombre">@row.nombre</div>
+                <div style="display: inline-block;" id="name">@row.name</div>
             </div>
             <div>
                 <div style="display: inline-block;">Costo: </div>
@@ -35,11 +35,11 @@
             </div>
             <div>
                 <div style="display: inline-block;">Description: </div>
-                <div style="display: inline-block;" id="description">@row.descripcion</div>
+                <div style="display: inline-block;" id="description">@row.description</div>
             </div>
             <div>
                 <div style="display: inline-block;">Unidad De Medida: </div>
-                <div style="display: inline-block;" id="unitMeasure">@row.unitMeasureName</div>
+                <div style="display: inline-block;" id="measure">@row.measureName</div>
             </div>
             <div>
                 <div style="display: inline-block;">En Inventario: </div>
@@ -55,7 +55,7 @@
             }
         </div>
         <div class="container">
-                <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary">Registrar producto</a> </div>
+                <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary btn-sm">Registrar producto</a> </div>
             </div>
             <div class="table table-bordered">
                 <table class="table table-bordered" id="rows">
@@ -94,13 +94,13 @@
                                 @restrict(roles = List(Array("productInv"))) {
                                     <td>
                                        @restrict(roles = List(Array("productInvEdit"))) {
-                                           <a href="/productInv_update/@child.id" class="btn btn-primary">Editar</a> 
+                                           <a href="/productInv_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
                                        }
                                        @restrict(roles = List(Array("productInvDelete"))) {
-                                           <a href="/productInv_remove/@child.id" class="btn btn-danger">Eliminar</a>
+                                           <a href="/productInv_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
                                        }
                                        @restrict(roles = List(Array("productInvShow"))) {
-                                           <a href="/productInv_show/@child.id" class="btn btn-info">Mostrar</a>
+                                           <a href="/productInv_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
                                        }
                                    </td> 
                                }

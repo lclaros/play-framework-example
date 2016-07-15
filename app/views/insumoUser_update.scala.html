@@ -5,7 +5,7 @@
 @main("Actualizar") {
 	<a href="/insumoUser_list"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.InsumoUserController.updatePost()) {
-        @inputText(row("nombre"))
+        @inputText(row("name"))
         @inputText(row("carnet"))
         @inputText(row("telefono"))
         @inputText(row("direccion"))

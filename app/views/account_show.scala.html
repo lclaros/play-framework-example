@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("accountList"))) {
-            <a href="/account_list" class="btn btn-info">Listar</a> 
+            <a href="/account_list" class="btn btn-info btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("accountEdit"))) {
-            <a href="/account_update/@row.id" class="btn btn-primary">Editar</a> 
+            <a href="/account_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
         }
         @restrict(roles = List(Array("accountDelete"))) {
-           <a href="/account_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/account_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">
@@ -63,13 +63,13 @@
                         </td>
                         <td>
                             @restrict(roles = List(Array("accountEdit"))) {
-                                <a href="/account_update/@child.id" class="btn btn-primary">Editar</a> 
+                                <a href="/account_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
                             }
                             @restrict(roles = List(Array("accountDelete"))) {
-                                <a href="/account_remove/@child.id" class="btn btn-danger">Eliminar</a>
+                                <a href="/account_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
                             }
                             @restrict(roles = List(Array("accountShow"))) {
-                                <a href="/account_show/@child.id" class="btn btn-info">Mostrar</a>
+                                <a href="/account_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
                             }
                         </td> 
                     </tr>
@@ -107,13 +107,13 @@
                         </td>
                         <td>
                            @restrict(roles = List(Array("transactionDetailEdit"))) {
-                               <a href="/transactionDetail_update/@child.id" class="btn btn-primary">Editar</a> 
+                               <a href="/transactionDetail_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
                            @restrict(roles = List(Array("transactionDetailDelete"))) {
-                               <a href="/transactionDetail_remove/@child.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/transactionDetail_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
                            @restrict(roles = List(Array("transactionDetailShow"))) {
-                               <a href="/transactionDetail_show/@child.id" class="btn btn-info">Mostrar</a>
+                               <a href="/transactionDetail_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
                        </td> 
                     </tr>

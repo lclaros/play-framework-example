@@ -5,13 +5,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportList"))) {
-            <a href="/discountReport_list" class="btn btn-info">Listar</a> 
+            <a href="/discountReport_list" class="btn btn-info btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("discountReportEdit"))) {
-            <a href="/discountReport_update/@row.id" class="btn btn-primary">Editar</a> 
+            <a href="/discountReport_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
         }
         @restrict(roles = List(Array("discountReportDelete"))) {
-           <a href="/discountReport_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/discountReport_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">
@@ -33,9 +33,9 @@
         </div>
     </div>
     <div class="container">
-        <a href="/discountDetail_add/@row.id" class="btn btn-primary">Agregar Productores</a>
-        <a href="/discountReport_generarReporte/@row.id" class="btn btn-primary">Generar reporte</a>
-        <a href="/discountReport_show_pdf/@row.id" class="btn btn-info">PDF</a>
+        <a href="/discountDetail_add/@row.id" class="btn btn-primary btn-sm">Agregar Productores</a>
+        <a href="/discountReport_generarReporte/@row.id" class="btn btn-primary btn-sm">Generar reporte</a>
+        <a href="/discountReport_show_pdf/@row.id" class="btn btn-info btn-sm">PDF</a>
     </div>
 
     <div style="font-size: larger; font-weight: 800;">
@@ -66,13 +66,13 @@
                         <td>@child.discount</td>
                         <td>
                            @restrict(roles = List(Array("discountDetailEdit"))) {
-                               <a href="/discountDetail_update/@child.id" class="btn btn-primary">Editar</a> 
+                               <a href="/discountDetail_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
                            @restrict(roles = List(Array("discountDetailDelete"))) {
-                               <a href="/discountDetail_remove/@child.id" class="btn btn-danger">Eliminar</a>
+                               <a href="/discountDetail_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
                            @restrict(roles = List(Array("discountDetailShow"))) {
-                               <a href="/discountDetail_show/@child.id" class="btn btn-info">Mostrar</a>
+                               <a href="/discountDetail_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
                        </td> 
                     </tr>

@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionShow"))) {
-            <a href="/transaction_show/@parentId" class="btn btn-info">Asiento Diario</a> 
+            <a href="/transaction_show/@parentId" class="btn btn-info btn-sm">Asiento Diario</a> 
         }
     </div>
     @form(routes.TransactionDetailController.add()) {
@@ -14,8 +14,8 @@
         @select(field = row("accountId"), options = options(accounts))
         @inputText(row("debit"), 'id -> "debitInput")
         @inputText(row("credit"), 'id -> "creditInput")
-        <input type="submit" value="Guardar" class="btn btn-primary"/>
-        <a href="/transaction_show/@parentId" class="btn btn-primary">Cancelar</a>
+        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        <a href="/transaction_show/@parentId" class="btn btn-primary btn-sm">Cancelar</a>
     }
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transactionDetail_add.js")'></script>
 }

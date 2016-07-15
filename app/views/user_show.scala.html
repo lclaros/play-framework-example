@@ -6,19 +6,19 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("userList"))) {
-            <a href="/user_list" class="btn btn-primary">Listar</a> 
+            <a href="/user_list" class="btn btn-primary btn-sm">Listar</a> 
         }
         @restrict(roles = List(Array("userEdit"))) {
-            <a href="/user_update/@row.id" class="btn btn-info">Editar</a> 
+            <a href="/user_update/@row.id" class="btn btn-info btn-sm">Editar</a> 
         }
         @restrict(roles = List(Array("userDelete"))) {
-           <a href="/user_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/user_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">
         <div>
             <div style="display: inline-block;"> Nombre: </div>
-            <div style="display: inline-block;" id="name">@row.nombre</div>
+            <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
             <div style="display: inline-block;"> Carnet: </div>

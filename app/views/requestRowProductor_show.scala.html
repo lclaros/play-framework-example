@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("requestRowShow"))) {
-            <a href="/requestRow_show/@row.requestRowId" class="btn btn-info">Detalle de Pedido</a> 
+            <a href="/requestRow_show/@row.requestRowId" class="btn btn-info btn-sm">Detalle de Pedido</a> 
         }
         @restrict(roles = List(Array("requestRowProductorEdit"))) {
-            <a href="/requestRowProductor_update/@row.id" class="btn btn-primary">Editar</a> 
+            <a href="/requestRowProductor_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
         }
         @restrict(roles = List(Array("requestRowProductorDelete"))) {
-           <a href="/requestRowProductor_remove/@row.id" class="btn btn-danger">Eliminar</a>
+           <a href="/requestRowProductor_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
 
     </div>
@@ -31,11 +31,11 @@
         </div>
         <div>
             <div style="display: inline-block;"> Precio: </div>
-            <div style="display: inline-block;" id="quantity">@row.precio</div>
+            <div style="display: inline-block;" id="quantity">@row.price</div>
         </div>
         <div>
             <div style="display: inline-block;"> Precio Total: </div>
-            <div style="display: inline-block;" id="quantity">@(row.precio * row.quantity)</div>
+            <div style="display: inline-block;" id="quantity">@(row.price * row.quantity)</div>
         </div>
         <div>
             <div style="display: inline-block;"> Status: </div>

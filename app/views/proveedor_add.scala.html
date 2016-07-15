@@ -6,18 +6,18 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("proveedorList"))) {
-            <a href="/proveedor_list" class="btn btn-primary">Listar</a> 
+            <a href="/proveedor_list" class="btn btn-primary btn-sm">Listar</a> 
         }
     </div>
     @form(routes.ProveedorController.addProveedor()) {
         <div class="container">
-            @inputText(proveedor("nombre"))
+            @inputText(proveedor("name"))
             @inputText(proveedor("telefono"))
             @inputText(proveedor("direccion"))
             @inputText(proveedor("contacto"))
             @inputText(proveedor("account"))
-            <input type="submit" class="btn btn-primary" value="Guardar"/>
-            <a href="/proveedor_list" class="btn btn-primary">Cancelar</a>
+            <input type="submit" class="btn btn-primary btn-sm" value="Guardar"/>
+            <a href="/proveedor_list" class="btn btn-primary btn-sm">Cancelar</a>
         </div>
     }
 }

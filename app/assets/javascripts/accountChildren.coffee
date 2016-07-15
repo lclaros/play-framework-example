@@ -5,5 +5,5 @@ $ ->
       id = $("<td>").text row.id
       code = $("<td>").text row.code
       name = $("<td>").text row.name
-      links = $("<td>").html '<a href="/account_update/' + row.id + '" class="btn btn-primary">Editar</a>' + '<a href="/account_remove/' + row.id + '" class="btn btn-danger">Eliminar</a>' + '<a href="/account_show/' + row.id + '" class="btn btn-info">Mostrar</a>'
+      links = $("<td>").html '<a href="/account_update/' + row.id + '" class="btn btn-primary btn-sm">Editar</a>' + '<a href="/account_remove/' + row.id + '" class="btn btn-danger btn-sm">Eliminar</a>' + '<a href="/account_show/' + row.id + '" class="btn btn-info btn-sm">Mostrar</a>'
       $("#children").append $("<tr>").append(id).append(code).append(name).append(links)

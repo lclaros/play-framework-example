@@ -126,7 +126,7 @@ class ProductRequestByInsumoController @Inject() (
     Await.result(repoVete.getById(id).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
-        cache put (user.id.toString, user.nombre)
+        cache put (user.id.toString, user.name)
       }
       
       cache.toMap
@@ -137,7 +137,7 @@ class ProductRequestByInsumoController @Inject() (
     Await.result(repoInsUser.listInsumoUsers().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
-        cache put (user.id.toString, user.nombre)
+        cache put (user.id.toString, user.name)
       }
       
       cache.toMap

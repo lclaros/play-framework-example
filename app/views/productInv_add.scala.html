@@ -5,7 +5,7 @@
 @main("Agregar") {
     <div class="container">
         @restrict(roles = List(Array("productShow"))) {
-            <a href="/product_show/@productId" class="btn btn-primary">Product</a> 
+            <a href="/product_show/@productId" class="btn btn-primary btn-sm">Product</a> 
         }
     </div>
 
@@ -15,7 +15,7 @@
         @select(field = row("measureId"), options = options(measures))
         @inputText(row("amount"))
         @inputText(row("amountLeft"))
-        <input type="submit" class="btn btn-primary" value="Guardar"/>
-        <a href="/product_show/@productId" class="btn btn-primary">Cancel</a>
+        <input type="submit" class="btn btn-primary btn-sm" value="Guardar"/>
+        <a href="/product_show/@productId" class="btn btn-primary btn-sm">Cancel</a>
     }
 }

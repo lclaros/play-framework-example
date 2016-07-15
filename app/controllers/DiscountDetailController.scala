@@ -84,7 +84,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
         repoProductors.searchByAccount(res.account).map { resProductors =>
           val cache = collection.mutable.Map[String, String]()
           resProductors.map { productor => 
-            cache put (productor.id.toString(), productor.account.toString + ": " +productor.nombre.toString)
+            cache put (productor.id.toString(), productor.account.toString + ": " +productor.name.toString)
           }
           productorsNames = cache.toMap
           Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, cache.toMap))
@@ -102,7 +102,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
         repoProductors.searchByName(res.name).map { resProductors =>
           val cache = collection.mutable.Map[String, String]()
           resProductors.map { productor => 
-            cache put (productor.id.toString(), productor.account.toString + ": " +productor.nombre.toString)
+            cache put (productor.id.toString(), productor.account.toString + ": " +productor.name.toString)
           }
           productorsNames = cache.toMap
           Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, cache.toMap))
@@ -189,7 +189,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
     Await.result(repoProductors.getById(productorId).map { productors => 
       val cache = collection.mutable.Map[String, String]()
       productors.foreach { productor =>
-        cache put (productor.id.toString(), productor.account + ": " + productor.nombre)
+        cache put (productor.id.toString(), productor.account + ": " + productor.name)
       }
       cache.toMap
     }, 500.millis)
@@ -199,7 +199,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
     Await.result(repoProductors.list100Productors().map { productors => 
       val cache = collection.mutable.Map[String, String]()
       productors.foreach { productor =>
-        cache put (productor.id.toString(), productor.account + ": " + productor.nombre)
+        cache put (productor.id.toString(), productor.account + ": " + productor.name)
       }
       cache.toMap
     }, 2000.millis)

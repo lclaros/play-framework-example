@@ -22,31 +22,31 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
 
   private class ProductoresTable(tag: Tag) extends Table[Productor](tag, "productor") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def nombre = column[String]("nombre")
+    def name = column[String]("name")
     def carnet = column[Int]("carnet")
     def telefono = column[Int]("telefono")
     def direccion = column[String]("direccion")
     def account = column[String]("account")
     def module = column[Long]("module")
     def moduleName = column[String]("moduleName")
-    def asociacionName = column[String]("asociacionName")
+    def associationName = column[String]("associationName")
     def totalDebt = column[Double]("totalDebt")
     def numberPayment = column[Int]("numberPayment")
     def position = column[String]("position")
     def * = (
-              id, nombre, carnet, telefono, direccion, account, module, moduleName,
-              asociacionName, totalDebt, numberPayment, position
+              id, name, carnet, telefono, direccion, account, module, moduleName,
+              associationName, totalDebt, numberPayment, position
             ) <> ((Productor.apply _).tupled, Productor.unapply)
   }
 
   private val tableQ = TableQuery[ProductoresTable]
 
-  def create(nombre: String, carnet: Int, telefono: Int, direccion: String,
+  def create(name: String, carnet: Int, telefono: Int, direccion: String,
              account: String, module: Long, moduleName: String): Future[Productor] = db.run {
     (tableQ.map (
                   p => (
-                        p.nombre, p.carnet, p.telefono, p.direccion, p.account,
-                        p.module, p.moduleName, p.asociacionName, p.totalDebt, p.numberPayment, p.position
+                        p.name, p.carnet, p.telefono, p.direccion, p.account,
+                        p.module, p.moduleName, p.associationName, p.totalDebt, p.numberPayment, p.position
                        )
                 ) returning tableQ.map(_.id) into (
                                                    (nameAge, id) => 
@@ -57,7 +57,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
                                                                 nameAge._9, nameAge._10, nameAge._11
                                                               )
                                                    )
-    ) += (nombre, carnet, telefono, direccion, account, module, moduleName, "", 0, 0, "Productor")
+    ) += (name, carnet, telefono, direccion, account, module, moduleName, "", 0, 0, "Productor")
   }
 
   def list(start: Int, interval: Int): Future[Seq[Productor]] = db.run {
@@ -71,15 +71,15 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
 
   // update required to copy
   def update(
-              id: Long, nombre: String, carnet: Int, telefono: Int,
+              id: Long, name: String, carnet: Int, telefono: Int,
               direccion: String, account: String, module: Long,
-              moduleName: String, asociacionName: String,
+              moduleName: String, associationName: String,
               totalDebt: Double, numberPayment: Int,
               position: String
             ) : Future[Seq[Productor]] = db.run {
 
-    val q = for { c <- tableQ if c.id === id } yield c.nombre
-    db.run(q.update(nombre))
+    val q = for { c <- tableQ if c.id === id } yield c.name
+    db.run(q.update(name))
     val q2 = for { c <- tableQ if c.id === id } yield c.carnet
     db.run(q2.update(carnet))
     val q3 = for { c <- tableQ if c.id === id } yield c.telefono
@@ -112,7 +112,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.name)).result
   }
 
   def list100Productors(): Future[Seq[Productor]] = db.run {
@@ -124,7 +124,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   }
 
   def searchByName(name: String): Future[Seq[Productor]] = db.run {
-    tableQ.filter(_.nombre.toLowerCase like "%" + name.toLowerCase + "%").take(100).result
+    tableQ.filter(_.name.toLowerCase like "%" + name.toLowerCase + "%").take(100).result
   }
 
   def getTotal(): Future[Int] = db.run {
@@ -159,7 +159,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
 
   def searchProduct(search: String): Future[Seq[Productor]] = db.run {
     if (!search.isEmpty) {
-      tableQ.filter(p => (p.account like "%" + search + "%") || (p.nombre like "%" + search + "%")).drop(0).take(100).result
+      tableQ.filter(p => (p.account like "%" + search + "%") || (p.name like "%" + search + "%")).drop(0).take(100).result
     } else {
       tableQ.drop(0).take(100).result
     }    

@@ -6,15 +6,15 @@
 	@examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("companyShow"))) {
-           <a href="/company_show" class="btn btn-info">Mostrar</a>
+           <a href="/company_show" class="btn btn-info btn-sm">Mostrar</a>
         }
     </div>
     @form(routes.CompanyController.updatePost()) {
         @inputText(rowForm("name"))
         @inputText(rowForm("president"))
         @inputText(rowForm("description"))
-        <input type="submit" value="Actualizar"  class="btn btn-primary"/>
-        <a href="/company_show" class="btn btn-primary">Cancelar</a>
+        <input type="submit" value="Actualizar"  class="btn btn-primary btn-sm"/>
+        <a href="/company_show" class="btn btn-primary btn-sm">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }
