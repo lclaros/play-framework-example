@@ -121,13 +121,44 @@
       }
    </style>
    <body>
-      <header class="container">
-         <img src="@routes.Assets.versioned("images/fb_banner.png")" width="1000" height="1">
+      <header class="container centered">
+         <img id="banner" class="col-md-12 centered" src="@routes.Assets.versioned("images/banner_4.png")" height="200">
       </header>
-      <article class="container">
+      <script type="text/javascript">
+        var images = [];
+        images[0] = "/assets/images/banner_1.png";
+        images[1] = "/assets/images/banner_2.png";
+        images[2] = "/assets/images/banner_3.png";
+        images[3] = "/assets/images/banner_4.png";
+        images[4] = "/assets/images/banner_5.png";
+        images[5] = "/assets/images/banner_6.png";
+        images[6] = "/assets/images/banner_7.png";
+        images[7] = "/assets/images/banner_8.png";
+        images[8] = "/assets/images/banner_9.png";
+        images[9] = "/assets/images/banner_10.png";
+        var loop;
+        var i = 0;
+
+        var i = 0;
+        function fadeDivs() {
+            console.log("fade in");
+            i = i < images.length ? i : 0;
+            $('#banner').fadeOut(10000, function() {
+                $(this).attr('src', images[i]).fadeIn(10000);
+            })
+            i++;
+        }
+
+        $(document).ready(function() {
+            setInterval(fadeDivs, 3000);
+        });
+
+
+      </script>
+      <article class="container centered">
          @content
       </article>
-      <footer class="container" style="position: relative; bottom: -50px;">
+      <footer class="container centered" style="position: relative; bottom: -50px;">
         <smail> Sistema de Inventario y Contabilidad FEPROLEC</small>
       </footer>
    </body>

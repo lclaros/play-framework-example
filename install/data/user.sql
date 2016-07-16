@@ -21,7 +21,7 @@
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO user(id, nombre, carnet, telefono, direccion, sueldo, type, login, password) VALUES (1,'admin',222,333,'direccion',3000,'Admin','admin','admin'),(2,'admin2',7878,78798,'dir',78,'Admin','admin2','admin2'),(3,'insumo',789789,789789,'direccion',7878,'Insumo','insumo','insumo'),(4,'Veterinario 1',789789,789789,'direccion',890890,'Veterinario','veterinario','veterinario'),(5,'Almacen',789789,789789,'Direccion',678678,'Almacen','alamcen','almacen');
+INSERT INTO user(id, name, carnet, telefono, direccion, sueldo, type, login, password) VALUES (1,'admin',222,333,'direccion',3000,'Admin','admin','admin'),(2,'admin2',7878,78798,'dir',78,'Admin','admin2','admin2'),(3,'insumo',789789,789789,'direccion',7878,'Insumo','insumo','insumo'),(4,'Veterinario 1',789789,789789,'direccion',890890,'Veterinario','veterinario','veterinario'),(5,'Almacen',789789,789789,'Direccion',678678,'Almacen','alamcen','almacen');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
