@@ -23,7 +23,11 @@ drop table IF EXISTS company;
 # --- !Ups
 create table association (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50) not null
+  name VARCHAR(100) not null,
+  average double,
+  pleno double,
+  excedent double,
+  total double
 );
 
 create table module (
@@ -33,7 +37,6 @@ create table module (
   description VARCHAR(250),
   association INT(6),
   associationName VARCHAR(50)
-
 );
 
 create table measure (
@@ -135,12 +138,12 @@ create table productor (
   module INT,
   moduleName VARCHAR(50),
   associationName VARCHAR(50),
-  association INT,
+  associationId INT,
   acopio INT,
   status VARCHAR(30),
   promedio INT,
   pleno INT,
-  excedente INT,
+  excedent INT,
   totalDebt double,
   numberPayment int,
   position VARCHAR(30),

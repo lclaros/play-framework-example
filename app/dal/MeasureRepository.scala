@@ -20,7 +20,7 @@ class MeasureRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   import dbConfig._
   import driver.api._
 
-  private class MeasuresTable(tag: Tag) extends Table[Measure](tag, "Measure") {
+  private class MeasuresTable(tag: Tag) extends Table[Measure](tag, "measure") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")

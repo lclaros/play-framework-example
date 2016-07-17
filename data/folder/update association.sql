@@ -1,0 +1,15 @@
+UPDATE productor SET associationName = "APL" WHERE associationId = '10001';
+UPDATE productor SET associationName = "ADEPLEC" WHERE associationId = '10002';
+UPDATE productor SET associationName = "ACRHOBOL" WHERE associationId = '10004';
+UPDATE productor SET associationName = "APLI" WHERE associationId = '10005';
+UPDATE productor SET associationName = "ALVA" WHERE associationId = '10006';
+UPDATE productor SET associationName = "AMLECO" WHERE associationId = '10007';
+UPDATE productor SET associationName = "ALVICO" WHERE associationId = '10008';
+UPDATE productor SET associationName = "ALDEPA" WHERE associationId = '10009';
+UPDATE productor SET associationName = "ADEPLECTRA" WHERE associationId = '100010';
+UPDATE productor SET associationName = "APLEVACC" WHERE associationId = '100011';
+UPDATE productor SET associationName = "APLIM" WHERE associationId = '100013';
+UPDATE productor SET associationName = "INDEPENDIENTES" WHERE associationId = '19999';
+UPDATE productor SET associationName = "APLE MAICA" WHERE associationId = '10014';
+UPDATE productor SET associationName = "A.L.M." WHERE associationId = '10012';
+UPDATE productor SET associationName = "ASO LATTE CLAKH" WHERE associationId = '10015';
