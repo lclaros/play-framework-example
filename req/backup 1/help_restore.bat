@@ -1,0 +1,16 @@
+mysql -u root isystem4 < account.sql
+mysql -u root isystem4 < association.sql
+mysql -u root isystem4 < discountdetail.sql
+mysql -u root isystem4 < discountreport.sql
+mysql -u root isystem4 < module.sql
+mysql -u root isystem4 < product.sql
+mysql -u root isystem4 < productinv.sql
+mysql -u root isystem4 < productor.sql
+mysql -u root isystem4 < productrequest.sql
+mysql -u root isystem4 < proveedor.sql
+mysql -u root isystem4 < reportes.sql
+mysql -u root isystem4 < requestrow.sql
+mysql -u root isystem4 < requestrowproductor.sql
+mysql -u root isystem4 < transaction.sql
+mysql -u root isystem4 < transactiondetail.sql
+mysql -u root isystem4 < user.sql

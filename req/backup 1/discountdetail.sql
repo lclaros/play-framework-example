@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
 --
--- Host: localhost    Database: isystem
+-- Host: localhost    Database: isystem4
 -- ------------------------------------------------------
 -- Server version	5.6.24
 
@@ -16,12 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `productor`
+-- Dumping data for table `discountdetail`
 --
 
-LOCK TABLES `productor` WRITE;
-/*!40000 ALTER TABLE `productor` DISABLE KEYS */;
-/*!40000 ALTER TABLE `productor` ENABLE KEYS */;
+LOCK TABLES `discountdetail` WRITE;
+/*!40000 ALTER TABLE `discountdetail` DISABLE KEYS */;
+INSERT INTO `discountdetail` VALUES (1,1,1,1851,'7423: ERNESTO PAICHU','borrador',100);
+/*!40000 ALTER TABLE `discountdetail` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -33,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-27 11:17:08
+-- Dump completed on 2016-07-18 15:35:27

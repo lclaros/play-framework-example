@@ -67,7 +67,7 @@ class MeasureRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.id < 10L).map(s => (s.id, s.name)).result
+    tableQ.take(200).map(s => (s.id, s.name)).result
   }
 
 }

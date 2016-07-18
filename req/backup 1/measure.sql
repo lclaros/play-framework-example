@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
 --
--- Host: localhost    Database: isystem
+-- Host: localhost    Database: isystem4
 -- ------------------------------------------------------
 -- Server version	5.6.24
 
@@ -16,12 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `product`
+-- Dumping data for table `measure`
 --
 
-LOCK TABLES `product` WRITE;
-/*!40000 ALTER TABLE `product` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+LOCK TABLES `measure` WRITE;
+/*!40000 ALTER TABLE `measure` DISABLE KEYS */;
+INSERT INTO `measure` VALUES (1,'250 ML',250,'250 ML'),(2,'100 ML',100,'Descripcion'),(3,'10gr',10,'10 Gramos'),(4,'80X2mm',2,'Descripcion'),(5,'250cc',250,'250cc'),(6,'20ML',20,'Descripcion'),(7,'500ML',500,'500ML'),(8,'1LITRO',1000,'Descripcion'),(9,'200GRS',200,'200GRS'),(10,'10GRS',10,'10GRS'),(11,'50SOB. X 10GRS.',50,'50SOB. X 10GRS.'),(12,'100 X 1KG',100,'100 X 1KG'),(13,'100 X 25KG',25,'100 X 25KG'),(14,'VALDE X 18KG',1,'VALDE X 18KG'),(15,'VALDE X 4KG',1,'VALDE X 4KG'),(16,'Unidad',1,'Descripcion');
+/*!40000 ALTER TABLE `measure` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -33,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-07 20:37:39
+-- Dump completed on 2016-07-18 15:35:27

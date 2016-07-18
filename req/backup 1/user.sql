@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
 --
--- Host: localhost    Database: isystem
+-- Host: localhost    Database: isystem4
 -- ------------------------------------------------------
 -- Server version	5.6.24
 
@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `product`
+-- Dumping data for table `user`
 --
 
-LOCK TABLES `product` WRITE;
-/*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'Producto1',45,45,'45',45,7);
-/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'admin',222,333,'direccion',3000,'Admin','admin','admin','2016-07-18 17:14:42'),(2,'admin2',7878,78798,'dir',78,'Admin','admin2','admin2','2016-07-18 17:14:42'),(3,'insumo',789789,789789,'direccion',7878,'Insumo','insumo','insumo','2016-07-18 17:14:42'),(4,'Veterinario 1',789789,789789,'direccion',890890,'Veterinario','veterinario','veterinario','2016-07-18 17:14:42'),(5,'Almacen',789789,789789,'Direccion',678678,'Almacen','almacen','almacen','2016-07-18 17:14:42');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -34,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-27 11:17:08
+-- Dump completed on 2016-07-18 15:35:27
