@@ -22,7 +22,7 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
 class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProductor: RequestRowProductorRepository, repoProductReq: ProductRequestRepository, repoUnit: MeasureRepository, 
-                                      repoInsum: ProductRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
+                                      repoProduct: ProductRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                       (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateRequestRowForm] = Form {
@@ -161,7 +161,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   }
 
   def getProductsMap(): Map[String, String] = {
-    Await.result(repoInsum.getListNames().map{ case (res1) => 
+    Await.result(repoProduct.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -172,13 +172,13 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   }
 
   def getProductPrice(id: Long): Double = {
-    Await.result(repoInsum.getById(id).map{ case (res1) => 
+    Await.result(repoProduct.getById(id).map{ case (res1) => 
       res1(0).price
     }, 3000.millis)
   }
 
   def getProductById(id: Long): Product = {
-    Await.result(repoInsum.getById(id).map{ case (res1) => 
+    Await.result(repoProduct.getById(id).map{ case (res1) => 
       res1(0)
     }, 3000.millis)
   }
