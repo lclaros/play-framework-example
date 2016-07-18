@@ -118,20 +118,25 @@ create table bancos (
 create table product (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) not null,
-  cost double,
-  percent double,
-  price double,
-  description VARCHAR(250),
-  measureId INT,
-  measureName VARCHAR(50),
-  currentAmount int,
+  cost double DEFAULT 0,
+  totalValue double DEFAULT 0,
+  percent double DEFAULT 0,
+  price double DEFAULT 0,
+  description VARCHAR(250) DEFAULT '',
+  measureId INT DEFAULT 0,
+  measureName VARCHAR(50) DEFAULT '',
+  currentAmount INT  DEFAULT 0,
+  proveedorId INT DEFAULT 0,
+  proveedorName VARCHAR(50) DEFAULT '',
+  proveedorCode VARCHAR(50) DEFAULT '',
+  type VARCHAR(50) DEFAULT '',
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table productor (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) not null,
-  carnet int not null,
+  carnet INT not null,
   telefono INT,
   direccion VARCHAR(100),
   account VARCHAR(30),
@@ -145,7 +150,7 @@ create table productor (
   pleno INT,
   excedent INT,
   totalDebt double,
-  numberPayment int,
+  numberPayment INT,
   position VARCHAR(30),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -153,7 +158,7 @@ create table productor (
 create table proveedor (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) not null,
-  telefono int,
+  telefono INT,
   direccion VARCHAR(100),
   contacto VARCHAR(100),
   account INT,
@@ -162,19 +167,19 @@ create table proveedor (
 
 create table reportes (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  monto int not null,
-  account int not null,
-  cliente int not null,
+  monto INT not null,
+  account INT not null,
+  cliente INT not null,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table user (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) not null,
-  carnet int not null,
-  telefono int,
+  carnet INT not null,
+  telefono INT,
   direccion VARCHAR(30),
-  sueldo int,
+  sueldo INT,
   type VARCHAR(30),
   login VARCHAR(30),
   password VARCHAR(30),
@@ -232,7 +237,7 @@ create table requestRowProductor (
   productorName VARCHAR(50),
   measureId INT,
   measureName VARCHAR(50),
-  quantity int,
+  quantity INT,
   price double,
   paid double,
   debt double,
@@ -252,10 +257,10 @@ create table productInv (
   productName VARCHAR(60),
   proveedorName VARCHAR(60),
   measureName VARCHAR(60),
-  amount int,
-  amountLeft int,
-  cost_unit double,
-  total_cost double,
+  amount INT  DEFAULT 0,
+  amountLeft INT  DEFAULT 0,
+  cost_unit double  DEFAULT 0,
+  total_cost double  DEFAULT 0,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
