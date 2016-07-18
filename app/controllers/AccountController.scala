@@ -166,7 +166,8 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
     Await.result(
       repo.getListObjs().map { accountResult => 
       accountResult.foreach {
-        account => cache put (account.id.toString, account.code + " ------------- " + account.name)
+        account => 
+        cache put (account.id.toString, account.code + " ------------- " + account.name)
       }
     }, 1000.millis)
     cache.toMap

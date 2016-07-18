@@ -119,6 +119,18 @@
       nav > ul > li > div ul > li:hover > a {
         background-color: rgba( 255, 255, 255, 0.1);
       }
+
+      .conted body {
+          counter-reset: Serial;
+      }
+      .conted table {
+          border-collapse: separate;
+      }
+      .conted tr td:first-child:before {
+        counter-increment: Serial;
+        content: counter(Serial);
+      }
+
    </style>
    <body>
       <header class="container centered">

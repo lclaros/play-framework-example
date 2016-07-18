@@ -18,11 +18,12 @@
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Nombre</th>
                     <th>Costo</th>
                     <th>Porcentage</th>
                     <th>Precio</th>
-                    <th>Unidad de Medida</th>
+                    <th>Medida</th>
                     <th>En Inventario</th>
                     <th>-----------</th>
                 </tr>
@@ -30,6 +31,7 @@
             <tbody>
                 @for(row <- rows) {
                     <tr>
+                        <td></td>
                         <td>@row.name</td>
                         <td>@row.cost</td>
                         <td>@row.percent</td>
