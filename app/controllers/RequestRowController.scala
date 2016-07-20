@@ -37,7 +37,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
 
   //var unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
   var productRequestsMap = getProductRequestsMap(0)
-  var productsMap = getProductsMap()
+  var products = getProductsMap()
   var productPrice = 0.0
   var unidades = getMeasuresMap()
   var updatedRow: RequestRow = new RequestRow(0, 0, 1, "", 2, 1, 1, "", 1, "")
@@ -63,15 +63,15 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   def addGet(requestId: Long) = Action { implicit request =>
     unidades = getMeasuresMap()
     productRequestsMap = getProductRequestsMap(requestId)
-    productsMap = getProductsMap()
+    products = getProductsMap()
     requestIdParm = requestId
-    Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, newForm, productRequestsMap, productsMap, unidades))
+    Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler,requestIdParm, errorForm, productRequestsMap, productsMap, unidades)))
+        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, errorForm, productRequestsMap, products, unidades)))
       },
       res => {
         var product1 = getProductById(res.productId)
@@ -79,7 +79,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
         var requestMeasure = getMeasureById(res.measureId)
         var equivalent =  requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
 
-        repo.create(res.requestId, res.productId, productsMap(res.productId.toString()),
+        repo.create(res.requestId, res.productId, products(res.productId.toString()),
                     res.quantity, equivalent * product1.price, res.status,
                     res.measureId, res.measureId.toString).map { resNew =>
           Redirect(routes.RequestRowController.show(resNew.id))
@@ -144,9 +144,9 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
                         )
       unidades = getMeasuresMap()
       productRequestsMap = getProductRequestsMap(res(0).requestId)
-      productsMap = getProductsMap()
+      products = getProductsMap()
       updatedRow = res(0)
-      Ok(views.html.requestRow_update(new MyDeadboltHandler , updatedRow, updateForm.bind(anyData), productRequestsMap, productsMap, unidades))
+      Ok(views.html.requestRow_update(new MyDeadboltHandler , updatedRow, updateForm.bind(anyData), productRequestsMap, products, unidades))
     }
   }
 
@@ -248,10 +248,34 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
           new_price = product1.price * equivalent
         }
         repo.update(  
-                      res.id, res.requestId, res.productId, productsMap(res.productId.toString),
+                      res.id, res.requestId, res.productId, products(res.productId.toString),
                       res.quantity, new_price, res.status, res.measureId, res.measureId.toString
                     ).map { _ =>
           Redirect(routes.RequestRowController.show(res.id))
+        }
+      }
+    )
+  }
+
+  val searchProductForm: Form[SearchProductForm] = Form {
+    mapping(
+      "search" -> text
+    )(SearchProductForm.apply)(SearchProductForm.unapply)
+  }
+
+  def searchProductPost = Action.async { implicit request =>
+    searchProductForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades)))
+      },
+      res => {
+        repoProduct.searchProduct(res.search).map { resProducts =>
+          val cache = collection.mutable.Map[String, String]()
+          resProducts.map { product => 
+            cache put (product.id.toString(), product.name.toString)
+          }
+          products = cache.toMap
+          Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades))
         }
       }
     )

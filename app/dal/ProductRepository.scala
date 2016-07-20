@@ -119,4 +119,16 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
       db.run(q.update(amount + insumoObj.currentAmount))
     ))
   }
+
+  def getTotal(): Future[Int] = db.run {
+    tableQ.length.result
+  }
+
+  def searchProduct(search: String): Future[Seq[Product]] = db.run {
+    if (!search.isEmpty) {
+      tableQ.filter(p => (p.name like "%" + search + "%")).drop(0).take(100).result
+    } else {
+      tableQ.drop(0).take(100).result
+    }    
+  }
 }

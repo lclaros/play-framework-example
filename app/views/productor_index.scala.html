@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm],productors: Seq[Productor], total: Int, currentPage: Int, interval: Int)(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm], productors: Seq[Productor], total: Int, currentPage: Int, interval: Int)(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -13,7 +13,7 @@
         }
     </div>
     <div class="container">
-        @form(routes.ProductorController.searchProductPost()) {
+        @form(routes.ProductorController.searchProductorPost()) {
             @inputText(rowSearch("search"))
             <input type="submit" value="Buscar" class="btn btn-primary btn-sm"/>
         }   

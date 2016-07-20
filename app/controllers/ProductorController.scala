@@ -45,8 +45,8 @@ class ProductorController @Inject() (
     }, 3000.millis)
   }
 
-  def searchProduct(search: String): Seq[Productor] = {
-    Await.result(repo.searchProduct(search).map{ res => 
+  def searchProductor(search: String): Seq[Productor] = {
+    Await.result(repo.searchProductor(search).map{ res => 
       res
     }, 1000.millis)
   }
@@ -87,7 +87,7 @@ class ProductorController @Inject() (
       }
   }
 
-  def searchProductPost = Action.async { implicit request =>
+  def searchProductorPost = Action.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
     searchForm.bindFromRequest.fold(
@@ -95,7 +95,7 @@ class ProductorController @Inject() (
         Future.successful(Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, productors, total, currentPage, interval)))
       },
       res => {
-        productors = searchProduct(res.search)
+        productors = searchProductor(res.search)
         modules = getModuleNamesMap()
         var total = getTotal()
         var currentPage = 1

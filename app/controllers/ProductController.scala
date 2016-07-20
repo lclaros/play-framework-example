@@ -20,7 +20,7 @@ import security.MyDeadboltHandler
 
 class ProductController @Inject() (repo: ProductRepository, repoProdInv: ProductInvRepository, 
                                    repoUnit: MeasureRepository, val messagesApi: MessagesApi)
-                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport{
+                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateProductForm] = Form {
     mapping(
@@ -31,6 +31,12 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       "measureId" -> longNumber,
       "currentAmount" -> number
     )(CreateProductForm.apply)(CreateProductForm.unapply)
+  }
+
+  val searchForm: Form[SearchProductForm] = Form {
+    mapping(
+      "search" -> nonEmptyText
+    )(SearchProductForm.apply)(SearchProductForm.unapply)
   }
 
   var unidades = getMeasureMap()
@@ -50,9 +56,12 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
     Ok(views.html.product_add(new MyDeadboltHandler, newForm, unidades))
   }
 
+  var products: Seq[Product] = _
+
   def index = Action.async { implicit request =>
     repo.list().map { res =>
-      Ok(views.html.product_index(new MyDeadboltHandler, res))
+      products = res
+      Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products))
     }
   }
 
@@ -73,6 +82,32 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
                     ).map { resNew =>
           Redirect(routes.ProductController.show(resNew.id))
         }
+      }
+    )
+  }
+
+  def searchProduct(search: String): Seq[Product] = {
+    Await.result(repo.searchProduct(search).map { res => 
+      res
+    }, 1000.millis)
+  }
+
+  def getTotal(): Int = {
+    Await.result(repo.getTotal().map { case (res1) => 
+      res1
+    }, 3000.millis)
+  }
+
+  def searchProductPost = Action.async { implicit request =>
+    var total = getTotal()
+    var currentPage = 1
+    searchForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products)))
+      },
+      res => {
+        products = searchProduct(res.search)
+        Future(Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products)))
       }
     )
   }
@@ -188,6 +223,8 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
   }
 
 }
+
+case class SearchProductForm(search: String )
 
 case class CreateProductForm(
                               name: String, cost: Double, percent: Double,

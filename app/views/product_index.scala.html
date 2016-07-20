@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[Product])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rowSearch: Form[SearchProductForm], rows: Seq[Product])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -7,10 +7,20 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productCreate"))) {
-                                <a href="/product_add" class="btn btn-primary btn-sm">Crear</a> 
+                                <a href="/product_add" class="btn btn-primary btn-sm">Nuevo</a> 
+        }
+        @restrict(roles = List(Array("productList"))) {
+            <a href="/product_list" class="btn btn-primary btn-sm">Listar</a> 
         }
     </div>
-    
+
+    <div class="container">
+        @form(routes.ProductController.searchProductPost()) {
+            @inputText(rowSearch("search"))
+            <input type="submit" value="Buscar" class="btn btn-primary btn-sm"/>
+        }
+    </div>
+
     <div class="container">
         Lista de Productos
     </div>

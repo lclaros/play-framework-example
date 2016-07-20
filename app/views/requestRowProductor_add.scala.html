@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, row: Form[CreateRequestRowProductorForm], requests: Map[String, String], products: Map[String, String], productors: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, searchForm: Form[SearchProductorForm], rowForm: Form[CreateRequestRowProductorForm], requests: Map[String, String], products: Map[String, String], productors: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -9,14 +9,22 @@
             <a href="/requestRow_show/@requestRowId" class="btn btn-info btn-sm">Detalle de Pedido</a> 
         }
     </div>
+
+    <div style="display: inline-block;">
+        @form(routes.RequestRowProductorController.searchProductorPost()) {
+            @inputText(searchForm("search"))
+            <input type="submit" value="Buscar Productor" class="btn btn-primary btn-sm"/>
+        }        
+    </div>
+
     @form(routes.RequestRowProductorController.add()) {
-        @select(field = row("productId"), options = options(products))
-        @select(field = row("productorId"), options = options(productors))
-        @inputText(row("quantity"))
-        @inputText(row("price"))
-        @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
+        @select(field = rowForm("productId"), options = options(products))
+        @select(field = rowForm("productorId"), options = options(productors))
+        @inputText(rowForm("quantity"))
+        @inputText(rowForm("price"))
+        @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")))
         <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/requestRow_show/@requestRowId" class="btn btn-primary btn-sm">Cancelar</a>
-        @select(field = row("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")
+        @select(field = rowForm("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")
     }
 }

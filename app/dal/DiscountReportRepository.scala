@@ -20,7 +20,7 @@ class DiscountReportRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   import dbConfig._
   import driver.api._
 
-  private class DiscountReportTable(tag: Tag) extends Table[DiscountReport](tag, "discountreport") {
+  private class DiscountReportTable(tag: Tag) extends Table[DiscountReport](tag, "discountReport") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def startDate = column[String]("startDate")

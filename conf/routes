@@ -23,11 +23,14 @@ GET     /printersEdit               	controllers.PatternController.printersEdit
 GET     /printersFoo                	controllers.PatternController.printersFoo
 GET     /printersRegex              	controllers.PatternController.printersRegex
 
+# All searchs
+POST    /discountDetail_searchProductor			controllers.DiscountDetailController.searchProductorPost
+POST    /requestRow_searchProduct				controllers.RequestRowController.searchProductPost
+POST    /requestRowProductor_searchProductor	controllers.RequestRowProductorController.searchProductorPost
+POST    /productor_search		 				controllers.ProductorController.searchProductorPost
+
 
 # productores routes
-POST    /productor_search		 		controllers.ProductorController.searchProductPost
-POST    /productor_set	 				controllers.DiscountDetailController.setProductor
-POST    /productor_setName	 			controllers.DiscountDetailController.setProductorName
 GET     /productor_show/:id 			controllers.ProductorController.show(id: Long)
 GET     /productor_update/:id        	controllers.ProductorController.getUpdate(id: Long)
 GET     /productor_remove/:id        	controllers.ProductorController.delete(id: Long)
@@ -143,6 +146,7 @@ GET     /proveedor_list         		controllers.ProveedorController.index
 GET     /proveedor_add         			controllers.ProveedorController.addGet
 
 # Now for insumos or products
+GET     /product_search 				controllers.ProductController.searchProductPost
 GET     /product_show/:id 				controllers.ProductController.show(id: Long)
 GET     /product_update/:id        		controllers.ProductController.getUpdate(id: Long)
 GET     /product_remove/:id        		controllers.ProductController.delete(id: Long)

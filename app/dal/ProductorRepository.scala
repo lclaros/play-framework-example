@@ -157,7 +157,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     tableQ.filter(_.account like "%" + account + "%").result
   }
 
-  def searchProduct(search: String): Future[Seq[Productor]] = db.run {
+  def searchProductor(search: String): Future[Seq[Productor]] = db.run {
     if (!search.isEmpty) {
       tableQ.filter(p => (p.account like "%" + search + "%") || (p.name like "%" + search + "%")).drop(0).take(100).result
     } else {
