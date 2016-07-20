@@ -3,6 +3,7 @@
 @import helper._
 
 @main("Actualizar") {
+    @examples.templates.nav(handler)
 	<div class="container">
       @restrict(roles = List(Array("productShow"))) {
             <a href="/product_show/@row.productId" class="btn btn-primary btn-sm">Producto</a> 

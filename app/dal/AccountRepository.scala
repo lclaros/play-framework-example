@@ -165,4 +165,11 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     tableQ.filter(_.child === true).sortBy(m => (m.code)).sortBy(m => (m.code)).result
   }
 
+  def searchAccount(search: String): Future[Seq[Account]] = db.run {
+    if (!search.isEmpty) {
+      tableQ.filter(p => (p.name like "%" + search + "%") || (p.type_1 like "%" + search + "%") || (p.code like "%" + search + "%")).drop(0).take(100).result
+    } else {
+      tableQ.drop(0).take(100).result
+    }    
+  }
 }

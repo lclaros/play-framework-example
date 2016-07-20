@@ -28,6 +28,8 @@ POST    /discountDetail_searchProductor			controllers.DiscountDetailController.s
 POST    /requestRow_searchProduct				controllers.RequestRowController.searchProductPost
 POST    /requestRowProductor_searchProductor	controllers.RequestRowProductorController.searchProductorPost
 POST    /productor_search		 				controllers.ProductorController.searchProductorPost
+POST    /account_searchParent		 			controllers.AccountController.searchParentAccountPost
+POST    /account_search		 					controllers.AccountController.searchAccountPost
 
 
 # productores routes

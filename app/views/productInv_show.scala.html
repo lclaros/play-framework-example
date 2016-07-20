@@ -3,6 +3,7 @@
 @import be.objectify.deadbolt.scala.views.html._
 
 @main("Mostrar") {
+    @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productShow"))) {
             <a href="/product_show/@row.productId" class="btn btn-primary btn-sm">Producto</a> 

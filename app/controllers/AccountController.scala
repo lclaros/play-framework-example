@@ -36,20 +36,26 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
     )(CreateAccountForm.apply)(CreateAccountForm.unapply)
   }
 
+
   def index = Action.async { implicit request =>
     repo.list().map { res =>
-      Ok(views.html.account_index(new MyDeadboltHandler, res))
+      accounts = res
+      Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts))
     }
   }
 
   def addGet = Action { implicit request =>
-    Ok(views.html.account_add(new MyDeadboltHandler, newForm, yes_no, account_type, getAccountNamesMap()))
+    parentAccounts = getAccountNamesMap()
+    Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts))
   }
+
+  var parentAccounts: Map[String, String] = _
+  var accounts: Seq[Account] = _
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, errorForm, yes_no, account_type, getAccountNamesMap())))
+        Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, errorForm, yes_no, account_type, parentAccounts)))
       },
       res => {
         repo.create(res.code, res.name, res.type_1, res.negativo, res.parent, res.description).map { resNew =>
@@ -172,8 +178,50 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
     }, 1000.millis)
     cache.toMap
   }
+
+
+  val searchAccountForm: Form[SearchAccountForm] = Form {
+    mapping(
+      "search" -> text
+    )(SearchAccountForm.apply)(SearchAccountForm.unapply)
+  }
+
+  def searchParentAccountPost = Action.async { implicit request =>
+    searchAccountForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts)))
+      },
+      res => {
+        repo.searchAccount(res.search).map { resAccounts =>
+          val cache = collection.mutable.Map[String, String]()
+          resAccounts.map { account => 
+            cache put (account.id.toString(), account.code.toString + ": " +  account.name.toString)
+          }
+          parentAccounts = cache.toMap
+          Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts))
+        }
+      }
+    )
+  }
+  
+
+  def searchAccountPost = Action.async { implicit request =>
+    searchAccountForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts)))
+      },
+      res => {
+        repo.searchAccount(res.search).map { resAccounts =>
+          accounts = resAccounts
+          Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts))
+        }
+      }
+    )
+  }
   
 }
+
+case class SearchAccountForm(search: String)
 
 case class CreateAccountForm(code: String, name: String, type_1: String, negativo: String, parent: Long, description: String)
 

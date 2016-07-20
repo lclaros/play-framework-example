@@ -31,8 +31,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
       "productId" -> longNumber,
       "proveedorId" -> longNumber,
       "measureId" -> longNumber,
-      "amount" -> number,
-      "amountLeft" -> number
+      "amount" -> number
     )(CreateProductInvForm.apply)(CreateProductInvForm.unapply)
   }
 
@@ -69,43 +68,11 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
     Ok(views.html.productInv_add(new MyDeadboltHandler, productId, newForm, productMap, proveedorMap, measureMap))
   }
 
-  //def request = Action {
-  //  productMap = getInsumoNamesMap()
-  //  proveedorMap = getProveedorMap()
-  //  Ok(views.html.productInv_request(newForm, productMap, proveedorMap))
-  //}
-
-  //def request_row = Action {
-  //  productMap = getInsumoNamesMap()
-  //  proveedorMap = getProveedorMap()
-  //  Ok(views.html.productInv_request_row(newForm, productMap, proveedorMap))
-  //}
-
-  //def add_request_row = Action.async { implicit request =>
-  //  newForm.bindFromRequest.fold(
-  //    errorForm => {
-  //      Future.successful(Ok(views.html.productInv_request(errorForm, Map[String, String](), Map[String, String]())))
-  //    },
-  //    res => {
-  //      repo.create(res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>
-  //        Redirect(routes.ProductInvController.request)
-  //      }
-  //    }
-  //  )
-  //}
-
   def getProductInvs = Action.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
-
-  //def getProductInvsByInsumo(id: Long) = Action.async {
-  //  repo.listByInsumo(id).map { res =>
-  //    Ok(Json.toJson(res))
-  //  }
-  //}
-
 
   // to copy
   def show(id: Long) = Action.async { implicit request =>
@@ -198,14 +165,14 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productInv_add(new MyDeadboltHandler, productId, newForm, productMap, proveedorMap, measureMap)))
+        Future.successful(Ok(views.html.productInv_add(new MyDeadboltHandler, productId, errorForm, productMap, proveedorMap, measureMap)))
       },
       res => {
         repo.create(
                       res.productId, productMap(res.productId.toString),
                       res.proveedorId, proveedorMap(res.proveedorId.toString),
                       res.measureId, measureMap(res.measureId.toString),
-                      res.amount, res.amountLeft).map { resNew =>
+                      res.amount, res.amount).map { resNew =>
           repoProduct.updateAmount(res.productId, res.amount)
           Redirect(routes.ProductInvController.show(resNew.id))
         }
@@ -236,6 +203,6 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
 
 }
 
-case class CreateProductInvForm(productId: Long, proveedorId: Long, measureId: Long, amount: Int, amountLeft: Int)
+case class CreateProductInvForm(productId: Long, proveedorId: Long, measureId: Long, amount: Int)
 
 case class UpdateProductInvForm(id: Long, productId: Long, proveedorId: Long, measureId: Long, amount: Int, amountLeft: Int)
