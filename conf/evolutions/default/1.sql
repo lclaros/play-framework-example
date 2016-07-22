@@ -19,8 +19,10 @@ drop table IF EXISTS requestRowProductor;
 drop table IF EXISTS logEntry;
 drop table IF EXISTS measure;
 drop table IF EXISTS company;
-
-# --- !Ups
+drop table IF EXISTS roles;
+drop table IF EXISTS userRole;
+#
+## --- !Ups
 create table association (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) not null,
@@ -184,6 +186,19 @@ create table user (
   login VARCHAR(30),
   password VARCHAR(30),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+create table userRole (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  userId INT,
+  roleName VARCHAR(50),
+  roleCode VARCHAR(50)
+);
+
+create table roles (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  roleName VARCHAR(50),
+  roleCode VARCHAR(50)
 );
 
 create table productRequest (

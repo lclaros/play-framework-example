@@ -263,3 +263,128 @@ INSERT INTO product(proveedorName, name, currentAmount, cost, totalValue, type) 
 ('CLA BELLA',	'COLADERAS CON FILTROS',	'4',	'190',	'760', 'veterinaria'),
 ('CLA BELLA',	'PILTOLA',	'2',	'510',	'1020', 'veterinaria'),
 ('CLA BELLA',	'AGITADOR DE LECHE',	'2',	'450',	'900', 'veterinaria');
+
+
+
+INSERT INTO roles(roleName, roleCode) VALUES 
+('Unidad de Medida', "measure"),
+('Crear Unidaded de MCrear edida', "measureCreate"),
+('Listar Unidades MListar edida', "measureList"),
+('Mostrar Unidad de Medida', "measureShow"),
+('Editar Unidad de Medida', "measureEdit"),
+('Eliminar Unidad de Medida', "measureDelete"),
+
+('Productos', "product"),
+('Crear Producto', "productCreate"),
+('Listar Productos', "productList"),
+('Mostrar Producto', "productShow"),
+('Editar Producto', "productEdit"),
+('Eliminar Producto', "productDelete"),
+
+('Proveedores', "proveedor"),
+('Crear Proveedor', "proveedorCreate"),
+('Listar Proveedor', "proveedorList"),
+('Mostrar Proveedor', "proveedorShow"),
+('Editar Proveedor', "proveedorEdit"),
+('Eliminar Proveedor', "proveedorDelete"),
+
+('Modulos', "module"),
+('Crear Modulo ', "moduleCreate"),
+('Listar Modulo ', "moduleList"),
+('Mostrar Modulo ', "moduleShow"),
+('Editar Modulo ', "moduleEdit"),
+('Eliminar Modulo ', "moduleDelete"),
+
+('Productor', "productor"),
+('Crear Productor', "productorCreate"),
+('Listar Productor', "productorList"),
+('Mostrar Productor', "productorShow"),
+('Editar Productor', "productorEdit"),
+('Eliminar Productor', "productorDelete"),
+
+('Usuarios', "user"),
+('Crear Usuarios', "userCreate"),
+('Listar Usuarios', "userList"),
+('Mostrar Usuarios', "userShow"),
+('Editar Usuarios', "userEdit"),
+('Eliminar Usuarios', "userDelete"),
+
+('Cuentas', "account"),
+('Crear Cuentas', "accountCreate"),
+('Listar Cuentas', "accountList"),
+('Mostrar Cuentas', "accountShow"),
+('Editar Cuentas', "accountEdit"),
+('Eliminar Cuentas', "accountDelete"),
+
+('Transacciones', "transaction"),
+('Crear Transacciones', "transactionCreate"),
+('Listar Transacciones', "transactionList"),
+('Mostrar Transacciones', "transactionShow"),
+('Editar Transacciones', "transactionEdit"),
+('Eliminar Transacciones', "transactionDelete"),
+
+('Detalle de Transaccion', "transactionDetail"),
+('Crear Detalle de Transaccion', "transactionDetailCreate"),
+('Listar Detalle de Transaccion', "transactionDetailList"),
+('Mostrar Detalle de Transaccion', "transactionDetailShow"),
+('Editar Detalle de Transaccion', "transactionDetailEdit"),
+('Eliminar Detalle de Transaccion', "transactionDetailDelete"),
+
+('Pedidos', "productRequest"),
+('Crear Pedidos', "productRequestCreate"),
+('Listar Pedidos', "productRequestList"),
+('Mostrar Pedidos', "productRequestShow"),
+('Editar Pedidos', "productRequestEdit"),
+('Eliminar Pedidos', "productRequestDelete"),
+('Enviar Pedidos', "productRequestSend"),
+('Aceptar Pedidos', "productRequestAccept"),
+('Finalizar Pedidos', "productRequestFinish"),
+
+('Detalle de Pedido', "requestRow"),
+('Crear Detalle de Pedido', "requestRowCreate"),
+('Listar Detalle de Pedido', "requestRowList"),
+('Mostrar Detalle de Pedido', "requestRowShow"),
+('Editar Detalle de Pedido', "requestRowEdit"),
+('Eliminar Detalle de Pedido', "requestRowDelete"),
+
+('Asignacion de Producto a Productor', "requestRowProductor"),
+('Crear Asignacion de Producto a Productor', "requestRowProductorCreate"),
+('Listar Asignacion de Producto a Productor', "requestRowProductorList"),
+('Mostrar Asignacion de Producto a Productor', "requestRowProductorShow"),
+('Editar Asignacion de Producto a Productor', "requestRowProductorEdit"),
+('Eliminar Asignacion de Producto a Productor', "requestRowProductorDelete"),
+
+('Reporte de Descuentos', "discountReport"),
+('Crear Reporte de Descuentos', "discountReportCreate"),
+('Listar Reporte de Descuentos', "discountReportList"),
+('Mostrar Reporte de Descuentos', "discountReportShow"),
+('Editar Reporte de Descuentos', "discountReportEdit"),
+('Eliminar Reporte de Descuentos', "discountReportDelete"),
+('Finalizar Reporte de Descuentos', "discountReportFinalize"),
+
+('Detalle de Descuento', "discountDetail"),
+('Crear Detalle de Descuento', "discountDetailCreate"),
+('Listar Detalle de Descuento', "discountDetailList"),
+('Mostrar Detalle de Descuento', "discountDetailShow"),
+('Editar Detalle de Descuento', "discountDetailEdit"),
+('Eliminar Detalle de Descuento', "discountDetailDelete"),
+
+('Productos al Inventario', "productInv"),
+('Crear Productos al Inventario', "productInvCreate"),
+('Listar Productos al Inventario', "productInvList"),
+('Mostrar Productos al Inventario', "productInvShow"),
+('Editar Productos al Inventario', "productInvEdit"),
+('Eliminar Productos al Inventario', "productInvDelete"),
+
+('Reporte', "report"),
+('Mostrar Balance General', "balanceShow"),
+('Mostrar Libro Diario', "diaryShow"),
+('Mostrar Estado de Resultados', "financeShow"),
+('Mostrar Libros del Mayor', "mayorShow"),
+('Mostrar Sumas Y Saldos', "sumasSaldosShow"),
+
+('Informacion de la compania', "company"),
+('Mostrar Informacion de la compania', "companyShow"),
+('Editar Informacion de la compania', "companyEdit");
+
+

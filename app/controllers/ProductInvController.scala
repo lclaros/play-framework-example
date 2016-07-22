@@ -49,7 +49,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
 
   var productMap = getProductMapById(0)
   var proveedorMap = getProveedorMap()
-  var measureMap = getMeasureMap()
+  var measureMap = getMeasureMap(0)
   var productId: Long = 0
   var updatedRow: ProductInv = _
 
@@ -59,12 +59,16 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
     }
   }
   
+  def getProductMeasureId(id: Long): Long = {
+    Await.result(repoProduct.getById(id).map(res=> res(0).measureId), 3000.millis)
+  }
 
   def addGet(productId: Long) = Action { implicit request =>
     this.productId = productId
     productMap = getProductMapById(productId)
     proveedorMap = getProveedorMap()
-    measureMap = getMeasureMap()
+    var productMeasureId = getProductMeasureId(productId)
+    measureMap = getMeasureMap(productMeasureId)
     Ok(views.html.productInv_add(new MyDeadboltHandler, productId, newForm, productMap, proveedorMap, measureMap))
   }
 
@@ -96,7 +100,8 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
                         )
       productMap = getProductMapById(updatedRow.productId)
       proveedorMap = getProveedorMap()
-      measureMap = getMeasureMap()
+      var productMeasureId = getProductMeasureId(updatedRow.productId)
+      measureMap = getMeasureMap(productMeasureId)
       Ok(views.html.productInv_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), productMap, proveedorMap, measureMap))
     }
   }
@@ -123,8 +128,8 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
     }, 3000.millis)
   }
 
-  def getMeasureMap(): Map[String, String] = {
-    Await.result(repoMeasure.list().map { measures => 
+  def getMeasureMap(measureId: Long): Map[String, String] = {
+    Await.result(repoMeasure.getById(measureId).map { measures => 
       val cache = collection.mutable.Map[String, String]()
       measures.foreach { measure => 
         cache put (measure.id.toString, measure.name)

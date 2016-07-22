@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: User)(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: User, roles: Seq[Role], assignedRoles: Seq[UserRole])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -48,5 +48,66 @@
             <div style="display: inline-block;"> Password: </div>
             <div style="display: inline-block;" id="type_1">@row.password</div>
         </div>
+    </div>
+    <div class="container">
+        <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary btn-sm">Permisos Asignados</a> </div>
+    </div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    @restrict(roles = List(Array("productInv"))) {
+                        <th>-----------</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- assignedRoles) {
+                    <tr>
+                        </td>
+                        <td>@child.roleName</td>
+                        @restrict(roles = List(Array("role"))) {
+                            <td>
+                               @restrict(roles = List(Array("roleDelete"))) {
+                                   <a href="/role_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a> 
+                               }
+                           </td> 
+                       }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+     <div class="container">
+        <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary btn-sm">Lista de Ṕermisos</a> </div>
+    </div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    @restrict(roles = List(Array("productInv"))) {
+                        <th>-----------</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- roles) {
+                    <tr>
+                        </td>
+                        <td>@child.roleName</td>
+                        @restrict(roles = List(Array("role"))) {
+                            <td>
+                               @restrict(roles = List(Array("roleEdit"))) {
+                                   <a href="/role_assign/@row.id/@child.roleCode" class="btn btn-primary btn-sm">Assignar</a> 
+                               }
+                           </td> 
+                       }
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 }

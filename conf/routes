@@ -97,13 +97,16 @@ GET     /veterinarios         			controllers.VeterinarioController.getVeterinari
 GET     /veterinario_list     			controllers.VeterinarioController.index
 
 # Now for users
-GET     /user_show/:id 			controllers.UserController.show(id: Long)
-GET     /profile 				controllers.UserController.profile()
-GET     /profileById/:id 		controllers.UserController.profileById(id: Long)
-GET     /user_update/:id        controllers.UserController.getUpdate(id: Long)
-GET     /user_remove/:id        controllers.UserController.delete(id: Long)
-GET     /users/:id 				controllers.UserController.getById(id: Long)
-POST    /user_update            controllers.UserController.updatePost
+GET     /role_assign/:id/:roleCode 		controllers.UserController.assignRole(id: Long, roleCode: String)
+GET     /role_remove/:roleId 			controllers.UserController.removeRole(roleId: Long)
+GET     /user_show/:id 					controllers.UserController.show(id: Long)
+GET     /user_show/:id 					controllers.UserController.show(id: Long)
+GET     /profile 						controllers.UserController.profile()
+GET     /profileById/:id 				controllers.UserController.profileById(id: Long)
+GET     /user_update/:id        		controllers.UserController.getUpdate(id: Long)
+GET     /user_remove/:id        		controllers.UserController.delete(id: Long)
+GET     /users/:id 						controllers.UserController.getById(id: Long)
+POST    /user_update            		controllers.UserController.updatePost
 
 POST    /user                 	controllers.UserController.add
 GET     /users         			controllers.UserController.getUsers

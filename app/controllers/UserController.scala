@@ -17,7 +17,8 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesApi)
+class UserController @Inject() (repo: UserRepository, repoRoles: UserRoleRepository,
+                                val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateUserForm] = Form {
@@ -91,8 +92,6 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
       }, 2000.millis)
   }
 
-
-
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
@@ -127,12 +126,45 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
     )(UpdateUserForm.apply)(UpdateUserForm.unapply)
   }
 
+  def getRoles(): Seq[Role] = {
+    Await.result(repoRoles.listRoles().map(res => res), 3000.millis)
+  }
+
+  def getAssignedRoles(): Seq[UserRole] = {
+    Await.result(repoRoles.listUserRoles().map(res => res), 3000.millis)
+  }
+
+  var userId: Long =  _
   // to copy
   def show(id: Long) = Action.async { implicit request =>
+    userId = id
+    var assignedRoles = getAssignedRoles()
+    var roles = getRoles()
     repo.getById(id).map { res =>
-      Ok(views.html.user_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.user_show(new MyDeadboltHandler, res(0), roles, assignedRoles))
     }
   }
+
+  def getRoleByCode(roleCode: String): Role = {
+    Await.result(repoRoles.getRoleByCode(roleCode).map(res => res(0)), 3000.millis)
+  }
+
+  // to copy
+  def assignRole(userId: Long, roleCode: String) = Action.async { implicit request =>
+    var rol = getRoleByCode(roleCode)
+    repoRoles.createUserRole(userId, rol.roleName, roleCode).map (res => 
+      Redirect(routes.UserController.show(res.userId))
+    )
+  }
+
+  // to copy
+  def removeRole(id: Long) = Action.async { implicit request =>
+    repoRoles.deleteUserRole(id).map (res => 
+      Redirect(routes.UserController.show(userId))
+    )
+  }
+
+
 
   // update required
   def getUpdate(id: Long) = Action.async { implicit request =>

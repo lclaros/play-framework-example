@@ -14,6 +14,7 @@ class UserSecurity(val userName: String, val rolParam: String) extends Subject
 
   var rolesList: Map[String, List[SecurityRole]] = Map("admin" -> 
       List(
+            new SecurityRole("role"), new SecurityRole("roleCreate"), new SecurityRole("roleList"), new SecurityRole("roleShow"), new SecurityRole("roleEdit"), new SecurityRole("roleDelete"),
             new SecurityRole("measure"), new SecurityRole("measureCreate"), new SecurityRole("measureList"), new SecurityRole("measureShow"), new SecurityRole("measureEdit"), new SecurityRole("measureDelete"),
             new SecurityRole("product"), new SecurityRole("productCreate"), new SecurityRole("productList"), new SecurityRole("productShow"), new SecurityRole("productEdit"), new SecurityRole("productDelete"),
             new SecurityRole("proveedor"), new SecurityRole("proveedorCreate"), new SecurityRole("proveedorList"), new SecurityRole("proveedorShow"), new SecurityRole("proveedorEdit"), new SecurityRole("proveedorDelete"),

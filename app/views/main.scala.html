@@ -155,14 +155,14 @@
         function fadeDivs() {
             console.log("fade in");
             i = i < images.length ? i : 0;
-            $('#banner').fadeOut(10000, function() {
-                $(this).attr('src', images[i]).fadeIn(10000);
+            $('#banner').fadeOut(1000, function() {
+                $(this).attr('src', images[i]).fadeIn(20000);
             })
             i++;
         }
 
         $(document).ready(function() {
-            setInterval(fadeDivs, 3000);
+            setInterval(fadeDivs, 20000);
         });
 
 
