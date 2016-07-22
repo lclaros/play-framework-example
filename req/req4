@@ -1,8 +1,17 @@
+// July 22
+TODO|
+    Get permission and use in the UserSecurity Model
+
+    Update the parent values
+        request row productor, request row, 
+DONE
+    Added permissions assign actions
+    Data to work with permissions
+    Unit measure get for the product INV record
+
 // July 19 2016
 TODO
     Search/Set product in product request row, request row, account
-    Update the parent values
-        request row productor, request row, 
      
 
 // July (3, 10) 2016
