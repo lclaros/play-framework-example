@@ -5,6 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.Productor
+import models.Association
 
 import scala.concurrent.{ Future, ExecutionContext }
 
@@ -39,7 +40,17 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
             ) <> ((Productor.apply _).tupled, Productor.unapply)
   }
 
+  private class AssociationsTable(tag: Tag) extends Table[Association](tag, "association") {
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+    def name = column[String]("name")
+    def * = (
+              id, name
+            ) <> ((Association.apply _).tupled, Association.unapply)
+  }
+
+
   private val tableQ = TableQuery[ProductoresTable]
+  private val tableQAssociation = TableQuery[AssociationsTable]
 
   def create(name: String, carnet: Int, telefono: Int, direccion: String,
              account: String, module: Long, moduleName: String): Future[Productor] = db.run {
@@ -64,9 +75,21 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     tableQ.drop(start).take(interval).result
   }
 
+  def listByAssociation(id: Long): Future[Seq[Productor]] = db.run {
+    tableQ.take(500).result
+  }
+
+  def listAssociation(): Future[Seq[Association]] = db.run {
+    tableQAssociation.result
+  }
+
   // to cpy
   def getById(id: Long): Future[Seq[Productor]] = db.run {
     tableQ.filter(_.id === id).result
+  }
+
+  def getAssociationById(id: Long): Future[Seq[Association]] = db.run {
+    tableQAssociation.filter(_.id === id).result
   }
 
   // update required to copy
@@ -107,12 +130,15 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
-    
     tableQ.result
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
     tableQ.take(200).map(s => (s.id, s.name)).result
+  }
+
+  def getListNamesAssociations(): Future[Seq[Association]] = db.run {
+    tableQAssociation.result
   }
 
   def list100Productors(): Future[Seq[Productor]] = db.run {
@@ -159,7 +185,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
 
   def searchProductor(search: String): Future[Seq[Productor]] = db.run {
     if (!search.isEmpty) {
-      tableQ.filter(p => (p.account like "%" + search + "%") || (p.name like "%" + search + "%")).drop(0).take(100).result
+      tableQ.filter(p => (p.account like "%" + search + "%") || (p.name like "%" + search + "%") || (p.associationName like "%" + search + "%")).drop(0).take(100).result
     } else {
       tableQ.drop(0).take(100).result
     }    

@@ -44,6 +44,8 @@ GET     /productoresPage/:page			controllers.ProductorController.getProductores(
 GET     /productorsByModule/:id			controllers.ProductorController.getProductorsByModule(id: Long)
 GET     /productor_report    			controllers.ProductorController.getProductoresReport
 GET     /productor_list/:page   		controllers.ProductorController.index(page: Int)
+GET     /association_list   			controllers.ProductorController.index_association
+GET     /association_show/:id  			controllers.ProductorController.showAssociation(id: Long)
 GET     /productor_add   				controllers.ProductorController.addGet
 
 # accounts routes

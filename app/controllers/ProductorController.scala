@@ -21,7 +21,7 @@ import security.MyDeadboltHandler
 
 class ProductorController @Inject() (
                                     repo: ProductorRepository, repoRequests: RequestRowProductorRepository,
-                                    repoModule: ModuleRepository, repoDiscount: DiscountDetailRepository,
+                                    repoModule: ModuleRepository, repoProductor: ProductorRepository, repoDiscount: DiscountDetailRepository,
                                       val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
@@ -87,6 +87,15 @@ class ProductorController @Inject() (
       }
   }
 
+  var associations: Seq[Association] = _
+
+  def index_association() = Action.async { implicit request =>
+    repo.listAssociation().map { res =>
+      associations = res
+      Ok(views.html.association_index(new MyDeadboltHandler, associations))
+    }
+  }
+
   def searchProductorPost = Action.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
@@ -109,6 +118,10 @@ class ProductorController @Inject() (
     Ok(generator.toBytes(views.html.reporte_productores(), "http://localhost:9000/")).as("application/pdf")
   }
 
+  def getModuleById(id: Long): Module = {
+    Await.result(repoModule.getById(id).map(res => res(0)), 2000.millis)
+  }
+
   def add = Action.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
@@ -117,8 +130,9 @@ class ProductorController @Inject() (
         Future.successful(Ok(views.html.productor_add(new MyDeadboltHandler, errorForm, modules)))
       },
       res => {
+        val module = getModuleById(res.module)
         repo.create (res.name, res.carnet, res.telefono, res.direccion,
-                    res.account, res.module, modules(res.module.toString)).map { resNew =>
+                    res.account, res.module, module.name).map { resNew =>
           Redirect(routes.ProductorController.show(resNew.id))
         }
       }
@@ -177,6 +191,11 @@ class ProductorController @Inject() (
       }, 1000.millis)
   }
 
+  def getProductorsByAsso(id: Long): Seq[Productor] = {
+    Await.result(repoProductor.listByAssociation(id).map {res => 
+      res
+      }, 1000.millis)
+  }
 
   // to copy
   def show(id: Long) = Action.async { implicit request =>
@@ -184,6 +203,13 @@ class ProductorController @Inject() (
     val discounts = getDiscounts(id)
     repo.getById(id).map { res =>
       Ok(views.html.productor_show(new MyDeadboltHandler, res(0), requests, discounts))
+    }
+  }
+
+  def showAssociation(id: Long) = Action.async { implicit request =>
+    val productoresByAsso = getProductorsByAsso(id)
+    repo.getAssociationById(id).map { res =>
+      Ok(views.html.association_show(new MyDeadboltHandler, res(0), productoresByAsso))
     }
   }
 
@@ -221,6 +247,12 @@ class ProductorController @Inject() (
   // to copy
   def getById(id: Long) = Action.async {
     repo.getById(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+  def getAssociationById(id: Long) = Action.async {
+    repo.getAssociationById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }

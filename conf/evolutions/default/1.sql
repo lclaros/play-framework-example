@@ -34,16 +34,16 @@ create table association (
 
 create table module (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50) not null,
+  name VARCHAR(100) not null,
   president INT,
   description VARCHAR(250),
   association INT(6),
-  associationName VARCHAR(50)
+  associationName VARCHAR(100)
 );
 
 create table measure (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50),
+  name VARCHAR(100),
   quantity INT(6),
   description VARCHAR(250)
 );
@@ -51,7 +51,7 @@ create table measure (
 create table account (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   code VARCHAR(30),
-  name VARCHAR(50),
+  name VARCHAR(100),
   type VARCHAR(30),
   parent INT(6),
   negativo VARCHAR(30),
@@ -68,19 +68,19 @@ create table transaction (
   type VARCHAR(30),
   description VARCHAR(250),
   createdBy INT,
-  createdByName VARCHAR(50),
+  createdByName VARCHAR(100),
   autorizedBy INT,
-  autorizedByName VARCHAR(50), 
+  autorizedByName VARCHAR(100), 
   receivedBy INT,
-  receivedByName VARCHAR(50), 
+  receivedByName VARCHAR(100), 
   updatedBy INT(6),
-  updatedByName VARCHAR(50),
+  updatedByName VARCHAR(100),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table company (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50),
+  name VARCHAR(100),
   president VARCHAR(50),
   description VARCHAR(2505)
 );
@@ -103,10 +103,10 @@ create table transactionDetail (
   credit double,
   transactionDate VARCHAR(30),
   accountCode VARCHAR(30),
-  accountName VARCHAR(50),
+  accountName VARCHAR(100),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INT,
-  createdByName VARCHAR(50)
+  createdByName VARCHAR(100)
 );
 
 create table bancos (
@@ -126,10 +126,10 @@ create table product (
   price double DEFAULT 0,
   description VARCHAR(250) DEFAULT '',
   measureId INT DEFAULT 0,
-  measureName VARCHAR(50) DEFAULT '',
+  measureName VARCHAR(100) DEFAULT '',
   currentAmount INT  DEFAULT 0,
   proveedorId INT DEFAULT 0,
-  proveedorName VARCHAR(50) DEFAULT '',
+  proveedorName VARCHAR(100) DEFAULT '',
   proveedorCode VARCHAR(50) DEFAULT '',
   type VARCHAR(50) DEFAULT '',
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -143,8 +143,8 @@ create table productor (
   direccion VARCHAR(100),
   account VARCHAR(30),
   module INT,
-  moduleName VARCHAR(50),
-  associationName VARCHAR(50),
+  moduleName VARCHAR(100),
+  associationName VARCHAR(100),
   associationId INT,
   acopio INT,
   status VARCHAR(30),
@@ -191,13 +191,13 @@ create table user (
 create table userRole (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   userId INT,
-  roleName VARCHAR(50),
+  roleName VARCHAR(100),
   roleCode VARCHAR(50)
 );
 
 create table roles (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  roleName VARCHAR(50),
+  roleName VARCHAR(100),
   roleCode VARCHAR(50)
 );
 
@@ -205,21 +205,21 @@ create table productRequest (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   date VARCHAR(30),
   veterinario INT,
-  veterinarioname VARCHAR(50),
+  veterinarioname VARCHAR(100),
   storekeeper INT,
-  storekeeperName VARCHAR(50),
+  storekeeperName VARCHAR(100),
   user INT,
-  userName VARCHAR(50),
+  userName VARCHAR(100),
   module INT,
-  moduleName VARCHAR(50),
+  moduleName VARCHAR(100),
   status VARCHAR(30),
   detail VARCHAR(250),
   type VARCHAR(30),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INT,
-  createdByName VARCHAR(50),
+  createdByName VARCHAR(100),
   acceptedBy INT,
-  acceptedByName VARCHAR(50),
+  acceptedByName VARCHAR(100),
   acceptedAt Date
 );
 
@@ -227,31 +227,31 @@ create table requestRow (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   requestId INT,
   productId INT,
-  productName VARCHAR(50),
+  productName VARCHAR(100),
   productorId INT,
-  productorName VARCHAR(50),
+  productorName VARCHAR(100),
   quantity INT,
   price double,
   measureId INT,
-  measureName VARCHAR(50),
+  measureName VARCHAR(100),
   paid INT,
   debt INT,
   cuota INT,
   status VARCHAR(30),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INT,
-  createdByName VARCHAR(50)
+  createdByName VARCHAR(100)
 );
 
 create table requestRowProductor (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   requestRowId INT,
   productId INT,
-  productName VARCHAR(50),
+  productName VARCHAR(100),
   productorId INT,
-  productorName VARCHAR(50),
+  productorName VARCHAR(100),
   measureId INT,
-  measureName VARCHAR(50),
+  measureName VARCHAR(100),
   quantity INT,
   price double,
   paid double,
@@ -261,7 +261,8 @@ create table requestRowProductor (
   type VARCHAR(30),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INT,
-  createdByName VARCHAR(50)
+  createdByName VARCHAR(100),
+  payType VARCHAR(20)
 );
 
 create table productInv (
@@ -294,7 +295,7 @@ create table discountDetail (
   discountReport INT,
   requestRow INT,
   productorId INT,
-  productorName VARCHAR(50),
+  productorName VARCHAR(100),
   status VARCHAR(30),
   discount double
 );

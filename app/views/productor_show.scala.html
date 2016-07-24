@@ -52,6 +52,14 @@
             <div style="display: inline-block;" id="numberPayment">@row.numberPayment</div>
         </div>
         <div>
+            <div style="display: inline-block;"> Siguente descuento: </div>
+            <div style="display: inline-block;" id="numberPayment">@if(row.numberPayment > 0) {
+                    @(row.totalDebt/row.numberPayment)
+                }
+                </div>
+        </div>
+
+        <div>
             <div style="display: inline-block;"> Cargo: </div>
             <div style="display: inline-block;" id="position">@row.position</div>
         </div>

@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.duration._
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -10,17 +11,16 @@ import play.api.libs.json.Json
 import models._
 import dal._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: MessagesApi)
+class ModuleController @Inject() (repo: ModuleRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val associationes = scala.collection.immutable.Map[String, String]("0" -> "Ninguno", "1" -> "Association 1", "2" -> "Association 2")
 
   val newForm: Form[CreateModuleForm] = Form {
     mapping(
@@ -37,7 +37,20 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
     }
   }
 
+  var associationes:Map[String, String] = _
+
+  def getAssociations(): Map[String, String] = {
+    Await.result(repoProductor.getListNamesAssociations().map{ res => 
+      val cache = collection.mutable.Map[String, String]()
+      res.foreach { asociation => 
+        cache put (asociation.id.toString, asociation.name)
+      }
+      cache.toMap
+    }, 3000.millis)
+  }
+
   def addGet = Action { implicit request =>
+    associationes = getAssociations()
     Ok(views.html.module_add(new MyDeadboltHandler, newForm, associationes))
   }
 

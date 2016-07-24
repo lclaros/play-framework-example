@@ -1,0 +1,51 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, associations: Seq[Association])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Lista") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("associationCreateDEV"))) {
+            <a href="/association_add" class="btn btn-primary btn-sm">Nuevo</a> 
+        }
+        @restrict(roles = List(Array("associationListDEV"))) {
+            <a href="/association_list/1" class="btn btn-primary btn-sm">Listar</a> 
+        }
+    </div>
+
+    <div class="table table-bordered">
+        <table class="table table-bordered conted" id="rows">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>---</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(association <- associations) {
+                <tr>
+                    <td></td>
+                    <td>@association.id</td>
+                    <td>@association.name</td>
+                    <td>
+                        @restrict(roles = List(Array("associationEdit"))) {
+                            <a href="/association_update/@association.id" class="btn btn-primary btn-sm">Editar</a> 
+                        }
+                        @restrict(roles = List(Array("associationDelete"))) {
+                            <a href="/association_remove/@association.id" class="btn btn-danger btn-sm">Eliminar</a>
+                        }
+                        @restrict(roles = List(Array("associationShow"))) {
+                            <a href="/association_show/@association.id" class="btn btn-info btn-sm">Mostrar</a>
+                        }
+                    </td>
+
+                </tr>
+            }
+            </tbody>
+        </table>
+        <style type="text/css">
+        </style>
+    </div>
+}

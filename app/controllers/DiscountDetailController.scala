@@ -55,8 +55,8 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       },
       res => {
         var productName = productors(res.productorId.toString)
-        if (productName.length > 20)
-          productName = productName.substring(0, 20)
+        //if (productName.length > 20)
+        //  productName = productName.substring(0, 20)
         repo.create(
                       res.discountReport, res.productorId,
                       productName, res.status, res.discount

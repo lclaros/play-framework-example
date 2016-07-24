@@ -1,0 +1,65 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Association, productores: Seq[Productor])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Mostrar") {
+    @examples.templates.nav(handler)
+    <div class="container">
+    <div>
+            <div>
+        @restrict(roles = List(Array("associationList"))) {
+            <a href="/association_list" class="btn btn-info btn-sm">Listar</a> 
+        }
+        @restrict(roles = List(Array("associationEdit"))) {
+            <a href="/association_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
+        }
+        @restrict(roles = List(Array("associationDelete"))) {
+           <a href="/association_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
+        }
+    </div>
+            <div style="display: inline-block;"> Nombre: </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
+            <div style="display: inline-block;"> Codigo: </div>
+            <div style="display: inline-block;" id="name">@row.id</div>
+    </div>
+    </div>
+    <div class="container">
+        <div>Productos</div>
+        <div class="table table-bordered">
+            <table class="table table-bordered" id="productos">
+                <thead>
+                    <tr>
+                        <th>Nombre del Productor</th>
+                        <th>-----------</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(req <- productores) {
+                        <tr>
+                            <td>
+                                @restrictOr(roles = List(Array("productorShow"))) {
+                                   <a href="/productor_show/@req.id">@req.name
+                                </a> 
+                                }{
+                                    @req.name                                    
+                                }
+                            </td>
+                            <td>
+                               @restrict(roles = List(Array("productorEdit"))) {
+                                   <a href="/productor_update/@req.id" class="btn btn-primary btn-sm">Editar</a> 
+                               }
+                               @restrict(roles = List(Array("productorDelete"))) {
+                                   <a href="/productor_remove/@req.id" class="btn btn-danger btn-sm">Eliminar</a>
+                               }
+                               @restrict(roles = List(Array("productorShow"))) {
+                                   <a href="/productor_show/@req.id" class="btn btn-info btn-sm">Mostrar</a>
+                               }
+                           </td> 
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+}

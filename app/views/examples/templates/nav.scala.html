@@ -74,9 +74,19 @@
                </div>
             </li>
         }
+        @restrict(roles = List(Array("association"))) {
+            <li>
+               <a href="/association_list">Asociaciones<span class="caret"></span></a>
+               <div>
+                  <ul>
+                     <li><a href="/association_list">Lista</a></li>
+                  </ul>
+               </div>
+            </li>
+        }
         @restrict(roles = List(Array("productor"))) {
             <li>
-               <a href="/productor_list">Productores<span class="caret"></span></a>
+               <a href="/productor_list/1">Productores<span class="caret"></span></a>
                <div>
                   <ul>
                      <li><a href="/productor_list/1">Lista</a></li>

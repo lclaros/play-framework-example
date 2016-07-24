@@ -49,10 +49,10 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      
       cache.toMap
     }, 3000.millis)
   }
+
   def index() = Action.async { implicit request =>
     productRequestId = 0
     repo.list().map { res =>
