@@ -126,7 +126,7 @@ class UserController @Inject() (repo: UserRepository, repoRoles: UserRoleReposit
     )(UpdateUserForm.apply)(UpdateUserForm.unapply)
   }
 
-  def getRoles(): Seq[Role] = {
+  def getRoles(): Seq[Roles] = {
     Await.result(repoRoles.listRoles().map(res => res), 3000.millis)
   }
 
@@ -145,7 +145,7 @@ class UserController @Inject() (repo: UserRepository, repoRoles: UserRoleReposit
     }
   }
 
-  def getRoleByCode(roleCode: String): Role = {
+  def getRoleByCode(roleCode: String): Roles = {
     Await.result(repoRoles.getRoleByCode(roleCode).map(res => res(0)), 3000.millis)
   }
 

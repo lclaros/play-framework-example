@@ -5,7 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.UserRole
-import models.Role
+import models.Roles
 
 import scala.concurrent.{ Future, ExecutionContext }
 
@@ -29,11 +29,11 @@ class UserRoleRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
     def * = (id, userId, roleName, roleCode) <> ((UserRole.apply _).tupled, UserRole.unapply)
   }
 
-  private class RolesTable(tag: Tag) extends Table[Role](tag, "roles") {
+  private class RolesTable(tag: Tag) extends Table[Roles](tag, "roles") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def roleName = column[String]("roleName")
     def roleCode = column[String]("roleCode")
-    def * = (id, roleName, roleCode) <> ((Role.apply _).tupled, Role.unapply)
+    def * = (id, roleName, roleCode) <> ((Roles.apply _).tupled, Roles.unapply)
   }
 
 
@@ -67,29 +67,29 @@ class UserRoleRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
   }
 
 
-  def createRole(roleName: String, roleCode: String): Future[Role] = db.run {
+  def createRole(roleName: String, roleCode: String): Future[Roles] = db.run {
     (tableRole.map(p => (p.roleName, p.roleCode))
       returning tableRole.map(_.id)
-      into ((nameAge, id) => Role(id, nameAge._1, nameAge._2))
+      into ((nameAge, id) => Roles(id, nameAge._1, nameAge._2))
     ) += (roleName, roleCode)
   }
 
-  def listRoles(): Future[Seq[Role]] = db.run {
+  def listRoles(): Future[Seq[Roles]] = db.run {
     tableRole.result
   }
 
   // to cpy
-  def getRoleById(id: Long): Future[Seq[Role]] = db.run {
+  def getRoleById(id: Long): Future[Seq[Roles]] = db.run {
     tableRole.filter(_.id === id).result
   }
 
   // to cpy
-  def getRoleByCode(roleCode: String): Future[Seq[Role]] = db.run {
+  def getRoleByCode(roleCode: String): Future[Seq[Roles]] = db.run {
     tableRole.filter(_.roleCode === roleCode).result
   }
 
   // delete required
-  def deleteRole(id: Long): Future[Seq[Role]] = db.run {
+  def deleteRole(id: Long): Future[Seq[Roles]] = db.run {
     val q = tableRole.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
