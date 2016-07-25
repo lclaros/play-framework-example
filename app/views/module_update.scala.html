@@ -19,7 +19,7 @@
         @inputText(rowForm("name"))
         @inputText(rowForm("president"))
         @inputText(rowForm("description"))
-        @select(field = rowForm("association"), options = options(associations))
+        @select(field = rowForm("associationId"), options = options(associations))
         <input type="submit" value="Actualizar"  class="btn btn-primary btn-sm"/>
         <a href="/module_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")

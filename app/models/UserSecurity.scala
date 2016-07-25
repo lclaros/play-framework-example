@@ -32,7 +32,8 @@ class UserSecurity(val userName: String, val rolParam: String) extends Subject
             new SecurityRole("discountDetail"), new SecurityRole("discountDetailCreate"), new SecurityRole("discountDetailList"), new SecurityRole("discountDetailShow"), new SecurityRole("discountDetailEdit"), new SecurityRole("discountDetailDelete"),
             new SecurityRole("productInv"), new SecurityRole("productInvCreate"), new SecurityRole("productInvList"), new SecurityRole("productInvShow"), new SecurityRole("productInvEdit"), new SecurityRole("productInvDelete"),
             new SecurityRole("report"), new SecurityRole("balanceShow"), new SecurityRole("diaryShow"), new SecurityRole("financeShow"), new SecurityRole("mayorShow"), new SecurityRole("sumasSaldosShow"),
-            new SecurityRole("company"), new SecurityRole("companyShow"), new SecurityRole("companyEdit")
+            new SecurityRole("company"), new SecurityRole("companyShow"), new SecurityRole("companyEdit"),
+            new SecurityRole("logEntry"), new SecurityRole("logEntryShow"), new SecurityRole("logEntryList")
             //new SecurityRole("reportCreate"), new SecurityRole("reportList"), new SecurityRole("reportShow"), new SecurityRole("reportEdit"), new SecurityRole("reportDelete")
           ), "veterinario" ->
       List(
@@ -62,11 +63,6 @@ class UserSecurity(val userName: String, val rolParam: String) extends Subject
 
           ), "contabilidad" ->
       List(
-            new SecurityRole("product"), new SecurityRole("productCreate"), new SecurityRole("productList"), new SecurityRole("productShow"),
-            new SecurityRole("proveedor"), new SecurityRole("proveedorCreate"), new SecurityRole("proveedorList"), new SecurityRole("proveedorShow"),
-            new SecurityRole("user"), new SecurityRole("userCreate"), new SecurityRole("userList"), new SecurityRole("userShow"),
-            new SecurityRole("module"), new SecurityRole("moduleCreate"), new SecurityRole("moduleList"), new SecurityRole("moduleShow"),
-            new SecurityRole("productor"), new SecurityRole("productorCreate"), new SecurityRole("productorList"), new SecurityRole("productorShow"), new SecurityRole("productorEdit"), new SecurityRole("productorDelete"),
             new SecurityRole("transaction"), new SecurityRole("transactionCreate"), new SecurityRole("transactionList"), new SecurityRole("transactionShow"), new SecurityRole("transactionEdit"), new SecurityRole("transactionDelete"),
             new SecurityRole("transactionDetail"), new SecurityRole("transactionDetailCreate"), new SecurityRole("transactionDetailList"), new SecurityRole("transactionDetailShow"), new SecurityRole("transactionDetailEdit"), new SecurityRole("transactionDetailDelete"),
             new SecurityRole("company"), new SecurityRole("companyShow")

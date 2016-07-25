@@ -78,7 +78,9 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
         repo.create(
                       res.name, res.cost, res.percent,res.cost + res.cost * res.percent, res.description,
                       res.measureId, unidades(res.measureId.toString),
-                      res.currentAmount
+                      res.currentAmount,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
                     ).map { resNew =>
           Redirect(routes.ProductController.show(resNew.id))
         }
@@ -192,7 +194,9 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
         repo.update(
                       res.id, res.name, res.cost, res.percent, res.price,
                       res.description, res.measureId, unidades(res.measureId.toString),
-                      res.currentAmount
+                      res.currentAmount,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
                     ).map { _ =>
           Redirect(routes.ProductController.show(res.id))
         }

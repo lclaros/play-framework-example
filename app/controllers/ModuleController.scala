@@ -25,19 +25,19 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
   val newForm: Form[CreateModuleForm] = Form {
     mapping(
       "name" -> nonEmptyText,
-      "president" -> longNumber,
+      "president" -> text,
       "description" -> text,
-      "association" -> longNumber
+      "associationId" -> longNumber
     )(CreateModuleForm.apply)(CreateModuleForm.unapply)
   }
-
+  
   def index = Action.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.module_index(new MyDeadboltHandler, res))
     }
   }
 
-  var associationes:Map[String, String] = _
+  var associations: Map[String, String] = _
 
   def getAssociations(): Map[String, String] = {
     Await.result(repoProductor.getListNamesAssociations().map{ res => 
@@ -50,8 +50,8 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
   }
 
   def addGet = Action { implicit request =>
-    associationes = getAssociations()
-    Ok(views.html.module_add(new MyDeadboltHandler, newForm, associationes))
+    associations = getAssociations()
+    Ok(views.html.module_add(new MyDeadboltHandler, newForm, associations))
   }
 
   def index_pdf = Action {
@@ -62,10 +62,13 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.module_add(new MyDeadboltHandler, errorForm, associationes)))
+        Future.successful(Ok(views.html.module_add(new MyDeadboltHandler, errorForm, associations)))
       },
       res => {
-        repo.create(res.name, res.president, res.description, res.association, associationes(res.association.toString)).map { resNew =>
+        repo.create(res.name, res.president, res.description, res.associationId,
+                    associations(res.associationId.toString),
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString).map { resNew =>
           Redirect(routes.ModuleController.show(resNew.id))
         }
       }
@@ -89,9 +92,9 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
     mapping(
       "id" -> longNumber,
       "name" -> nonEmptyText,
-      "president" -> longNumber,
+      "president" -> text,
       "description" -> text,
-      "association" -> longNumber
+      "associationId" -> longNumber
     )(UpdateModuleForm.apply)(UpdateModuleForm.unapply)
   }
 
@@ -111,10 +114,10 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
       val anyData = Map("id" -> id.toString().toString(), "name" -> updatedRow.name,
                         "president" -> updatedRow.president.toString(),
                         "description" -> updatedRow.description.toString(),
-                        "association" -> updatedRow.association.toString(),
+                        "associationId" -> updatedRow.associationId.toString(),
                         "associationName" -> updatedRow.associationName.toString()
                        )
-      Ok(views.html.module_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), associationes))
+      Ok(views.html.module_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), associations))
     }
   }
 
@@ -136,10 +139,13 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.module_update(new MyDeadboltHandler, updatedRow, errorForm, associationes)))
+        Future.successful(Ok(views.html.module_update(new MyDeadboltHandler, updatedRow, errorForm, associations)))
       },
       res => {
-        repo.update(res.id, res.name, res.president, res.description, res.association, associationes(res.association.toString)).map { _ =>
+        repo.update(res.id, res.name, res.president, res.description, res.associationId,
+                    associations(res.associationId.toString),
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString).map { _ =>
           Redirect(routes.ModuleController.show(res.id))
         }
       }
@@ -147,7 +153,7 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
   }
 }
 
-case class CreateModuleForm(name: String, president: Long, description: String, association: Long)
+case class CreateModuleForm(name: String, president: String, description: String, associationId: Long)
 
 // Update required
-case class UpdateModuleForm(id: Long, name: String, president: Long, description: String, association: Long)
+case class UpdateModuleForm(id: Long, name: String, president: String, description: String, associationId: Long)

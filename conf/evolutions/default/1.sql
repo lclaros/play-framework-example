@@ -21,7 +21,7 @@ drop table IF EXISTS measure;
 drop table IF EXISTS company;
 drop table IF EXISTS roles;
 drop table IF EXISTS userRole;
-#
+
 ## --- !Ups
 create table association (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -35,9 +35,9 @@ create table association (
 create table module (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) not null,
-  president INT,
+  president VARCHAR(100),
   description VARCHAR(250),
-  association INT(6),
+  associationId INT(6),
   associationName VARCHAR(100)
 );
 
@@ -85,14 +85,14 @@ create table company (
   description VARCHAR(2505)
 );
 
-
-
 create table logEntry (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  date VARCHAR(30),
-  action VARCHAR(30),
-  tableName_1 VARCHAR(30),
-  userId INT(6)
+  action VARCHAR(100),
+  tableName1 VARCHAR(100),
+  userId INT(6),
+  userName VARCHAR(255),
+  description VARCHAR(255),
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table transactionDetail (

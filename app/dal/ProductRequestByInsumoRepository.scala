@@ -15,7 +15,11 @@ import scala.concurrent.duration._
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class ProductRequestByInsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoRequestRow: RequestRowRepository, repoProduct: ProductRepository)(implicit ec: ExecutionContext) {
+class ProductRequestByInsumoRepository @Inject() (
+                                                  dbConfigProvider: DatabaseConfigProvider,
+                                                  repoRequestRow: RequestRowRepository,
+                                                  repoProduct: ProductRepository
+                                                  )(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._

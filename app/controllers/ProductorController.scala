@@ -59,7 +59,11 @@ class ProductorController @Inject() (
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
       "account" -> text,
-      "module" -> longNumber
+      "module" -> longNumber,
+      "acopio" -> number,
+      "promedio" -> number,
+      "excedent" -> number,
+      "pleno" -> number
     )(CreateProductorForm.apply)(CreateProductorForm.unapply)
   }
 
@@ -83,7 +87,7 @@ class ProductorController @Inject() (
           total = getTotal()
           currentPage = start
           Ok(views.html.productor_index(new MyDeadboltHandler, newForm, searchForm, productors, total, currentPage, interval))
-        }        
+        }     
       }
   }
 
@@ -131,8 +135,12 @@ class ProductorController @Inject() (
       },
       res => {
         val module = getModuleById(res.module)
-        repo.create (res.name, res.carnet, res.telefono, res.direccion,
-                    res.account, res.module, module.name).map { resNew =>
+        repo.create ( res.name, res.carnet, res.telefono, res.direccion,
+                      res.account, res.module, module.name,
+                      res.acopio, res.promedio, res.excedent, res.pleno,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
+                    ).map { resNew =>
           Redirect(routes.ProductorController.show(resNew.id))
         }
       }
@@ -169,7 +177,10 @@ class ProductorController @Inject() (
       "module" -> longNumber,
       "totalDebt" -> of[Double],
       "numberPayment" -> number,
-      "position" -> text
+      "acopio" -> number,
+      "promedio" -> number,
+      "excedent" -> number,
+      "pleno" -> number
     )(UpdateProductorForm.apply)(UpdateProductorForm.unapply)
   }
 
@@ -229,7 +240,10 @@ class ProductorController @Inject() (
         "module" -> updatedRow.module.toString(),
         "totalDebt" -> updatedRow.totalDebt.toString(),
         "numberPayment" -> updatedRow.numberPayment.toString(),
-        "position" -> updatedRow.position.toString()
+        "acopio" -> updatedRow.acopio.toString(),
+        "promedio" -> updatedRow.promedio.toString(),
+        "excedent" -> updatedRow.excedent.toString(),
+        "pleno" -> updatedRow.pleno.toString()
         )
       Ok(views.html.productor_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), modules))
     }
@@ -269,7 +283,9 @@ class ProductorController @Inject() (
                       res.direccion, res.account, res.module,
                       modules(res.module.toString()), "Association Name",
                       res.totalDebt, res.numberPayment,
-                      res.position
+                      res.acopio, res.promedio, res.excedent, res.pleno,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
                     ).map { _ =>
           Redirect(routes.ProductorController.show(res.id))
         }
@@ -280,13 +296,15 @@ class ProductorController @Inject() (
 
 case class CreateProductorForm(
                                 name: String, carnet: Int, telefono: Int,
-                                direccion: String, account: String, module: Long
+                                direccion: String, account: String, module: Long,
+                                acopio: Int, promedio: Int, excedent: Int, pleno: Int
                               )
 
 case class UpdateProductorForm(
                                 id: Long, name: String, carnet: Int, telefono: Int,
                                 direccion: String, account: String, module: Long,
-                                totalDebt: Double, numberPayment: Int, position: String
+                                totalDebt: Double, numberPayment: Int,
+                                acopio: Int, promedio: Int, excedent: Int, pleno: Int
                               )
 
 case class SearchProductorForm (search: String)

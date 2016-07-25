@@ -75,6 +75,10 @@ GET     /modules_report    			controllers.ModuleController.getModulesReport
 GET     /module_list         		controllers.ModuleController.index
 GET     /module_add         		controllers.ModuleController.addGet
 
+# logEntry rows
+GET     /logEntry_show/:id 			controllers.LogEntryController.show(id: Long)
+GET     /logEntry_list         		controllers.LogEntryController.index
+
 # unit Measure routes
 GET     /measure_show/:id 			controllers.MeasureController.show(id: Long)
 GET     /measure_update/:id        	controllers.MeasureController.getUpdate(id: Long)

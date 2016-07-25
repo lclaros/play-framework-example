@@ -188,6 +188,16 @@
                </div>
             </li>
         }
+        @restrict(roles = List(Array("logEntry"))) {
+            <li>
+               <a href="/logEntry_list">Eventos<span class="caret"></span></a>
+               <div>
+                  <ul>
+                     <li><a href="/logEntry_list">Lista</a></li>
+                  </ul>
+               </div>
+            </li>
+        }
      </ul>
   </nav>
 </div>

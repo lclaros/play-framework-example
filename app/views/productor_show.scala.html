@@ -5,18 +5,17 @@
 @main("Mostrar") {
     @examples.templates.nav(handler)
     <div class="container">
-    <div>
-            <div>
-        @restrict(roles = List(Array("productorList"))) {
-            <a href="/productor_list/1" class="btn btn-info btn-sm">Listar</a> 
-        }
-        @restrict(roles = List(Array("productorEdit"))) {
-            <a href="/productor_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
-        }
-        @restrict(roles = List(Array("productorDelete"))) {
-           <a href="/productor_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
-        }
-    </div>
+        <div>
+            @restrict(roles = List(Array("productorList"))) {
+                <a href="/productor_list/1" class="btn btn-info btn-sm">Listar</a> 
+            }
+            @restrict(roles = List(Array("productorEdit"))) {
+                <a href="/productor_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
+            }
+            @restrict(roles = List(Array("productorDelete"))) {
+               <a href="/productor_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
+            }
+        </div>
         <div>
             <div style="display: inline-block;"> Nombre: </div>
             <div style="display: inline-block;" id="name">@row.name</div>
@@ -37,8 +36,6 @@
             <div style="display: inline-block;"> Modulo: </div>
             <div style="display: inline-block;" id="moduleName">@row.moduleName</div>
         </div>
-    </div>
-    <div>
          <div>
             <div style="display: inline-block;"> Cuenta: </div>
             <div style="display: inline-block;" id="account">@row.account</div>
@@ -56,14 +53,29 @@
             <div style="display: inline-block;" id="numberPayment">@if(row.numberPayment > 0) {
                     @(row.totalDebt/row.numberPayment)
                 }
-                </div>
+            </div>
+        </div>
+         <div>
+            <div style="display: inline-block;"> Acopio: </div>
+            <div style="display: inline-block;" id="account">@row.acopio</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Promedio: </div>
+            <div style="display: inline-block;" id="totalDebt">@row.promedio</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Excedente: </div>
+            <div style="display: inline-block;" id="numberPayment">@row.excedent</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Pleno: </div>
+            <div style="display: inline-block;" id="numberPayment">@row.pleno </div>
         </div>
 
         <div>
             <div style="display: inline-block;"> Cargo: </div>
             <div style="display: inline-block;" id="position">@row.position</div>
         </div>
-    </div>
     </div>
     <div class="container">
         <div>Productos</div>

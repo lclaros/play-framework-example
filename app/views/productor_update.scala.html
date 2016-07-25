@@ -27,6 +27,10 @@
             @inputText(rowForm("totalDebt"), 'readonly -> "readonly")
             @inputText(rowForm("numberPayment"))
             @inputText(rowForm("position"), 'readonly -> "readonly")
+            @inputText(rowForm("acopio"))
+            @inputText(rowForm("promedio"))
+            @inputText(rowForm("excedent"))
+            @inputText(rowForm("pleno"))
         <input type="submit" value="Actualizar"  class="btn btn-primary btn-sm"/>
         <a href="/productor_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")

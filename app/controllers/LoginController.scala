@@ -70,6 +70,11 @@ class LoginController @Inject() (repo: UserRepository, val messagesApi: Messages
                                         "role" -> res2(0).type_1.toLowerCase,
                                         "userId" -> res2(0).id.toString(),
                                         "userName" -> res2(0).name.toString())
+            } else if (res2(0).type_1.toLowerCase == "contabilidad") {
+              Redirect("/").withSession("userSecurity" -> res2(0).login,
+                                        "role" -> res2(0).type_1.toLowerCase,
+                                        "userId" -> res2(0).id.toString(),
+                                        "userName" -> res2(0).name.toString())
             } else {
               Redirect("/error")
             }

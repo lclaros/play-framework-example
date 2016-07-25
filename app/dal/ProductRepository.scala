@@ -14,7 +14,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -39,8 +39,11 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   def create( 
               name: String, cost: Double, percent: Double, price: Double,
               description: String, measureId: Long, measureName: String,
-              currentAmount: Int
+              currentAmount: Int, userId: Long, userName: String
             ): Future[Product] = db.run {
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT, userId, userName, name);
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT, userId, userName, name);
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT, 1, "Admin", name);
     (tableQ.map(
                   p => (
                           p.name, p.cost, p.percent, p.price, p.description,
@@ -76,8 +79,10 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   // update required to copy
   def update( id: Long, name: String, cost: Double, percent: Double, price: Double,
               description: String, measureId: Long, measureName: String,
-              currentAmount: Int
+              currentAmount: Int, userId: Long, userName: String
             ): Future[Seq[Product]] = db.run {
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.PRODUCT, userId, userName, name)
+    
     val q = for { c <- tableQ if c.id === id } yield c.name
     db.run(q.update(name))
     val q2 = for { c <- tableQ if c.id === id } yield c.percent
