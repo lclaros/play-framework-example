@@ -45,7 +45,12 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
         Future.successful(Ok(views.html.proveedor_add(new MyDeadboltHandler, errorForm)))
       },
       proveedor => {
-        repo.create(proveedor.name, proveedor.telefono, proveedor.direccion, proveedor.contacto, proveedor.account).map { resNew =>
+        repo.create(
+                      proveedor.name, proveedor.telefono, proveedor.direccion,
+                      proveedor.contacto, proveedor.account,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
+                    ).map { resNew =>
           Redirect(routes.ProveedorController.show(resNew.id))
         }
       }
@@ -114,7 +119,11 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
         Future.successful(Ok(views.html.proveedor_update(new MyDeadboltHandler, updatedRow, errorForm)))
       },
       res => {
-        repo.update(res.id, res.name, res.telefono, res.direccion, res.contacto, res.account).map { _ =>
+        repo.update(
+                      res.id, res.name, res.telefono, res.direccion,
+                      res.contacto, res.account,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString).map { _ =>
           Redirect(routes.ProveedorController.show(res.id))
         }
       }

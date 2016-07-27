@@ -14,7 +14,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -33,7 +33,11 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
 
   private val tableQ = TableQuery[ProveedoresTable]
 
-  def create(name: String, telefono: Int, direccion: String, contacto: String, account: Long): Future[Proveedor] = db.run {
+  def create(
+              name: String, telefono: Int, direccion: String, contacto: String,
+              account: Long, userId: Long, userName: String
+            ): Future[Proveedor] = db.run {
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.PROVEEDOR, userId, userName, name);
     (tableQ.map(p => (p.name, p.telefono, p.direccion, p.contacto, p.account))
       returning tableQ.map(_.id)
       into ((nameAge, id) => Proveedor(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
@@ -50,7 +54,9 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   }
 
   // update required to copy
-  def update(id: Long, name: String, telefono: Int, direccion: String, contacto: String, account: Long): Future[Seq[Proveedor]] = db.run {
+  def update(id: Long, name: String, telefono: Int, direccion: String, contacto: String,
+              account: Long, userId: Long, userName: String): Future[Seq[Proveedor]] = db.run {
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.PROVEEDOR, userId, userName, name);
     val q = for { c <- tableQ if c.id === id } yield c.name
     db.run(q.update(name))
     val q3 = for { c <- tableQ if c.id === id } yield c.telefono

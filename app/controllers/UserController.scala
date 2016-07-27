@@ -17,9 +17,11 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class UserController @Inject() (repo: UserRepository, repoRoles: UserRoleRepository,
-                                val messagesApi: MessagesApi)
-                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class UserController @Inject()  (
+                                  repo: UserRepository,
+                                  repoRoles: UserRoleRepository,
+                                  val messagesApi: MessagesApi
+                                )(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateUserForm] = Form {
     mapping(
@@ -59,12 +61,7 @@ class UserController @Inject() (repo: UserRepository, repoRoles: UserRoleReposit
   def profile() = Action { implicit request =>
     Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
         if (res2.length > 0) {
-          if (res2(0).type_1.length > 0) {
-            Redirect("/")
-          } else {
-            Ok(views.html.storekeeper_profile2(res2(0)))
-            Redirect("/error")
-          }
+          Redirect("/")          
         } else {
           Redirect("/login")
         }
@@ -73,22 +70,7 @@ class UserController @Inject() (repo: UserRepository, repoRoles: UserRoleReposit
 
   def profileById(userId: Long) = Action { implicit request =>
     Await.result(repo.getById(userId).map { res2 =>
-        if (res2.length > 0) {
-          if (res2(0).type_1.toLowerCase == "admin") {
             Redirect("/")
-          } else if (res2(0).type_1.toLowerCase == "veterinario") {
-            Redirect(routes.VeterinarioController.profile(res2(0).id))
-          } else if (res2(0).type_1.toLowerCase == "insumo") {
-            Redirect(routes.InsumoUserController.profile(res2(0).id))
-          } else if (res2(0).type_1.toLowerCase == "almacen") {
-            Redirect(routes.StorekeeperController.profile(res2(0).id))
-          } else {
-            Ok(views.html.storekeeper_profile2(res2(0)))
-            Redirect("/error")
-          }
-        } else {
-          Redirect("/login")
-        }
       }, 2000.millis)
   }
 
@@ -98,7 +80,11 @@ class UserController @Inject() (repo: UserRepository, repoRoles: UserRoleReposit
         Future.successful(Ok(views.html.user_add(new MyDeadboltHandler, errorForm, types)))
       },
       res => {
-        repo.create(res.name, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
+        repo.create(
+                      res.name, res.carnet, res.telefono, res.direccion,
+                      res.sueldo, res.type_1, res.login, res.password,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString).map { _ =>
           Redirect(routes.UserController.index)
         }
       }
@@ -202,7 +188,12 @@ class UserController @Inject() (repo: UserRepository, repoRoles: UserRoleReposit
         Future.successful(Ok(views.html.user_update(new MyDeadboltHandler, updateRow, errorForm, types)))
       },
       res => {
-        repo.update(res.id, res.name, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
+        repo.update(
+                      res.id, res.name, res.carnet, res.telefono,
+                      res.direccion, res.sueldo, res.type_1,
+                      res.login, res.password,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString).map { _ =>
           Redirect(routes.UserController.show(res.id))
         }
       }

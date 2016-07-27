@@ -34,7 +34,6 @@ class UserSecurity(val userName: String, val rolParam: String) extends Subject
             new SecurityRole("report"), new SecurityRole("balanceShow"), new SecurityRole("diaryShow"), new SecurityRole("financeShow"), new SecurityRole("mayorShow"), new SecurityRole("sumasSaldosShow"),
             new SecurityRole("company"), new SecurityRole("companyShow"), new SecurityRole("companyEdit"),
             new SecurityRole("logEntry"), new SecurityRole("logEntryShow"), new SecurityRole("logEntryList")
-            //new SecurityRole("reportCreate"), new SecurityRole("reportList"), new SecurityRole("reportShow"), new SecurityRole("reportEdit"), new SecurityRole("reportDelete")
           ), "veterinario" ->
       List(
             new SecurityRole("productRequest"), new SecurityRole("productRequestCreate"), new SecurityRole("productRequestList"),
@@ -59,7 +58,7 @@ class UserSecurity(val userName: String, val rolParam: String) extends Subject
             new SecurityRole("discountReport"), new SecurityRole("discountReportCreate"), new SecurityRole("discountReportList"), new SecurityRole("discountReportShow"), new SecurityRole("discountReportEdit"), new SecurityRole("discountReportDelete"), new SecurityRole("discountReportFinalize"),
             new SecurityRole("discountDetail"), new SecurityRole("discountDetailCreate"), new SecurityRole("discountDetailList"), new SecurityRole("discountDetailShow"), new SecurityRole("discountDetailEdit"), new SecurityRole("discountDetailDelete"),
             new SecurityRole("productInv"), new SecurityRole("productInvCreate"), new SecurityRole("productInvList"), new SecurityRole("productInvShow"), new SecurityRole("productInvEdit"), new SecurityRole("productInvDelete"),
-            new SecurityRole("company"), new SecurityRole("companyShow")            
+            new SecurityRole("company"), new SecurityRole("companyShow")
 
           ), "contabilidad" ->
       List(

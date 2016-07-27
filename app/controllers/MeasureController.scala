@@ -44,7 +44,9 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
         Future.successful(Ok(views.html.measure_add(new MyDeadboltHandler, errorForm)))
       },
       res => {
-        repo.create(res.name, res.quantity, res.description).map { resNew =>
+        repo.create(res.name, res.quantity, res.description,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString).map { resNew =>
           Redirect(routes.MeasureController.show(resNew.id))
         }
       }
@@ -117,7 +119,9 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
         Future.successful(Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, errorForm)))
       },
       res => {
-        repo.update(res.id, res.name, res.quantity, res.description).map { _ =>
+        repo.update(res.id, res.name, res.quantity, res.description,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString).map { _ =>
           Redirect(routes.MeasureController.show(res.id))
         }
       }

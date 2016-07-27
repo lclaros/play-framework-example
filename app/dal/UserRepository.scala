@@ -14,7 +14,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -38,14 +38,10 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
 
   private val tableQ = TableQuery[UsersTable]
 
-//  def create(name: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String): Future[User] = db.run {
-//    (tableQ.map(p => (p.name, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1, p.login, p.password))
-//      returning tableQ.map(_.id)
-//      into ((nameAge, id) => User(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8))
-//    ) += (name, carnet, telefono, direccion, sueldo, type_1, "", "")
-//  }
-
-  def create(name: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String): Future[User] = db.run {
+  def create(name: String, carnet: Int, telefono: Int, direccion: String,
+            sueldo: Int, type_1: String, login: String, password: String,
+            userId: Long, userName: String): Future[User] = db.run {
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.USER, userId, userName, name);
     (tableQ.map(p => (p.name, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1, p.login, p.password))
       returning tableQ.map(_.id)
       into ((nameAge, id) => User(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8))
@@ -83,7 +79,11 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
 
 
   // update required to copy
-  def update(id: Long, name: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String): Future[Seq[User]] = db.run {
+  def update(id: Long, name: String, carnet: Int, telefono: Int,
+              direccion: String, sueldo: Int, type_1: String,
+              login: String, password: String, userId: Long,
+              userName: String): Future[Seq[User]] = db.run {
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.USER, userId, userName, name);
     val q = for { c <- tableQ if c.id === id } yield c.name
     db.run(q.update(name))
     val q2 = for { c <- tableQ if c.id === id } yield c.carnet

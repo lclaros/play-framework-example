@@ -10,12 +10,12 @@
         }
     </div>
     @form(routes.TransactionDetailController.add()) {
-        @select(field = row("transactionId"), options = options(transactions))
         @select(field = row("accountId"), options = options(accounts))
         @inputText(row("debit"), 'id -> "debitInput")
         @inputText(row("credit"), 'id -> "creditInput")
         <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/transaction_show/@parentId" class="btn btn-primary btn-sm">Cancelar</a>
+        @select(field = row("transactionId"), options = options(transactions), 'hidden -> "true", '_label -> "")
     }
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transactionDetail_add.js")'></script>
 }

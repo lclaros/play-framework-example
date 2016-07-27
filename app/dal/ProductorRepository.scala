@@ -59,8 +59,8 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, r
 
   def create(name: String, carnet: Int, telefono: Int, direccion: String,
              account: String, module: Long, moduleName: String, acopio: Int,
-             promedio: Int, excedent: Int, pleno: Int
-             , userId: Long, userName: String): Future[Productor] = db.run {
+             promedio: Int, excedent: Int, pleno: Int,
+             userId: Long, userName: String): Future[Productor] = db.run {
     repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCTOR, userId, userName, name);
     (tableQ.map (
                   p => (
