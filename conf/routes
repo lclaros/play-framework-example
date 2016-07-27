@@ -31,7 +31,6 @@ POST    /productor_search		 				controllers.ProductorController.searchProductorP
 POST    /account_searchParent		 			controllers.AccountController.searchParentAccountPost
 POST    /account_search		 					controllers.AccountController.searchAccountPost
 
-
 # productores routes
 GET     /productor_show/:id 			controllers.ProductorController.show(id: Long)
 GET     /productor_update/:id        	controllers.ProductorController.getUpdate(id: Long)
@@ -60,7 +59,6 @@ POST    /account                 	controllers.AccountController.add
 GET     /accounts         			controllers.AccountController.getAccounts
 GET     /account_list         		controllers.AccountController.index
 GET     /account_add         		controllers.AccountController.addGet
-
 
 # modules routes
 GET     /module_show/:id 			controllers.ModuleController.show(id: Long)
@@ -91,17 +89,6 @@ GET     /measure         			controllers.MeasureController.getMeasures
 GET     /measure_list         		controllers.MeasureController.index
 GET     /measure_add         		controllers.MeasureController.addGet
 
-# Now for veterinarios
-GET     /veterinario_show/:id 			controllers.VeterinarioController.show(id: Long)
-GET     /veterinario_update/:id        	controllers.VeterinarioController.getUpdate(id: Long)
-GET     /veterinario_remove/:id        	controllers.VeterinarioController.delete(id: Long)
-GET     /veterinarios/:id 				controllers.VeterinarioController.getById(id: Long)
-POST    /veterinario_update             controllers.VeterinarioController.updatePost
-
-POST    /veterinario                 	controllers.VeterinarioController.add
-GET     /veterinarios         			controllers.VeterinarioController.getVeterinarios
-GET     /veterinario_list     			controllers.VeterinarioController.index
-
 # Now for users
 GET     /role_assign/:id/:roleCode 		controllers.UserController.assignRole(id: Long, roleCode: String)
 GET     /role_remove/:roleId 			controllers.UserController.removeRole(roleId: Long)
@@ -118,31 +105,6 @@ POST    /user                 	controllers.UserController.add
 GET     /users         			controllers.UserController.getUsers
 GET     /user_list     		controllers.UserController.index
 GET     /user_add     		controllers.UserController.addGet
-
-
-# Now for Storekeepers
-GET     /storekeeper_show/:id 			controllers.StorekeeperController.show(id: Long)
-GET     /storekeeper_update/:id        	controllers.StorekeeperController.getUpdate(id: Long)
-GET     /storekeeper_remove/:id        	controllers.StorekeeperController.delete(id: Long)
-GET     /storekeepers/:id 				controllers.StorekeeperController.getById(id: Long)
-POST    /storekeeper_update             controllers.StorekeeperController.updatePost
-
-POST    /storekeeper                 	controllers.StorekeeperController.add
-GET     /storekeepers         			controllers.StorekeeperController.getStorekeepers
-GET     /storekeeper_list     			controllers.StorekeeperController.index
-
-
-# Now for InsumoUsers
-GET     /insumoUser_show/:id 			controllers.InsumoUserController.show(id: Long)
-GET     /insumoUser_update/:id        	controllers.InsumoUserController.getUpdate(id: Long)
-GET     /insumoUser_remove/:id        	controllers.InsumoUserController.delete(id: Long)
-GET     /insumoUsers/:id 				controllers.InsumoUserController.getById(id: Long)
-POST    /insumoUser_update             controllers.InsumoUserController.updatePost
-
-POST    /insumoUser                 	controllers.InsumoUserController.add
-GET     /insumoUsers         			controllers.InsumoUserController.getInsumoUsers
-GET     /insumoUser_list     			controllers.InsumoUserController.index
-
 
 # Now for provedores
 GET     /proveedor_show/:id 			controllers.ProveedorController.show(id: Long)
@@ -198,7 +160,6 @@ GET     /discountDetailsByInsumo/:id			controllers.DiscountDetailController.getD
 GET     /discountDetail_list         			controllers.DiscountDetailController.index
 GET     /discountDetail_add/:discountId			controllers.DiscountDetailController.addGet(discountId: Long)
 
-
 # Now for Transaction Detail
 GET     /transactionDetail_show/:id 				controllers.TransactionDetailController.show(id: Long)
 GET     /transactionDetail_update/:id        		controllers.TransactionDetailController.getUpdate(id: Long)
@@ -212,8 +173,6 @@ GET     /transactionDetailsByTransaction/:id		controllers.TransactionDetailContr
 GET     /transactionDetailsByAccount/:id			controllers.TransactionDetailController.getTransactionDetailsByAccount(id: Long)
 GET     /transactionDetail_list         			controllers.TransactionDetailController.index
 GET     /transactionDetail_addGet/:id         			controllers.TransactionDetailController.addGet(id: Long)
-
-
 
 # Now for  Discount Report
 GET     /discountReport_show/:id 				controllers.DiscountReportController.show(id: Long)
@@ -229,7 +188,6 @@ POST    /discountReport                 		controllers.DiscountReportController.a
 GET     /discountReports         				controllers.DiscountReportController.getDiscountReports
 GET     /discountReport_list         			controllers.DiscountReportController.index
 GET     /discountReport_add         			controllers.DiscountReportController.addGet
-
 
 # Now for Product requests
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
@@ -247,8 +205,6 @@ GET     /productRequestsByStorekeeper/:id        	controllers.ProductRequestCont
 GET     /productRequest_list         				controllers.ProductRequestController.index
 GET     /productRequest_add     					controllers.ProductRequestController.addGet
 
-
-
 # Now for Product requests
 GET     /productRequestByInsumo_show/:id 				controllers.ProductRequestByInsumoController.show(id: Long)
 GET     /productRequestByInsumo_update/:id 				controllers.ProductRequestByInsumoController.getUpdate(id: Long)
@@ -263,8 +219,6 @@ POST    /productRequestByInsumo      					controllers.ProductRequestByInsumoCont
 GET     /productRequestByInsumos         				controllers.ProductRequestByInsumoController.getProductRequestByInsumos
 GET     /productRequestByInsumo_list         			controllers.ProductRequestByInsumoController.index
 GET     /productRequestByInsumo_addGet     				controllers.ProductRequestByInsumoController.addGet
-
-
 
 # Now for Product requests Rows
 GET     /requestRow_show/:id 				controllers.RequestRowController.show(id: Long)
@@ -312,17 +266,9 @@ GET     /requestRowProductor_list         			controllers.RequestRowProductorCont
 GET     /requestRowProductorsByProductor/:id    	controllers.RequestRowProductorController.requestRowProductorsByProductor(id: Long)
 GET     /requestRowProductor_add/:requestRowId		controllers.RequestRowProductorController.addGet(requestRowId: Long)
 
-
-# profiles
-GET     /Veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
-GET     /Almacen_profile/:id 				controllers.StorekeeperController.profile(id: Long)
-GET     /Insumo_profile/:id 				controllers.InsumoUserController.profile(id: Long)
-
-
 #POST    /insumo                 		controllers.InsumoController.addInsumo
 #GET     /insumos         				controllers.InsumoController.getInsumos
 #GET     /insumo_list         			controllers.InsumoController.index
-
 
 POST    /reporte                 		controllers.ReporteController.addReporte
 GET     /reportes         				controllers.ReporteController.getReportes
@@ -332,7 +278,6 @@ GET     /reportes_diary      			controllers.ReporteController.diary
 GET     /result_finance      			controllers.ReporteController.resultFinance
 GET     /reportes_mayor      			controllers.ReporteController.mayor
 GET     /reportes_sumasYSaldos      	controllers.ReporteController.sumasYSaldos
-
 
 # Now for Product requests
 GET     /transaction_update/:id 	       		controllers.TransactionController.getUpdate(id: Long)
@@ -348,7 +293,6 @@ GET     /transaction_add/:type         				controllers.TransactionController.add
 
 GET     /transactions         						controllers.TransactionController.getTransactions
 GET     /transaction_list         					controllers.TransactionController.index
-
 
 GET     /clientes                    	controllers.ClienteController.getClientes
 

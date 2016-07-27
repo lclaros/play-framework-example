@@ -3,11 +3,15 @@ July 23
     - Entrega de productos a productores por Unidad de Medida
 // July 22
 TODO|
+    EVENT LOG
+        - modules(transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, )
     Get permission and use in the UserSecurity Model
 
     Update the parent values
         request row productor, request row, 
 DONE
+    EVENT LOG
+        - modules(measures, products, productors, users, accounts, proveedors, )
     Added permissions assign actions
     Data to work with permissions
     Unit measure get for the product INV record
@@ -19,8 +23,8 @@ TODO
 
 // July (3, 10) 2016
 TODO
-    - fix the totales of all reports
-        - diary
+    - Fix the totales of all reports
+        - Diary
 
 
     - generic list
