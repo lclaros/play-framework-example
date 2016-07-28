@@ -15,7 +15,10 @@ import scala.concurrent.duration._
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoRequestRow: RequestRowRepository, repoProduct: ProductRepository)(implicit ec: ExecutionContext) {
+class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
+                                          repoRequestRow: RequestRowRepository,
+                                          repoProduct: ProductRepository,
+                                          repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -37,7 +40,11 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
 
   private val tableQ = TableQuery[ProductRequestTable]
 
-  def create(date: String, veterinario: Long, veterinarioName: String, storekeeper: Long, storekeeperName: String, status: String, detail: String, type_1: String): Future[ProductRequest] = db.run {
+  def create(
+              date: String, veterinario: Long, veterinarioName: String, storekeeper: Long,
+              storekeeperName: String, status: String, detail: String, type_1: String,
+              userId: Long, userName: String): Future[ProductRequest] = db.run {
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT_REQUEST, userId, userName, date);
     (tableQ.map(p => (p.date, p.veterinario, p.veterinarioName, p.storekeeper, p.storekeeperName, p.status, p.detail, p.type_1))
       returning tableQ.map(_.id)
       into ((nameAge, id) => ProductRequest(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8))
@@ -70,7 +77,12 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
   // update required to copy
-  def update(id: Long, date: String, veterinario: Long, veterinarioName: String, storekeeper: Long, storekeeperName: String, status: String, detail: String, type_1: String): Future[Seq[ProductRequest]] = db.run {
+  def update(
+              id: Long, date: String, veterinario: Long, veterinarioName: String, storekeeper: Long,
+              storekeeperName: String, status: String, detail: String, type_1: String,
+              userId: Long, userName: String
+            ): Future[Seq[ProductRequest]] = db.run {
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.PRODUCT_REQUEST, userId, userName, date);
     val q = for { c <- tableQ if c.id === id } yield c.date
     db.run(q.update(date))
     val q2 = for { c <- tableQ if c.id === id } yield c.veterinario

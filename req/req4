@@ -4,14 +4,14 @@ July 23
 // July 22
 TODO|
     EVENT LOG
-        - modules(transactions, transactionDetail, productRequest, requestRow, requestRowProductor, discountReport, reportDetail, )
+        - modules(, requestRowProductor, discountReport, reportDetail, )
     Get permission and use in the UserSecurity Model
 
     Update the parent values
         request row productor, request row, 
 DONE
     EVENT LOG
-        - modules(measures, products, productors, users, accounts, proveedors, )
+        - modules(measures, products, productors, users, accounts, proveedors, transactions, transactionDetail, productRequest, module, requestRow, requestRowByInsumo)
     Added permissions assign actions
     Data to work with permissions
     Unit measure get for the product INV record

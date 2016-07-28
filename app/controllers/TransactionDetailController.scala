@@ -47,10 +47,17 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
         Future.successful(Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, errorForm, transactionMap, accountMap)))
       },
       res => {
-        repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { resNew =>
-          repoAccounts.updateParentDebitCredit(res.accountId, res.debit, res.credit);
-          repoTransaction.getById(res.transactionId).map{ res => repo.updateTransactionParams(resNew.id, res(0).date)}
-          repoAccounts.getById(res.accountId).map{ res => repo.updateAccountParams(resNew.id, res(0).code, res(0).name)}
+        repo.create(
+                      res.transactionId, res.accountId, res.debit, res.credit,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
+                    ).map { resNew =>
+                            repoAccounts.updateParentDebitCredit(res.accountId, res.debit, res.credit);
+                            repoTransaction.getById(res.transactionId).map{ res => repo.updateTransactionParams(resNew.id, res(0).date)
+                          }
+
+                    repoAccounts.getById(res.accountId).map{ res => repo.updateAccountParams(resNew.id, res(0).code, res(0).name)
+          }
           Redirect(routes.TransactionDetailController.show(resNew.id))
         }
       }
@@ -183,7 +190,11 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
         Future.successful(Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, errorForm, accountMap)))
       },
       res => {
-        repo.update(res.id, res.transactionId, res.accountId, res.debit, res.credit).map { _ =>
+        repo.update(
+                      res.id, res.transactionId, res.accountId, res.debit, res.credit,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
+                    ).map { _ =>
           Redirect(routes.TransactionDetailController.show(res.id))
         }
       }

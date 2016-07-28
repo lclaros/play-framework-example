@@ -36,6 +36,7 @@ class LogEntryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
   val REQUEST_ROW_PRODUCTOR = "Entrega de Producto al productor"
   val ROLE = "Rol"
   val TRANSACTION = "Transaccion"
+  val TRANSACTION_DETAIL = "Detalle de transacion"
   val USER = "Usuario"
   val USER_PERMISSION = "Permiso"
   val USER_ROLE = "Assignacion de Permiso"

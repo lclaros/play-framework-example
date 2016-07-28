@@ -60,9 +60,12 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
         Future.successful(Ok(views.html.productRequest_add(new MyDeadboltHandler, errorForm, veterinariosNames, storeNames)))
       },
       res => {
-        repo.create(res.date, res.veterinario, veterinariosNames(res.veterinario.toString),
+        repo.create(
+                    res.date, res.veterinario, veterinariosNames(res.veterinario.toString),
                     res.storekeeper, storeNames(res.storekeeper.toString),
-                    res.status, res.detail, "veterinaria").map { resNew =>
+                    res.status, res.detail, "veterinaria",
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString).map { resNew =>
           Redirect(routes.ProductRequestController.show(resNew.id))
         }
       }
@@ -222,7 +225,9 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       res => {
         repo.update(
                       res.id, res.date, res.veterinario, veterinariosNames(res.veterinario.toString),
-                      res.storekeeper, storeNames(res.storekeeper.toString), res.status, res.detail, "insumo"
+                      res.storekeeper, storeNames(res.storekeeper.toString), res.status, res.detail, "insumo",
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
                     ).map { _ =>
           Redirect(routes.ProductRequestController.show(res.id))
         }

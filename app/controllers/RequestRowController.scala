@@ -81,7 +81,9 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
 
         repo.create(res.requestId, res.productId, products(res.productId.toString()),
                     res.quantity, equivalent * product1.price, res.status,
-                    res.measureId, res.measureId.toString).map { resNew =>
+                    res.measureId, res.measureId.toString,
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString).map { resNew =>
           Redirect(routes.RequestRowController.show(resNew.id))
         }
       }
@@ -249,7 +251,9 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
         }
         repo.update(  
                       res.id, res.requestId, res.productId, products(res.productId.toString),
-                      res.quantity, new_price, res.status, res.measureId, res.measureId.toString
+                      res.quantity, new_price, res.status, res.measureId, res.measureId.toString,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
                     ).map { _ =>
           Redirect(routes.RequestRowController.show(res.id))
         }

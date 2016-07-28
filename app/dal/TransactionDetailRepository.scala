@@ -15,7 +15,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class TransactionDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class TransactionDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -36,7 +36,8 @@ class TransactionDetailRepository @Inject() (dbConfigProvider: DatabaseConfigPro
 
   private val tableQ = TableQuery[TransactionDetailsTable]
 
-  def create(transactionId: Long, accountId: Long, debit: Double, credit: Double): Future[TransactionDetail] = db.run {
+  def create(transactionId: Long, accountId: Long, debit: Double, credit: Double, userId: Long, userName: String): Future[TransactionDetail] = db.run {
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.TRANSACTION_DETAIL, userId, userName, accountId.toString);
     (tableQ.map(p => (p.transactionId, p.accountId, p.debit, p.credit, p.transactionDate, p.accountCode, p.accountName))
       returning tableQ.map(_.id)
       into ((nameAge, id) => TransactionDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7))
@@ -78,7 +79,8 @@ class TransactionDetailRepository @Inject() (dbConfigProvider: DatabaseConfigPro
   }
 
   // update required to copy
-  def update(id: Long, transactionId: Long, accountId: Long, debit: Double, credit: Double): Future[Seq[TransactionDetail]] = db.run {
+  def update(id: Long, transactionId: Long, accountId: Long, debit: Double, credit: Double, userId: Long, userName: String): Future[Seq[TransactionDetail]] = db.run {
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.TRANSACTION_DETAIL, userId, userName, accountId.toString);
     val q = for { c <- tableQ if c.id === id } yield c.transactionId
     db.run(q.update(transactionId))
     val q2 = for { c <- tableQ if c.id === id } yield c.accountId

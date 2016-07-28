@@ -92,7 +92,12 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
         var requestMeasure = getMeasureById(res.measureId)
         var equivalent =  requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
 
-        repo.create(res.requestId, res.productId, productsMap(res.productId.toString), res.quantity, equivalent * product1.price , res.status, res.measureId, res.measureId.toString).map { _ =>
+        repo.create(
+                      res.requestId, res.productId, productsMap(res.productId.toString), res.quantity,
+                      equivalent * product1.price , res.status, res.measureId, res.measureId.toString,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
+                    ).map { _ =>
           Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
         }
       }
@@ -215,7 +220,12 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
           var equivalent = requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
           new_price = product1.price * equivalent
         }
-        repo.update(res.id, res.requestId, res.productId, productsMap(res.productId.toString), res.quantity, new_price , res.status, res.measureId, res.measureId.toString).map { _ =>
+        repo.update(
+                      res.id, res.requestId, res.productId, productsMap(res.productId.toString),
+                      res.quantity, new_price , res.status, res.measureId, res.measureId.toString,
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
+                    ).map { _ =>
           Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
         }
       }

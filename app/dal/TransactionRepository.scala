@@ -18,7 +18,8 @@ import scala.concurrent.{ Future, ExecutionContext, Await }
 @Singleton
 class TransactionRepository @Inject() ( 
                                         dbConfigProvider: DatabaseConfigProvider, 
-                                        repoTransDetail: TransactionDetailRepository
+                                        repoTransDetail: TransactionDetailRepository,
+                                        repoLog: LogEntryRepository
                                       )(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
@@ -46,9 +47,11 @@ class TransactionRepository @Inject() (
   private val tableQ = TableQuery[TransactionTable]
 
   def createIngreso(
-              date: String, type_1: String, description: String,
-              createdBy: Long, createdByName: String
-            ): Future[Transaction] = db.run {
+                    date: String, type_1: String, description: String,
+                    createdBy: Long, createdByName: String,
+                    userId: Long, userName: String
+                  ): Future[Transaction] = db.run {
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.TRANSACTION, userId, userName, date + " " + type_1 + " " + description);
     (tableQ.map(p => (
                         p.date, p.type_1, p.description,
                         p.createdBy, p.createdByName,
@@ -70,8 +73,10 @@ class TransactionRepository @Inject() (
   def create(
               date: String, type_1: String, description: String, createdBy: Long,
               createdByName: String, receivedBy: Long,
-              receivedByName: String, autorizedBy: Long, autorizedByName: String
+              receivedByName: String, autorizedBy: Long, autorizedByName: String,
+              userId: Long, userName: String
             ): Future[Transaction] = db.run {
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.TRANSACTION, userId, userName, date + " " + type_1 + " " + description);
     (tableQ.map(p => (
                         p.date, p.type_1, p.description,
                         p.createdBy, p.createdByName,
@@ -117,9 +122,10 @@ class TransactionRepository @Inject() (
 
   // update required to copy
   def updateIngreso(
-                    id: Long, date: String, type_1: String, description: String
+                    id: Long, date: String, type_1: String, description: String,
+                    userId: Long, userName: String
                     ): Future[Seq[Transaction]] = db.run {
-    
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.TRANSACTION, userId, userName, date + " " + type_1 + " " + description);
     val q = for { c <- tableQ if c.id === id } yield c.date
     db.run(q.update(date))
     val q4 = for { c <- tableQ if c.id === id } yield c.type_1
@@ -134,9 +140,10 @@ class TransactionRepository @Inject() (
   def update(
               id: Long, date: String, type_1: String, description: String,
               receivedBy: Long, receivedByName: String,
-              autorizedBy: Long, autorizedByName: String
+              autorizedBy: Long, autorizedByName: String,
+              userId: Long, userName: String
             ): Future[Seq[Transaction]] = db.run {
-    
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.TRANSACTION, userId, userName, date + " " + type_1 + " " + description);
     val q = for { c <- tableQ if c.id === id } yield c.date
     db.run(q.update(date))
     val q4 = for { c <- tableQ if c.id === id } yield c.type_1

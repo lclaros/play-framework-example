@@ -90,7 +90,9 @@ class TransactionController @Inject() (
         var userName = request.session.get("userName").getOrElse("0").toString
         repo.createIngreso(
                     res.date, res.type_1, res.description, 
-                    userId, userName
+                    userId, userName,
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString
                     ).map { resNew =>
           Redirect(routes.TransactionController.show(resNew.id))
         }
@@ -110,7 +112,9 @@ class TransactionController @Inject() (
                     res.date, res.type_1, res.description, 
                     userId, userName,
                     res.receivedBy, users(res.receivedBy.toString),
-                    res.autorizedBy, users(res.autorizedBy.toString)
+                    res.autorizedBy, users(res.autorizedBy.toString),
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString
                     ).map { resNew =>
           Redirect(routes.TransactionController.show(resNew.id))
         }
@@ -205,7 +209,9 @@ class TransactionController @Inject() (
       res => {
         repo.updateIngreso(
                     res.id, res.date, res.type_1,
-                    res.description
+                    res.description,
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString
                     ).map { resNew =>
           Redirect(routes.TransactionController.show(res.id))
         }
@@ -220,10 +226,12 @@ class TransactionController @Inject() (
       },
       res => {
         repo.update(
-                    res.id, res.date, res.type_1,
-                    res.description, res.receivedBy, 
-                    users(res.receivedBy.toString),
-                    res.autorizedBy, users(res.autorizedBy.toString)
+                      res.id, res.date, res.type_1,
+                      res.description, res.receivedBy, 
+                      users(res.receivedBy.toString),
+                      res.autorizedBy, users(res.autorizedBy.toString),
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
                     ).map { resNew =>
           Redirect(routes.TransactionController.show(res.id))
         }

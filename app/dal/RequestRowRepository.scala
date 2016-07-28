@@ -14,7 +14,9 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoInsum: ProductRepository)(implicit ec: ExecutionContext) {
+class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
+                                      repoInsum: ProductRepository,
+                                      repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -37,7 +39,10 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
 
   private val tableQ = TableQuery[RequestRowTable]
 
-  def create(requestId: Long, productId: Long, productName: String, quantity: Int, price: Double, status: String, measureId: Long, measureName: String): Future[RequestRow] = db.run {
+  def create(requestId: Long, productId: Long, productName: String, quantity: Int, price: Double,
+            status: String, measureId: Long, measureName: String,
+            userId: Long, userName: String): Future[RequestRow] = db.run {
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.REQUEST_ROW, userId, userName, productName + "( " + quantity +")");
     (tableQ.map(p => (p.requestId, p.productId, p.productName, p.quantity, p.price, p.paid, p.status, p.measureId, p.measureName))
       returning tableQ.map(_.id)
       into ((nameAge, id) => RequestRow(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8, nameAge._9))
@@ -70,8 +75,9 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
   // update required to copy
   def update(id: Long, requestId: Long, productId: Long, productName: String,
                quantity: Int, price: Double, status: String, measureId: Long,
-               measureName: String
+               measureName: String, userId: Long, userName: String
              ): Future[Seq[RequestRow]] = db.run {
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.REQUEST_ROW, userId, userName, productName + "( " + quantity +")");
     val q2 = for { c <- tableQ if c.id === id } yield c.requestId
     db.run(q2.update(requestId))
     val q3 = for { c <- tableQ if c.id === id } yield c.productId

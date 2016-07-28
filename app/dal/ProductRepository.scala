@@ -14,7 +14,8 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
+class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
+                                  repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -42,8 +43,6 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, rep
               currentAmount: Int, userId: Long, userName: String
             ): Future[Product] = db.run {
     repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT, userId, userName, name);
-    repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT, userId, userName, name);
-    repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT, 1, "Admin", name);
     (tableQ.map(
                   p => (
                           p.name, p.cost, p.percent, p.price, p.description,
