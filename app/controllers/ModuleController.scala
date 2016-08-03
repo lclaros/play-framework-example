@@ -19,7 +19,7 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
 class ModuleController @Inject() (repo: ModuleRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
-                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport{
+                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
 
   val newForm: Form[CreateModuleForm] = Form {

@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateMeasureForm])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateMeasureForm], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
 
 @import helper._
 
@@ -12,7 +12,8 @@
         @inputText(row("name"))
         @inputText(row("quantity"))
         @inputText(row("description"))
+        @select(field = row("measureId"), options = options(measures))
         <input type="submit" value="Agregar Unidad de Medida" class="btn btn-primary btn-sm"/>
-        <a href="measure_list/" class="btn btn-primary btn-sm">Cancelar</a>
+        <a href="measure_list" class="btn btn-primary btn-sm">Cancelar</a>
     }
 }

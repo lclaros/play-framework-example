@@ -17,113 +17,156 @@ import collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
-class ProductRequestByInsumoController @Inject() (
-                                                    repo: ProductRequestByInsumoRepository,
-                                                    repoVete: UserRepository,
-                                                    repoModule: ModuleRepository,
-                                                    repoInsUser: UserRepository,
-                                                    val messagesApi: MessagesApi
-                                                  )
-                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport{
+class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRow: RequestRowRepository, repoVete: UserRepository,
+                                          repoSto: UserRepository, repoInsUser: UserRepository,
+                                          val messagesApi: MessagesApi)
+                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
-  val newForm: Form[CreateProductRequestByInsumoForm] = Form {
+  val newForm: Form[CreateProductRequestForm] = Form {
     mapping(
       "date" -> text,
       "user" -> longNumber,
-      "module" -> longNumber,
+      "moduleId" -> longNumber,
       "status" -> text,
       "detail" -> text
-    )(CreateProductRequestByInsumoForm.apply)(CreateProductRequestByInsumoForm.unapply)
+    )(CreateProductRequestForm.apply)(CreateProductRequestForm.unapply)
   }
-  var modules = getmodulesNamesMap()
 
-  def index = Action { implicit request =>
-    val usersNames = getUserNamesMap(request.session.get("userId").getOrElse("0").toLong)
-    modules = getmodulesNamesMap()
-    Ok(views.html.productRequestByInsumo_index(usersNames, modules))
+  var users = getUsersMap()
+  var modules = getModulesMap()
+
+  def index = Action.async { implicit request =>
+    repo.list().map { res =>
+      Ok(views.html.productRequest_index(new MyDeadboltHandler, res))
+    }
+  }
+
+  def addGet = Action { implicit request =>
+    if (request.session.get("role").getOrElse("0").toLowerCase == "user") {
+      users = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
+    } else {
+      users = getUsersMap()
+    }
+    modules = getModulesMap()
+    Ok(views.html.productRequest_add(new MyDeadboltHandler, newForm, users, modules))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productRequestByInsumo_index(Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.productRequest_add(new MyDeadboltHandler, errorForm, users, modules)))
       },
       res => {
-        repo.create(res.date, res.user, res.module, modules(res.module.toString), res.status, res.detail, "veterinaria").map { _ =>
-          Redirect(routes.UserController.profileById(res.user))
+        repo.create(
+                    res.date, res.user, users(res.user.toString),
+                    res.moduleId, modules(res.moduleId.toString),
+                    res.status, res.detail, "module",
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString).map { resNew =>
+          Redirect(routes.ProductRequestController.show(resNew.id))
         }
       }
     )
   }
 
-  def addGet = Action { implicit request =>
-    val veterinariosNames = getUserNamesMap(request.session.get("userId").getOrElse("0").toLong)
-    modules = getmodulesNamesMap()
-    Ok(views.html.productRequestByInsumo_add(newForm, veterinariosNames, modules))
-  }
-
-  def getProductRequestByInsumosByUser(id: Long) = Action.async {
-    repo.listByUser(id).map { res =>
+  def getProductRequestsByVeterinario(id: Long) = Action.async {
+    repo.listByVeterinario(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductRequestByInsumosBymodule(id: Long) = Action.async {
-    repo.listByModule(id).map { res =>
+  def getProductRequestsByStorekeeper(id: Long) = Action.async {
+    repo.listByStorekeeper(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductRequestByInsumos = Action.async {
+  def getProductRequestsByInsumoUser(id: Long) = Action.async {
+    repo.listByInsumoUser(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+  def getProductRequests = Action.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
+
   // update required
-  val updateForm: Form[UpdateProductRequestByInsumoForm] = Form {
+  val updateForm: Form[UpdateProductRequestForm] = Form {
     mapping(
       "id" -> longNumber,
       "date" -> text,
       "user" -> longNumber,
-      "module" -> longNumber,
+      "moduleId" -> longNumber,
       "status" -> text,
       "detail" -> text
-    )(UpdateProductRequestByInsumoForm.apply)(UpdateProductRequestByInsumoForm.unapply)
+    )(UpdateProductRequestForm.apply)(UpdateProductRequestForm.unapply)
+  }
+
+  def getChildren(productRequestId: Long): Seq[RequestRow] = {
+    Await.result(repoRow.listByParent(productRequestId).map { res =>
+      res
+    }, 3000.millis)
   }
 
   // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.productRequestByInsumo_show())
+  def show(id: Long) = Action.async { implicit request =>
+    val requestRows = getChildren(id)
+    repo.getById(id).map { res =>
+      Ok(views.html.productRequest_show(new MyDeadboltHandler, res(0), requestRows))
+    }
   }
 
+  var updatedId: Long = 0
   // update required
   def getUpdate(id: Long) = Action.async { implicit request =>
+    updatedId = id;
     repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "user" -> res.toList(0).user.toString(), "module" -> res.toList(0).module.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
-      val insumosMap = getUserNamesMap(request.session.get("userId").getOrElse("0").toLong)
-      val storeMap = getmodulesNamesMap()
-      Ok(views.html.productRequestByInsumo_update(updateForm.bind(anyData), insumosMap, storeMap))
+      val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "user" -> res.toList(0).user.toString(), "moduleId" -> res.toList(0).moduleId.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
+      if (request.session.get("role").getOrElse("0").toLowerCase == "user") {
+        users = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
+      } else {
+        users = getUsersMap()
+      }
+      modules = getModulesMap()
+      Ok(views.html.productRequest_update(new MyDeadboltHandler, updatedId, updateForm.bind(anyData), users, modules))
     }
   }
 
 // update required
   def getSend(id: Long) = Action.async { implicit request =>
     repo.sendById(id).map {case (res) =>
-      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
+      Redirect(routes.ProductRequestController.index())
     }
   }
 
 // update required
-  def getFill(id: Long) = Action.async { implicit request =>
+  def getFinish(id: Long) = Action.async { implicit request =>
     repo.finishById(id).map {case (res) =>
-      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
+      Redirect(routes.ProductRequestController.index())
     }
   }
 
-  def getUserNamesMap(id: Long): Map[String, String] = {
+
+  def getVeterinarioNamesMap(id: Long): Map[String, String] = {
     Await.result(repoVete.getById(id).map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach { user => 
+        cache put (user.id.toString, user.name)
+      }
+      
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getUsersMap(): Map[String, String] = {
+    Await.result(repoVete.listVeterinarios().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
         cache put (user.id.toString, user.name)
@@ -144,8 +187,8 @@ class ProductRequestByInsumoController @Inject() (
     }, 3000.millis)
   }
 
-  def getmodulesNamesMap(): Map[String, String] = {
-    Await.result(repoModule.list().map{ case (res1) => 
+  def getModulesMap(): Map[String, String] = {
+    Await.result(repoSto.listStorekeepers().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
         cache put (user.id.toString, user.name)
@@ -157,8 +200,12 @@ class ProductRequestByInsumoController @Inject() (
 
   // delete required
   def delete(id: Long) = Action.async {
+    val requestRows = getChildren(id)
+    requestRows.foreach { req => 
+      repoRow.delete(req.id)
+    }
     repo.delete(id).map { res =>
-      Ok(views.html.productRequestByInsumo_index(Map[String, String](), Map[String, String]()))
+      Redirect(routes.ProductRequestController.index)
     }
   }
 
@@ -169,22 +216,26 @@ class ProductRequestByInsumoController @Inject() (
     }
   }
 
-
   // update required
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productRequestByInsumo_update(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.productRequest_update(new MyDeadboltHandler, updatedId, errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.date, res.user, res.module, modules(res.module.toString), res.status, res.detail, "insumo").map { _ =>
-          Redirect(routes.UserController.profile())
+        repo.update(
+                      res.id, res.date, res.user, users(res.user.toString),
+                      res.moduleId, modules(res.moduleId.toString), res.status, res.detail, "insumo",
+                      request.session.get("userId").get.toLong,
+                      request.session.get("userName").get.toString
+                    ).map { _ =>
+          Redirect(routes.ProductRequestController.show(res.id))
         }
       }
     )
   }
 }
 
-case class CreateProductRequestByInsumoForm(date: String, user: Long, module: Long, status: String, detail: String)
+case class CreateProductRequestForm(date: String, user: Long, moduleId: Long, status: String, detail: String)
 
-case class UpdateProductRequestByInsumoForm(id: Long, date: String, user: Long, module: Long, status: String, detail: String)
+case class UpdateProductRequestForm(id: Long, date: String, user: Long, moduleId: Long, status: String, detail: String)

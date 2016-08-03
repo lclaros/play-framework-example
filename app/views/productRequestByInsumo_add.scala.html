@@ -1,17 +1,21 @@
-@(row: Form[CreateProductRequestByInsumoForm], insumoUsers: Map[String, String], modulos: Map[String, String])(implicit messages: Messages)
-
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductRequestForm], vets: Map[String, String], stors: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Crear") {
-    <div>
-        <a href="/"></a>
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestList"))) {
+            <a href="/productRequest_list" class="btn btn-primary btn-sm">Listar</a> 
+        }
     </div>
-    @form(routes.ProductRequestByInsumoController.add()) {
+    @form(routes.ProductRequestController.add()) {
         @inputText(row("date"))
-        @select(field = row("user"), options = options(insumoUsers))
-        @select(field = row("module"), options = options(modulos))
+        @select(field = row("veterinario"), options = options(vets))
+        @select(field = row("storekeeper"), options = options(stors))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("detail"))
-        <input type="submit" value="Guardar Pedido" class="btn btn-primary btn-sm"/> <a href="/" class="btn btn-primary btn-sm"> Cancelar</a>
+        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        <a href="/productRequest_list" class="btn btn-primary btn-sm"> Cancelar</a>
     }
 }

@@ -4,6 +4,7 @@ currentAmount = Cantidad Actual
 id_asociacion = Associacion
 discountReport = Reporte
 productorId = Productor
+MeasureId = Medida
 status = Estado
 amount = Cantidad
 startDate = Fecha de Inicio

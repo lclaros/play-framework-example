@@ -44,8 +44,10 @@ create table module (
 create table measure (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100),
-  quantity INT(6),
-  description VARCHAR(250)
+  quantity double,
+  description VARCHAR(250),
+  measureId INT,
+  measureName VARCHAR(100)
 );
 
 create table account (

@@ -29,7 +29,8 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       "percent" -> of[Double],
       "description" -> text,
       "measureId" -> longNumber,
-      "currentAmount" -> number
+      "currentAmount" -> number,
+      "type_1" -> text
     )(CreateProductForm.apply)(CreateProductForm.unapply)
   }
 
@@ -39,7 +40,8 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
     )(SearchProductForm.apply)(SearchProductForm.unapply)
   }
 
-  var unidades = getMeasureMap()
+  var measures = getMeasureMap()
+  val types = scala.collection.immutable.Map[String, String]("Insumo" -> "Insumo", "Veterinaria" -> "Veterinaria")
   def getMeasureMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
@@ -52,8 +54,8 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
   }
 
   def addGet = Action { implicit request =>
-    unidades = getMeasureMap()
-    Ok(views.html.product_add(new MyDeadboltHandler, newForm, unidades))
+    measures = getMeasureMap()
+    Ok(views.html.product_add(new MyDeadboltHandler, newForm, measures, types))
   }
 
   var products: Seq[Product] = _
@@ -72,13 +74,14 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
   def addProduct = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_add(new MyDeadboltHandler, errorForm, unidades)))
+        Future.successful(Ok(views.html.product_add(new MyDeadboltHandler, errorForm, measures, types)))
       },
       res => {
         repo.create(
                       res.name, res.cost, res.percent,res.cost + res.cost * res.percent, res.description,
-                      res.measureId, unidades(res.measureId.toString),
+                      res.measureId, measures(res.measureId.toString),
                       res.currentAmount,
+                      res.type_1,
                       request.session.get("userId").get.toLong,
                       request.session.get("userName").get.toString
                     ).map { resNew =>
@@ -130,7 +133,8 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       "price" -> of[Double],
       "description" -> text,
       "measureId" -> longNumber,
-      "currentAmount" -> number
+      "currentAmount" -> number,
+      "type_1" -> text
     )(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
 
@@ -164,9 +168,10 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
                         "description" -> updatedRow.description,
                         "measureId" -> updatedRow.measureId.toString(),
                         "measureName" -> updatedRow.measureName.toString(),
-                        "currentAmount" -> updatedRow.currentAmount.toString()
+                        "currentAmount" -> updatedRow.currentAmount.toString(),
+                        "type_1" -> updatedRow.type_1.toString()
                         )
-      Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), unidades))
+      Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures, types))
     }
   }
 
@@ -188,13 +193,13 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, errorForm, unidades)))
+        Future.successful(Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, errorForm, measures, types)))
       },
       res => {
         repo.update(
                       res.id, res.name, res.cost, res.percent, res.price,
-                      res.description, res.measureId, unidades(res.measureId.toString),
-                      res.currentAmount,
+                      res.description, res.measureId, measures(res.measureId.toString),
+                      res.currentAmount, res.type_1,
                       request.session.get("userId").get.toLong,
                       request.session.get("userName").get.toString
                     ).map { _ =>
@@ -232,11 +237,11 @@ case class SearchProductForm(search: String )
 
 case class CreateProductForm(
                               name: String, cost: Double, percent: Double,
-                              description: String, measureId: Long, currentAmount: Int
+                              description: String, measureId: Long, currentAmount: Int, type_1: String
                             )
 
 case class UpdateProductForm(
                               id: Long, name: String, cost: Double,
                               percent: Double, price: Double, description: String,
-                              measureId: Long, currentAmount: Int
+                              measureId: Long, currentAmount: Int, type_1: String
                             )

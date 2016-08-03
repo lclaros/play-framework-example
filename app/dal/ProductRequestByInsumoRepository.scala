@@ -30,22 +30,22 @@ class ProductRequestByInsumoRepository @Inject() (
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def date = column[String]("date")
     def user = column[Long]("user")
-    def userName = column[Long]("userName")
-    def module = column[Long]("module")
+    def userName = column[String]("userName")
+    def moduleId = column[Long]("moduleId")
     def moduleName = column[String]("moduleName")
     def status = column[String]("status")
     def detail = column[String]("detail")
     def type_1 = column[String]("type")
-    def * = (id, date, user, module, moduleName, status, detail, type_1) <> ((ProductRequestByInsumo.apply _).tupled, ProductRequestByInsumo.unapply)
+    def * = (id, date, user, userName, moduleId, moduleName, status, detail, type_1) <> ((ProductRequestByInsumo.apply _).tupled, ProductRequestByInsumo.unapply)
   }
 
   private val tableQ = TableQuery[ProductRequestByInsumoTable]
 
-  def create(date: String, user: Long, module: Long, moduleName: String, status: String, detail: String, type_1: String): Future[ProductRequestByInsumo] = db.run {
-    (tableQ.map(p => (p.date, p.user, p.module, p.moduleName, p.status, p.detail, p.type_1))
+  def create(date: String, user: Long, userName: String, moduleId: Long, moduleName: String, status: String, detail: String, type_1: String): Future[ProductRequestByInsumo] = db.run {
+    (tableQ.map(p => (p.date, p.user, p.userName, p.moduleId, p.moduleName, p.status, p.detail, p.type_1))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => ProductRequestByInsumo(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7))
-    ) += (date, user, module, moduleName, status, detail, type_1)
+      into ((nameAge, id) => ProductRequestByInsumo(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8))
+    ) += (date, user, userName, moduleId, moduleName, status, detail, type_1)
   }
 
   def list(): Future[Seq[ProductRequestByInsumo]] = db.run {
@@ -57,7 +57,7 @@ class ProductRequestByInsumoRepository @Inject() (
   }
 
   def listByModule(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
-    tableQ.filter(_.module === id).result
+    tableQ.filter(_.moduleId === id).result
   }
 
   def listByInsumoUser(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
@@ -74,13 +74,15 @@ class ProductRequestByInsumoRepository @Inject() (
   }
 
   // update required to copy
-  def update(id: Long, date: String, user: Long, module: Long, moduleName: String, status: String, detail: String, type_1: String): Future[Seq[ProductRequestByInsumo]] = db.run {
+  def update(id: Long, date: String, user: Long, userName: String, moduleId: Long, moduleName: String, status: String, detail: String, type_1: String): Future[Seq[ProductRequestByInsumo]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.date
     db.run(q.update(date))
     val q2 = for { c <- tableQ if c.id === id } yield c.user
     db.run(q2.update(user))
-    val q3 = for { c <- tableQ if c.id === id } yield c.module
-    db.run(q3.update(module))
+    val q21 = for { c <- tableQ if c.id === id } yield c.userName
+    db.run(q21.update(userName))
+    val q3 = for { c <- tableQ if c.id === id } yield c.moduleId
+    db.run(q3.update(moduleId))
     val q31 = for { c <- tableQ if c.id === id } yield c.moduleName
     db.run(q31.update(moduleName))
     val q4 = for { c <- tableQ if c.id === id } yield c.status

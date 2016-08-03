@@ -1,47 +1,98 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: ProductRequest, children: Seq[RequestRow])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Mostrar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productRequestInsumo_show.js")'></script>
-    <div>
-        <a href="/profile"><span class="glyphicon glyphicon-plus">Cuenta</span></a>
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestList"))) {
+            <a href="/productRequest_list" class="btn btn-primary btn-sm">Listar</a> 
+        }
+        @restrict(roles = List(Array("productRequestEdit"))) {
+            <a href="/productRequest_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
+        }
+        @restrict(roles = List(Array("productRequestDelete"))) {
+           <a href="/productRequest_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
+        }
+        @restrict(roles = List(Array("productRequestSend"))) {
+            @if(row.status == "borrador") {
+                <a href="/productRequest_send/@row.id" class="btn btn-primary btn-sm">Enviar</a>
+            }
+        }
+        @restrict(roles = List(Array("productRequestFinish"))) {
+            @if(row.status == "enviado") {
+                <a href="/productRequest_finish/@row.id" class="btn btn-primary btn-sm">Finalizar</a>
+            }
+        }
     </div>
+
     <div class="container">
         <div>
             <div style="display: inline-block;"> Date: </div>
-            <div style="display: inline-block;" id="date">  </div>
+            <div style="display: inline-block;" id="date">@row.date</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Veterinario: </div>
+            <div style="display: inline-block;" id="veterinarioName">@row.veterinarioName</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Almacen: </div>
+            <div style="display: inline-block;" id="storekeeperName">@row.storekeeperName</div>
         </div>
         <div>
             <div style="display: inline-block;"> Status: </div>
-            <div style="display: inline-block;" id="status">  </div>
-        </div>
-        <div>
-            <div style="display: inline-block;"> Modulo: </div>
-            <div style="display: inline-block;" id="moduleName">  </div>
-        </div>
-        <div>
-            <div style="display: inline-block;"> Detail: </div>
-            <div style="display: inline-block;" id="detail">  </div>
+            <div style="display: inline-block;" id="status">@row.status</div>
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRowByInsumo_addGet" class="btn btn-primary btn-sm">Agregar Productos</a> </div>
+        @restrict(roles = List(Array("requestRowCreate"))) {
+            <div style="display: inline-block;"> <a href="/requestRow_add/@row.id" class="btn btn-primary btn-sm">Agregar Detalle</a> </div>
+        }
     </div>
 
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowInsumo_index.js")'></script>
-    <div>Lista de Productos</div>
+    <div>Lista Detalle de Pedido</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
                     <th>Precio</th>
-                    <th>Pagado</th>
                     <th>Estado</th>
                     <th>-----------</th>
                 </tr>
             </thead>
+            <tbody>
+                @for(child <- children) {
+                    <tr>
+                        <td>
+                            @restrictOr(roles = List(Array("productShow"))) {
+                               <a href="/product_show/@child.productId">@child.productName
+                            </a> 
+                            }{
+                                @child.productName                                    
+                            }
+                        </td>
+                        <td>@child.quantity</td>
+                        <td>@child.price</td>
+                        <td>@child.status</td>
+                        <td>
+                           @restrict(roles = List(Array("requestRowShow"))) {
+                               <a href="/requestRow_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
+                           }
+                           @restrict(roles = List(Array("requestRowEdit"))) {
+                               <a href="/requestRow_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
+                           }
+                           @restrict(roles = List(Array("requestRowDelete"))) {
+                               <a href="/requestRow_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
+                           }
+                           @if(child.status != "entregado") {
+                            <a href="/requestRow_fill/@child.id" class="btn btn-primary btn-sm">Entregar</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 

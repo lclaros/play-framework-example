@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.duration._
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -10,12 +11,13 @@ import play.api.libs.json.Json
 import models._
 import dal._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
+import play.api.data.format.Formats._ 
 
 class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -23,13 +25,29 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
   val newForm: Form[CreateMeasureForm] = Form {
     mapping(
       "name" -> nonEmptyText,
-      "quantity" -> number,
-      "description" -> text
+      "quantity" -> of[Double],
+      "description" -> text,
+      "measureId" ->  longNumber
     )(CreateMeasureForm.apply)(CreateMeasureForm.unapply)
   }
 
+  var measures = getMeasureMap()
+
+  def getMeasureMap(): Map[String, String] = {
+    Await.result(repo.getListNames().map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ case (key: Long, value: String) => 
+        cache put (key.toString(), value)
+      }
+      cache put ("0", "Ninguno")
+      cache.toMap
+    }, 3000.millis)
+  }
+
+
   def addGet = Action { implicit request =>
-    Ok(views.html.measure_add(new MyDeadboltHandler, newForm))
+    measures = getMeasureMap()
+    Ok(views.html.measure_add(new MyDeadboltHandler, newForm, measures))
   }
 
   def index = Action.async { implicit request =>
@@ -41,10 +59,12 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.measure_add(new MyDeadboltHandler, errorForm)))
+        Future.successful(Ok(views.html.measure_add(new MyDeadboltHandler, errorForm, measures)))
       },
       res => {
-        repo.create(res.name, res.quantity, res.description,
+        repo.create(
+                      res.name, res.quantity, res.description,
+                      res.measureId, measures(res.measureId.toString),
                       request.session.get("userId").get.toLong,
                       request.session.get("userName").get.toString).map { resNew =>
           Redirect(routes.MeasureController.show(resNew.id))
@@ -70,8 +90,9 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
     mapping(
       "id" -> longNumber,
       "name" -> nonEmptyText,
-      "quantity" -> number,
-      "description" -> text
+      "quantity" -> of[Double],
+      "description" -> text,
+      "measureId" ->  longNumber
     )(UpdateMeasureForm.apply)(UpdateMeasureForm.unapply)
   }
 
@@ -86,15 +107,17 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
 
   // update required
   def getUpdate(id: Long) = Action.async { implicit request =>
+    measures = getMeasureMap()
     repo.getById(id).map { res =>
       updatedRow = res(0)
       val anyData = Map(
                         "id" -> id.toString().toString(),
                         "name" -> updatedRow.name,
                         "quantity" -> updatedRow.quantity.toString(),
-                        "description" -> updatedRow.description.toString()
+                        "description" -> updatedRow.description.toString(),
+                        "measureId" -> updatedRow.measureId.toString()
                        )
-      Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
+      Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures))
     }
   }
 
@@ -116,12 +139,15 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, errorForm)))
+        Future.successful(Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, errorForm, measures)))
       },
       res => {
-        repo.update(res.id, res.name, res.quantity, res.description,
+        repo.update(
+                      res.id, res.name, res.quantity, res.description,
+                      res.measureId, measures(res.measureId.toString),
                       request.session.get("userId").get.toLong,
-                      request.session.get("userName").get.toString).map { _ =>
+                      request.session.get("userName").get.toString
+                    ).map { _ =>
           Redirect(routes.MeasureController.show(res.id))
         }
       }
@@ -130,7 +156,7 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
 
 }
 
-case class CreateMeasureForm(name: String, quantity: Int, description: String)
+case class CreateMeasureForm(name: String, quantity: Double, description: String, measureId: Long)
 
 // Update required
-case class UpdateMeasureForm(id: Long, name: String, quantity: Int, description: String)
+case class UpdateMeasureForm(id: Long, name: String, quantity: Double, description: String, measureId: Long)

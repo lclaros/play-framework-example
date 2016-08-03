@@ -1,8 +1,22 @@
 TODO
+
+August 1
+TODO
+    EVENT LOG
+        - Modules(, requestRowProductor, discountReport, reportDetail, )
+    Get permission and use in the UserSecurity Model
+
+    Update the parent values
+        - Request row productor, request row,
+
+    Work With insumos
+        - Product type page
+
+DONE
 July 23
     - Entrega de productos a productores por Unidad de Medida
 // July 22
-TODO|
+TODO
     EVENT LOG
         - modules(, requestRowProductor, discountReport, reportDetail, )
     Get permission and use in the UserSecurity Model
