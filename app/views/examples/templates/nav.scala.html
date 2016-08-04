@@ -150,6 +150,19 @@
                </div>
             </li>
         }
+        @restrict(roles = List(Array("productRequestByInsumo"))) {
+            <li>
+               <a href="/productRequestByInsumo_list">Insumo<span class="caret"></span></a>
+               <div>
+                  <ul>
+                     <li><a href="/productRequestByInsumo_list">Lista</a></li>
+                     @restrict(roles = List(Array("productRequestByInsumoCreate"))) {
+                      <li><a href="/productRequestByInsumo_add">Nuevo</a></li>
+                     }
+                  </ul>
+               </div>
+            </li>
+        }
         @restrict(roles = List(Array("discountReport"))) {
             <li>
                <a href="/discountReport_list">Descuentos<span class="caret"></span></a>

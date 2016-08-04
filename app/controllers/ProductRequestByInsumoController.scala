@@ -20,19 +20,19 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRow: RequestRowRepository, repoVete: UserRepository,
-                                          repoSto: UserRepository, repoInsUser: UserRepository,
+class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository, repoRow: RequestRowRepository,
+                                          repoVete: UserRepository, repoSto: UserRepository, repoInsUser: UserRepository,
                                           val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
-  val newForm: Form[CreateProductRequestForm] = Form {
+  val newForm: Form[CreateProductRequestByInsumoForm] = Form {
     mapping(
       "date" -> text,
       "user" -> longNumber,
       "moduleId" -> longNumber,
       "status" -> text,
       "detail" -> text
-    )(CreateProductRequestForm.apply)(CreateProductRequestForm.unapply)
+    )(CreateProductRequestByInsumoForm.apply)(CreateProductRequestByInsumoForm.unapply)
   }
 
   var users = getUsersMap()
@@ -40,7 +40,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
 
   def index = Action.async { implicit request =>
     repo.list().map { res =>
-      Ok(views.html.productRequest_index(new MyDeadboltHandler, res))
+      Ok(views.html.productRequestByInsumo_index(new MyDeadboltHandler, res))
     }
   }
 
@@ -51,22 +51,22 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       users = getUsersMap()
     }
     modules = getModulesMap()
-    Ok(views.html.productRequest_add(new MyDeadboltHandler, newForm, users, modules))
+    Ok(views.html.productRequestByInsumo_add(new MyDeadboltHandler, newForm, users, modules))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productRequest_add(new MyDeadboltHandler, errorForm, users, modules)))
+        Future.successful(Ok(views.html.productRequestByInsumo_add(new MyDeadboltHandler, errorForm, users, modules)))
       },
       res => {
-        repo.create(
+        repo.createByInsumo(
                     res.date, res.user, users(res.user.toString),
                     res.moduleId, modules(res.moduleId.toString),
-                    res.status, res.detail, "module",
+                    res.status, res.detail, "insumo",
                     request.session.get("userId").get.toLong,
                     request.session.get("userName").get.toString).map { resNew =>
-          Redirect(routes.ProductRequestController.show(resNew.id))
+          Redirect(routes.ProductRequestByInsumoController.show(resNew.id))
         }
       }
     )
@@ -98,7 +98,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
 
 
   // update required
-  val updateForm: Form[UpdateProductRequestForm] = Form {
+  val updateForm: Form[UpdateProductRequestByInsumoForm] = Form {
     mapping(
       "id" -> longNumber,
       "date" -> text,
@@ -106,7 +106,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       "moduleId" -> longNumber,
       "status" -> text,
       "detail" -> text
-    )(UpdateProductRequestForm.apply)(UpdateProductRequestForm.unapply)
+    )(UpdateProductRequestByInsumoForm.apply)(UpdateProductRequestByInsumoForm.unapply)
   }
 
   def getChildren(productRequestId: Long): Seq[RequestRow] = {
@@ -128,28 +128,32 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   def getUpdate(id: Long) = Action.async { implicit request =>
     updatedId = id;
     repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "user" -> res.toList(0).user.toString(), "moduleId" -> res.toList(0).moduleId.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
+      val anyData = Map(
+                          "id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(),
+                          "userId" -> res.toList(0).userId.toString(), "moduleId" -> res.toList(0).moduleId.toString(),
+                          "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString()
+                        )
       if (request.session.get("role").getOrElse("0").toLowerCase == "user") {
         users = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
       } else {
         users = getUsersMap()
       }
       modules = getModulesMap()
-      Ok(views.html.productRequest_update(new MyDeadboltHandler, updatedId, updateForm.bind(anyData), users, modules))
+      Ok(views.html.productRequestByInsumo_update(new MyDeadboltHandler, updatedId, updateForm.bind(anyData), users, modules))
     }
   }
 
 // update required
   def getSend(id: Long) = Action.async { implicit request =>
     repo.sendById(id).map {case (res) =>
-      Redirect(routes.ProductRequestController.index())
+      Redirect(routes.ProductRequestByInsumoController.index())
     }
   }
 
 // update required
   def getFinish(id: Long) = Action.async { implicit request =>
     repo.finishById(id).map {case (res) =>
-      Redirect(routes.ProductRequestController.index())
+      Redirect(routes.ProductRequestByInsumoController.index())
     }
   }
 
@@ -205,7 +209,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       repoRow.delete(req.id)
     }
     repo.delete(id).map { res =>
-      Redirect(routes.ProductRequestController.index)
+      Redirect(routes.ProductRequestByInsumoController.index)
     }
   }
 
@@ -220,22 +224,22 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productRequest_update(new MyDeadboltHandler, updatedId, errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.productRequestByInsumo_update(new MyDeadboltHandler, updatedId, errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(
+        repo.updateByInsumo(
                       res.id, res.date, res.user, users(res.user.toString),
                       res.moduleId, modules(res.moduleId.toString), res.status, res.detail, "insumo",
                       request.session.get("userId").get.toLong,
                       request.session.get("userName").get.toString
                     ).map { _ =>
-          Redirect(routes.ProductRequestController.show(res.id))
+          Redirect(routes.ProductRequestByInsumoController.show(res.id))
         }
       }
     )
   }
 }
 
-case class CreateProductRequestForm(date: String, user: Long, moduleId: Long, status: String, detail: String)
+case class CreateProductRequestByInsumoForm(date: String, user: Long, moduleId: Long, status: String, detail: String)
 
-case class UpdateProductRequestForm(id: Long, date: String, user: Long, moduleId: Long, status: String, detail: String)
+case class UpdateProductRequestByInsumoForm(id: Long, date: String, user: Long, moduleId: Long, status: String, detail: String)

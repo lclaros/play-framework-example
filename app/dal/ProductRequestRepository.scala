@@ -35,20 +35,63 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     def status = column[String]("status")
     def detail = column[String]("detail")
     def type_1 = column[String]("type")
-    def * = (id, date, veterinario, veterinarioName, storekeeper, storekeeperName, status, detail, type_1) <> ((ProductRequest.apply _).tupled, ProductRequest.unapply)
+    def userId = column[Long]("user")
+    def userName = column[String]("userName")
+    def moduleId = column[Long]("module")
+    def moduleName = column[String]("moduleName")
+
+    def * = (
+              id, date, veterinario, veterinarioName, storekeeper, storekeeperName,
+              status, detail, type_1, userId, userName, moduleId, moduleName
+            ) <> ((ProductRequest.apply _).tupled, ProductRequest.unapply)
   }
 
   private val tableQ = TableQuery[ProductRequestTable]
 
-  def create(
+  def create (
               date: String, veterinario: Long, veterinarioName: String, storekeeper: Long,
               storekeeperName: String, status: String, detail: String, type_1: String,
               userId: Long, userName: String): Future[ProductRequest] = db.run {
     repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT_REQUEST, userId, userName, date);
-    (tableQ.map(p => (p.date, p.veterinario, p.veterinarioName, p.storekeeper, p.storekeeperName, p.status, p.detail, p.type_1))
+    (tableQ.map(p => (
+                        p.date, p.veterinario, p.veterinarioName, p.storekeeper,
+                        p.storekeeperName, p.status, p.detail, p.type_1, p.userId, p.userName, p.moduleId,
+                        p.moduleName)
+                      )
       returning tableQ.map(_.id)
-      into ((nameAge, id) => ProductRequest(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8))
-    ) += (date, veterinario, veterinarioName, storekeeper, storekeeperName, status, detail, type_1)
+      into ((nameAge, id) => ProductRequest(
+                                              id, nameAge._1, nameAge._2, nameAge._3, nameAge._4,
+                                              nameAge._5, nameAge._6, nameAge._7, nameAge._8, nameAge._9, nameAge._10, nameAge._11,
+                                              nameAge._12)
+                                            )
+    ) += (
+            date, veterinario, veterinarioName,
+            storekeeper, storekeeperName, status,
+            detail, type_1, 0, "", 0, ""
+          )
+  }
+
+  def createByInsumo (
+                    date: String, userId2: Long, userName2: String, moduleId: Long,
+                    moduleName: String, status: String, detail: String, type_1: String,
+                    userId: Long, userName: String
+                    ): Future[ProductRequest] = db.run {
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT_REQUEST, userId, userName, date);
+    (tableQ.map(p => (  
+                        p.date, p.userId, p.userName,
+                        p.moduleId, p.moduleName,
+                        p.status, p.detail, p.type_1, p.userId, p.userName, p.moduleId,
+                        p.moduleName
+                      )
+                )
+      returning tableQ.map(_.id)
+      into ((nameAge, id) => ProductRequest(
+                                              id, nameAge._1, nameAge._2, nameAge._3,
+                                              nameAge._4, nameAge._5, nameAge._6, nameAge._7,
+                                              nameAge._8, nameAge._9, nameAge._10, nameAge._11,
+                                              nameAge._12)
+                                            )
+    ) += (date, 0, "", 0, "", status, detail, type_1, userId2, userName2, moduleId, moduleName)
   }
 
   def list(): Future[Seq[ProductRequest]] = db.run {
@@ -78,8 +121,10 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
 
   // update required to copy
   def update(
-              id: Long, date: String, veterinario: Long, veterinarioName: String, storekeeper: Long,
-              storekeeperName: String, status: String, detail: String, type_1: String,
+              id: Long, date: String, veterinario: Long,
+              veterinarioName: String, storekeeper: Long,
+              storekeeperName: String, status: String,
+              detail: String, type_1: String,
               userId: Long, userName: String
             ): Future[Seq[ProductRequest]] = db.run {
     repoLog.createLogEntry(repoLog.UPDATE, repoLog.PRODUCT_REQUEST, userId, userName, date);
@@ -93,6 +138,34 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     db.run(q3.update(storekeeper))
     val q31 = for { c <- tableQ if c.id === id } yield c.storekeeperName
     db.run(q31.update(storekeeperName))
+    val q4 = for { c <- tableQ if c.id === id } yield c.status
+    db.run(q4.update(status))
+    val q5 = for { c <- tableQ if c.id === id } yield c.detail
+    db.run(q5.update(detail))
+    val q6 = for { c <- tableQ if c.id === id } yield c.type_1
+    db.run(q6.update(type_1))
+    tableQ.filter(_.id === id).result
+  }
+
+  // update required to copy
+  def updateByInsumo(
+              id: Long, date: String, userId2: Long,
+              userName2: String, moduleId: Long,
+              moduleName: String, status: String,
+              detail: String, type_1: String,
+              userId: Long, userName: String
+            ): Future[Seq[ProductRequest]] = db.run {
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.PRODUCT_REQUEST, userId, userName, date);
+    val q = for { c <- tableQ if c.id === id } yield c.date
+    db.run(q.update(date))
+    val q2 = for { c <- tableQ if c.id === id } yield c.userId
+    db.run(q2.update(userId2))
+    val q21 = for { c <- tableQ if c.id === id } yield c.userName
+    db.run(q21.update(userName2))
+    val q3 = for { c <- tableQ if c.id === id } yield c.moduleId
+    db.run(q3.update(moduleId))
+    val q31 = for { c <- tableQ if c.id === id } yield c.moduleName
+    db.run(q31.update(moduleName))
     val q4 = for { c <- tableQ if c.id === id } yield c.status
     db.run(q4.update(status))
     val q5 = for { c <- tableQ if c.id === id } yield c.detail

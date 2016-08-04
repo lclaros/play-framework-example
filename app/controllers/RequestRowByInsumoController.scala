@@ -18,9 +18,11 @@ import scala.collection.mutable.ArrayBuffer
 import play.api.data.format.Formats._ 
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
-class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoProductReq: ProductRequestRepository, repoUnit: MeasureRepository,
-                                      repoInsum: ProductRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
+class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRowProductor: RequestRowProductorRepository, repoProductReq: ProductRequestRepository, repoUnit: MeasureRepository, 
+                                      repoProduct: ProductRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                       (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateRequestRowByInsumoForm] = Form {
@@ -33,58 +35,43 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
     )(CreateRequestRowByInsumoForm.apply)(CreateRequestRowByInsumoForm.unapply)
   }
 
-  //val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
-  var productReqsMap = getProductReqsMapMap()
-  var productsMap = getproductsMapMap()
-  var unidades = getMeasuresMap()
+  //var unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
+  var productRequestsMap = getProductRequestsMap(0)
+  var products = getProductsMap()
   var productPrice = 0.0
+  var unidades = getMeasuresMap()
+  var updatedRow: RequestRow = new RequestRow(0, 0, 1, "", 2, 1, 1, "", 1, "")
+  var productRequestId: Long = 0
   
-  def getProductPrice(id: Long): Double = {
-    Await.result(repoInsum.getById(id).map{ case (res1) => 
-      res1(0).price
-    }, 3000.millis)
-  }
-
-  def getProductById(id: Long): Product = {
-    Await.result(repoInsum.getById(id).map{ case (res1) => 
-      res1(0)
-    }, 3000.millis)
-  }
-
-  def getMeasureById(id: Long): Measure = {
-    Await.result(repoUnit.getById(id).map{ case (res1) => 
-      res1(0)
-    }, 3000.millis)
-  }
-
   def getMeasuresMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      
       cache.toMap
     }, 3000.millis)
   }
 
-  def index = Action {
-    productReqsMap = getProductReqsMapMap()
-    productsMap = getproductsMapMap()
-    Ok(views.html.requestRowByInsumo_index(productReqsMap, productsMap))
+  def index() = Action.async { implicit request =>
+    productRequestId = 0
+    repo.list().map { res =>
+      Ok(views.html.requestRow_index(new MyDeadboltHandler, res))
+    }
   }
-
-  def addGet = Action {
+  var requestIdParm: Long = 0
+  def addGet(requestId: Long) = Action { implicit request =>
     unidades = getMeasuresMap()
-    productReqsMap = getProductReqsMapMap()
-    productsMap = getproductsMapMap()
-    Ok(views.html.requestRowByInsumo_add(newForm, productReqsMap, productsMap, unidades))
+    productRequestsMap = getProductRequestsMap(requestId)
+    products = getProductsMap()
+    requestIdParm = requestId
+    Ok(views.html.requestRowByInsumo_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowByInsumo_index(Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.requestRowByInsumo_add(new MyDeadboltHandler, requestIdParm, searchProductForm, errorForm, productRequestsMap, products, unidades)))
       },
       res => {
         var product1 = getProductById(res.productId)
@@ -92,25 +79,24 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
         var requestMeasure = getMeasureById(res.measureId)
         var equivalent =  requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
 
-        repo.create(
-                      res.requestId, res.productId, productsMap(res.productId.toString), res.quantity,
-                      equivalent * product1.price , res.status, res.measureId, res.measureId.toString,
-                      request.session.get("userId").get.toLong,
-                      request.session.get("userName").get.toString
-                    ).map { _ =>
-          Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
+        repo.create(res.requestId, res.productId, products(res.productId.toString()),
+                    res.quantity, equivalent * product1.price, res.status,
+                    res.measureId, res.measureId.toString,
+                    request.session.get("userId").get.toLong,
+                    request.session.get("userName").get.toString).map { resNew =>
+          Redirect(routes.RequestRowByInsumoController.show(resNew.id))
         }
       }
     )
   }
 
-  def getRequestRowByInsumos = Action.async {
+  def getRequestRows = Action.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getRequestRowByInsumosByParent(id: Long) = Action.async {
+  def getRequestRowsByParent(id: Long) = Action.async {
     repo.listByParent(id).map { res =>
       Ok(Json.toJson(res))
     }
@@ -125,34 +111,59 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
       "quantity" -> number,
       "price" -> of[Double],
       "status" -> text,
-      "measureId" -> longNumber
+      "measure" -> longNumber
     )(UpdateRequestRowByInsumoForm.apply)(UpdateRequestRowByInsumoForm.unapply)
   }
 
-  // to copy
-  def show(id: Long) = Action {
-    Ok(views.html.requestRowByInsumo_show())
+  def getRequestRowProductos(requestRowId: Long): Seq[RequestRowProductor] = {
+    Await.result(repoRowProductor.listByParent(requestRowId).map {  res =>
+        res
+    }, 3000.millis)
   }
 
-  // update required
-  def getUpdate(id: Long) = Action.async {
-    unidades = getMeasuresMap()
-    repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "requestId" -> res.toList(0).requestId.toString(),
-                                "productId" -> res.toList(0).productId.toString(),
-                                "quantity" -> res.toList(0).quantity.toString(), 
-                                "price" -> res.toList(0).price.toString(), 
-                                "status" -> res.toList(0).status.toString(),
-                                "measureId" -> res.toList(0).measureId.toString()
-                        )
-      productReqsMap = getProductReqsMapMap()
-      productsMap = getproductsMapMap()
-      Ok(views.html.requestRowByInsumo_update(updateForm.bind(anyData), productReqsMap, productsMap, unidades))
+  // to copy
+  def show(id: Long) = Action.async { implicit request =>
+    // get the productRequestRow
+    // products = getProductRequestRows(id)
+    val requestRowProductors = getRequestRowProductos(id)
+    repo.getById(id).map { res =>
+      productRequestId = res(0).requestId
+      Ok(views.html.requestRow_show(new MyDeadboltHandler, res(0), requestRowProductors))
     }
   }
 
-  def getProductReqsMapMap(): Map[String, String] = {
-    Await.result(repoProductReq.getListNames().map{ case (res1) => 
+  // update required
+  def getUpdate(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map {case (res) =>
+      val anyData = Map(
+                          "id" -> id.toString().toString(),
+                          "requestId" -> res.toList(0).requestId.toString(),
+                          "productId" -> res.toList(0).productId.toString(),
+                          "quantity" -> res.toList(0).quantity.toString(),
+                          "price" -> res.toList(0).price.toString(),
+                          "status" -> res.toList(0).status.toString(),
+                          "measureId" -> res.toList(0).measureId.toString()
+                        )
+      unidades = getMeasuresMap()
+      productRequestsMap = getProductRequestsMap(res(0).requestId)
+      products = getProductsMap()
+      updatedRow = res(0)
+      Ok(views.html.requestRowByInsumo_update(new MyDeadboltHandler , updatedRow, updateForm.bind(anyData), productRequestsMap, products, unidades))
+    }
+  }
+
+  def getProductRequestsMap(requestId: Long): Map[String, String] = {
+    Await.result(repoProductReq.getById(requestId).map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ case (res) => 
+        cache put (res.id.toString(), res.date.toString())
+      }
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getProductsMap(): Map[String, String] = {
+    Await.result(repoProduct.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -162,14 +173,21 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
     }, 3000.millis)
   }
 
-  def getproductsMapMap(): Map[String, String] = {
-    Await.result(repoInsum.getListNames().map{ case (res1) => 
-      val cache = collection.mutable.Map[String, String]()
-      res1.foreach{ case (key: Long, value: String) => 
-        cache put (key.toString(), value)
-      }
-      
-      cache.toMap
+  def getProductPrice(id: Long): Double = {
+    Await.result(repoProduct.getById(id).map{ case (res1) => 
+      res1(0).price
+    }, 3000.millis)
+  }
+
+  def getProductById(id: Long): Product = {
+    Await.result(repoProduct.getById(id).map{ case (res1) => 
+      res1(0)
+    }, 3000.millis)
+  }
+
+  def getMeasureById(id: Long): Measure = {
+    Await.result(repoUnit.getById(id).map{ case (res1) => 
+      res1(0)
     }, 3000.millis)
   }
 
@@ -184,17 +202,28 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
     }, 3000.millis)
   }
 
+  def getByIdObj(id: Long): RequestRow = {
+    Await.result(repo.getById(id).map { res =>
+      res(0)
+      }, 200.millis)
+  }
+
 // update required
   def getFill(id: Long) = Action.async {
-    repo.fillById(id, 1L, 1).map {case (res) =>
-      Redirect(routes.ProductRequestByInsumoController.show(res(0).requestId))
+    var row = getByIdObj(id)
+    repo.fillById(id, row.productId, row.quantity).map { res =>
+      Redirect(routes.ProductRequestController.show(res(0).requestId))
     }
   }
 
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.requestRowByInsumo_index(Map[String, String](), Map[String, String]()))
+      if (productRequestId == 0) {
+          Redirect(routes.RequestRowByInsumoController.index)
+        } else {
+          Redirect(routes.ProductRequestController.show(productRequestId))
+        }
     }
   }
 
@@ -209,7 +238,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowByInsumo_update(errorForm, Map[String, String](), Map[String, String](), unidades)))
+        Future.successful(Ok(views.html.requestRowByInsumo_update(new MyDeadboltHandler, updatedRow, errorForm, Map[String, String](), Map[String, String](), unidades)))
       },
       res => {
         var new_price = res.price
@@ -220,18 +249,41 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
           var equivalent = requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
           new_price = product1.price * equivalent
         }
-        repo.update(
-                      res.id, res.requestId, res.productId, productsMap(res.productId.toString),
-                      res.quantity, new_price , res.status, res.measureId, res.measureId.toString,
+        repo.update(  
+                      res.id, res.requestId, res.productId, products(res.productId.toString),
+                      res.quantity, new_price, res.status, res.measureId, res.measureId.toString,
                       request.session.get("userId").get.toLong,
                       request.session.get("userName").get.toString
                     ).map { _ =>
-          Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
+          Redirect(routes.RequestRowByInsumoController.show(res.id))
         }
       }
     )
   }
 
+  val searchProductForm: Form[SearchProductForm] = Form {
+    mapping(
+      "search" -> text
+    )(SearchProductForm.apply)(SearchProductForm.unapply)
+  }
+
+  def searchProductPost = Action.async { implicit request =>
+    searchProductForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.requestRowByInsumo_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades)))
+      },
+      res => {
+        repoProduct.searchProduct(res.search).map { resProducts =>
+          val cache = collection.mutable.Map[String, String]()
+          resProducts.map { product => 
+            cache put (product.id.toString(), product.name.toString)
+          }
+          products = cache.toMap
+          Ok(views.html.requestRowByInsumo_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades))
+        }
+      }
+    )
+  }
 }
 
 case class CreateRequestRowByInsumoForm(requestId: Long, productId: Long, quantity: Int, status: String, measureId: Long)

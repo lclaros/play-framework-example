@@ -5,23 +5,23 @@
 @main("Mostrar") {
     @examples.templates.nav(handler)
     <div class="container">
-        @restrict(roles = List(Array("productRequestList"))) {
-            <a href="/productRequest_list" class="btn btn-primary btn-sm">Listar</a> 
+        @restrict(roles = List(Array("productRequestByInsumoList"))) {
+            <a href="/productRequestByInsumo_list" class="btn btn-primary btn-sm">Listar</a> 
         }
-        @restrict(roles = List(Array("productRequestEdit"))) {
-            <a href="/productRequest_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
+        @restrict(roles = List(Array("productRequestByInsumoEdit"))) {
+            <a href="/productRequestByInsumo_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
         }
-        @restrict(roles = List(Array("productRequestDelete"))) {
-           <a href="/productRequest_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
+        @restrict(roles = List(Array("productRequestByInsumoDelete"))) {
+           <a href="/productRequestByInsumo_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
-        @restrict(roles = List(Array("productRequestSend"))) {
+        @restrict(roles = List(Array("productRequestByInsumoSend"))) {
             @if(row.status == "borrador") {
-                <a href="/productRequest_send/@row.id" class="btn btn-primary btn-sm">Enviar</a>
+                <a href="/productRequestByInsumo_send/@row.id" class="btn btn-primary btn-sm">Enviar</a>
             }
         }
-        @restrict(roles = List(Array("productRequestFinish"))) {
+        @restrict(roles = List(Array("productRequestByInsumoFinish"))) {
             @if(row.status == "enviado") {
-                <a href="/productRequest_finish/@row.id" class="btn btn-primary btn-sm">Finalizar</a>
+                <a href="/productRequestByInsumo_finish/@row.id" class="btn btn-primary btn-sm">Finalizar</a>
             }
         }
     </div>
@@ -45,8 +45,8 @@
         </div>
     </div>
     <div>
-        @restrict(roles = List(Array("requestRowCreate"))) {
-            <div style="display: inline-block;"> <a href="/requestRow_add/@row.id" class="btn btn-primary btn-sm">Agregar Detalle</a> </div>
+        @restrict(roles = List(Array("requestRowByInsumoCreate"))) {
+            <div style="display: inline-block;"> <a href="/requestRowByInsumo_add/@row.id" class="btn btn-primary btn-sm">Agregar Detalle</a> </div>
         }
     </div>
 
@@ -77,17 +77,17 @@
                         <td>@child.price</td>
                         <td>@child.status</td>
                         <td>
-                           @restrict(roles = List(Array("requestRowShow"))) {
-                               <a href="/requestRow_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
+                           @restrict(roles = List(Array("requestRowByInsumoShow"))) {
+                               <a href="/requestRowByInsumo_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
-                           @restrict(roles = List(Array("requestRowEdit"))) {
-                               <a href="/requestRow_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
+                           @restrict(roles = List(Array("requestRowByInsumoEdit"))) {
+                               <a href="/requestRowByInsumo_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
-                           @restrict(roles = List(Array("requestRowDelete"))) {
-                               <a href="/requestRow_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
+                           @restrict(roles = List(Array("requestRowByInsumoDelete"))) {
+                               <a href="/requestRowByInsumo_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
                            @if(child.status != "entregado") {
-                            <a href="/requestRow_fill/@child.id" class="btn btn-primary btn-sm">Entregar</a>
+                            <a href="/requestRowByInsumo_fill/@child.id" class="btn btn-primary btn-sm">Entregar</a>
                            }
                        </td> 
                     </tr>
