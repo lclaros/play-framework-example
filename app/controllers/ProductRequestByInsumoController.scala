@@ -21,14 +21,14 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
 class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository, repoRow: RequestRowRepository,
-                                          repoVete: UserRepository, repoSto: UserRepository, repoInsUser: UserRepository,
+                                          repoUser: UserRepository, repoModule: ModuleRepository, repoInsUser: UserRepository,
                                           val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateProductRequestByInsumoForm] = Form {
     mapping(
       "date" -> text,
-      "user" -> longNumber,
+      "userId" -> longNumber,
       "moduleId" -> longNumber,
       "status" -> text,
       "detail" -> text
@@ -61,7 +61,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
       },
       res => {
         repo.createByInsumo(
-                    res.date, res.user, users(res.user.toString),
+                    res.date, res.userId, users(res.userId.toString),
                     res.moduleId, modules(res.moduleId.toString),
                     res.status, res.detail, "insumo",
                     request.session.get("userId").get.toLong,
@@ -102,7 +102,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
     mapping(
       "id" -> longNumber,
       "date" -> text,
-      "user" -> longNumber,
+      "userId" -> longNumber,
       "moduleId" -> longNumber,
       "status" -> text,
       "detail" -> text
@@ -119,7 +119,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
   def show(id: Long) = Action.async { implicit request =>
     val requestRows = getChildren(id)
     repo.getById(id).map { res =>
-      Ok(views.html.productRequest_show(new MyDeadboltHandler, res(0), requestRows))
+      Ok(views.html.productRequestByInsumo_show(new MyDeadboltHandler, res(0), requestRows))
     }
   }
 
@@ -127,7 +127,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
   // update required
   def getUpdate(id: Long) = Action.async { implicit request =>
     updatedId = id;
-    repo.getById(id).map {case (res) =>
+    repo.getById(id).map { case (res) =>
       val anyData = Map(
                           "id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(),
                           "userId" -> res.toList(0).userId.toString(), "moduleId" -> res.toList(0).moduleId.toString(),
@@ -157,9 +157,8 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
     }
   }
 
-
   def getVeterinarioNamesMap(id: Long): Map[String, String] = {
-    Await.result(repoVete.getById(id).map{ case (res1) => 
+    Await.result(repoUser.getById(id).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
         cache put (user.id.toString, user.name)
@@ -170,7 +169,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
   }
 
   def getUsersMap(): Map[String, String] = {
-    Await.result(repoVete.listVeterinarios().map{ case (res1) => 
+    Await.result(repoUser.listInsumoUsers().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
         cache put (user.id.toString, user.name)
@@ -192,7 +191,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
   }
 
   def getModulesMap(): Map[String, String] = {
-    Await.result(repoSto.listStorekeepers().map{ case (res1) => 
+    Await.result(repoModule.list().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
         cache put (user.id.toString, user.name)
@@ -228,7 +227,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
       },
       res => {
         repo.updateByInsumo(
-                      res.id, res.date, res.user, users(res.user.toString),
+                      res.id, res.date, res.userId, users(res.userId.toString),
                       res.moduleId, modules(res.moduleId.toString), res.status, res.detail, "insumo",
                       request.session.get("userId").get.toLong,
                       request.session.get("userName").get.toString
@@ -240,6 +239,6 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
   }
 }
 
-case class CreateProductRequestByInsumoForm(date: String, user: Long, moduleId: Long, status: String, detail: String)
+case class CreateProductRequestByInsumoForm(date: String, userId: Long, moduleId: Long, status: String, detail: String)
 
-case class UpdateProductRequestByInsumoForm(id: Long, date: String, user: Long, moduleId: Long, status: String, detail: String)
+case class UpdateProductRequestByInsumoForm(id: Long, date: String, userId: Long, moduleId: Long, status: String, detail: String)

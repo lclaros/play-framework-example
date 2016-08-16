@@ -111,7 +111,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
       "quantity" -> number,
       "price" -> of[Double],
       "status" -> text,
-      "measure" -> longNumber
+      "measureId" -> longNumber
     )(UpdateRequestRowByInsumoForm.apply)(UpdateRequestRowByInsumoForm.unapply)
   }
 
@@ -128,7 +128,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
     val requestRowProductors = getRequestRowProductos(id)
     repo.getById(id).map { res =>
       productRequestId = res(0).requestId
-      Ok(views.html.requestRow_show(new MyDeadboltHandler, res(0), requestRowProductors))
+      Ok(views.html.requestRowByInsumo_show(new MyDeadboltHandler, res(0), requestRowProductors))
     }
   }
 
@@ -238,7 +238,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowByInsumo_update(new MyDeadboltHandler, updatedRow, errorForm, Map[String, String](), Map[String, String](), unidades)))
+        Future.successful(Ok(views.html.requestRowByInsumo_update(new MyDeadboltHandler, updatedRow, errorForm, productRequestsMap, products, unidades)))
       },
       res => {
         var new_price = res.price
@@ -249,6 +249,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
           var equivalent = requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
           new_price = product1.price * equivalent
         }
+        println(res)        
         repo.update(  
                       res.id, res.requestId, res.productId, products(res.productId.toString),
                       res.quantity, new_price, res.status, res.measureId, res.measureId.toString,
@@ -257,6 +258,9 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
                     ).map { _ =>
           Redirect(routes.RequestRowByInsumoController.show(res.id))
         }
+        println(res)
+        println("Some issue by here")
+        Future.successful(Redirect(routes.RequestRowByInsumoController.show(res.id)))
       }
     )
   }

@@ -216,7 +216,7 @@ GET     /productRequestByInsumo_remove/:id        			controllers.ProductRequestB
 GET     /productRequestsByInsumo/:id 						controllers.ProductRequestByInsumoController.getById(id: Long)
 POST    /productRequestByInsumo_update     					controllers.ProductRequestByInsumoController.updatePost
 
-POST    /productRequest      								controllers.ProductRequestByInsumoController.add
+POST    /productRequestByInsumo      						controllers.ProductRequestByInsumoController.add
 GET     /productRequestsByInsumo         					controllers.ProductRequestByInsumoController.getProductRequests
 GET     /productRequestByInsumo_list         				controllers.ProductRequestByInsumoController.index
 GET     /productRequestByInsumo_add     					controllers.ProductRequestByInsumoController.addGet

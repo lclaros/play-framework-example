@@ -9,10 +9,10 @@
             <a href="/productRequestByInsumo_show/@row.requestId" class="btn btn-info btn-sm">Pedido</a>
         }
         @restrict(roles = List(Array("requestRowEdit"))) {
-            <a href="/requestRow_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
+            <a href="/requestRowByInsumo_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
         }
         @restrict(roles = List(Array("requestRowDelete"))) {
-           <a href="/requestRow_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
+           <a href="/requestRowByInsumo_remove/@row.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
     <div class="container">
@@ -34,10 +34,10 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRowProductor_add/@row.id"  class="btn btn-primary btn-sm">Entrega de Producto</a> </div>
+            <div style="display: inline-block;"> <a href="/requestRowProductor_add/@row.id"  class="btn btn-primary btn-sm">Pagar</a> </div>
     </div>
 
-    <div>Lista de Productos Entregados</div>
+    <div>Lista de Pagos</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>

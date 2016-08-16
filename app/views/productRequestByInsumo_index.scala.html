@@ -14,10 +14,10 @@
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Fecha</th>
-                    <th>Veterinario</th>
-                    <th>Almacen</th>
-                    <th>Status</th>
+                    <th>Fecha/Nombre</th>
+                    <th>Usuario</th>
+                    <th>Modulo</th>
+                    <th>Estado</th>
                     <th>Detail</th>
                     <th>-----------</th>
                 </tr>
@@ -28,18 +28,18 @@
                         <td>@row.date</td>
                         <td>
                             @restrictOr(roles = List(Array("userShow"))) {
-                               <a href="/user_show/@row.veterinario">@row.veterinarioName
+                               <a href="/user_show/@row.veterinario">@row.userName
                             </a> 
                             }{
-                                @row.veterinarioName                                    
+                                @row.userName                                    
                             }
                         </td>
                         <td>
-                            @restrictOr(roles = List(Array("userShow"))) {
-                               <a href="/user_show/@row.storekeeper">@row.storekeeperName
-                            </a> 
+                            @restrictOr(roles = List(Array("moduleShow"))) {
+                               <a href="/user_show/@row.storekeeper">@row.moduleName
+                            </a>
                             }{
-                                @row.storekeeperName                                    
+                                @row.moduleName
                             }
                         </td>
 

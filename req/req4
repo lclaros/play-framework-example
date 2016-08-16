@@ -1,7 +1,28 @@
 TODO
 
+August 14 
+FEEDBACK
+ - Remember
+    - Have results of the things that I shoudl have
+    - Have a description of the system result like a description of what it will do, the purpose of the 
+    system to have something to share or log, well that will makes us see the result.
+    - 
+
+
 August 1
 TODO
+    Update the "Entrega de producto pagado" parent, ()
+        - Show some information in the parent
+        - Show some bar status of the payed registered(Enhansment)
+
+    Request Row Pay (Get Price from the product information), Have some history of the product
+        - quantity
+        - cost
+
+    Product Request By Insumo(DONE)
+        - Almacen manager
+        - Module Id
+
     EVENT LOG
         - Modules(, requestRowProductor, discountReport, reportDetail, )
     Get permission and use in the UserSecurity Model
@@ -11,6 +32,7 @@ TODO
 
     Work With insumos
         - Product type page
+
 
 DONE
 July 23

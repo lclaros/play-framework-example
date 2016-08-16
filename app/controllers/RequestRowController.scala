@@ -111,7 +111,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       "quantity" -> number,
       "price" -> of[Double],
       "status" -> text,
-      "measure" -> longNumber
+      "measureId" -> longNumber
     )(UpdateRequestRowForm.apply)(UpdateRequestRowForm.unapply)
   }
 
@@ -146,6 +146,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
                         )
       unidades = getMeasuresMap()
       productRequestsMap = getProductRequestsMap(res(0).requestId)
+      println(productRequestsMap)
       products = getProductsMap()
       updatedRow = res(0)
       Ok(views.html.requestRow_update(new MyDeadboltHandler , updatedRow, updateForm.bind(anyData), productRequestsMap, products, unidades))
@@ -238,7 +239,9 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_update(new MyDeadboltHandler, updatedRow, errorForm, Map[String, String](), Map[String, String](), unidades)))
+        println("Some error is by there")
+        println(errorForm)
+        Future.successful(Ok(views.html.requestRow_update(new MyDeadboltHandler, updatedRow, errorForm, productRequestsMap, products, unidades)))
       },
       res => {
         var new_price = res.price
@@ -249,6 +252,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
           var equivalent = requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
           new_price = product1.price * equivalent
         }
+        println("Going to the method")
         repo.update(  
                       res.id, res.requestId, res.productId, products(res.productId.toString),
                       res.quantity, new_price, res.status, res.measureId, res.measureId.toString,

@@ -78,10 +78,10 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
                     ): Future[ProductRequest] = db.run {
     repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT_REQUEST, userId, userName, date);
     (tableQ.map(p => (  
-                        p.date, p.userId, p.userName,
-                        p.moduleId, p.moduleName,
-                        p.status, p.detail, p.type_1, p.userId, p.userName, p.moduleId,
-                        p.moduleName
+                        p.date,
+                        p.veterinario, p.veterinarioName, p.storekeeper,
+                        p.storekeeperName, p.status, p.detail, p.type_1, p.userId, p.userName,
+                        p.moduleId, p.moduleName
                       )
                 )
       returning tableQ.map(_.id)
