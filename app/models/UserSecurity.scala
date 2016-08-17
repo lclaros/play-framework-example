@@ -8,7 +8,7 @@ import be.objectify.deadbolt.core.models.Subject
  * @author Steve Chaloner (steve@objectify.be)
  */
 
-class UserSecurity(val userName: String, val rolParam: String) extends Subject
+class UserSecurity (val userName: String, val rolParam: String, var rolesListParam: List[SecurityRole] = List()) extends Subject
 {
   var rol = rolParam
 
