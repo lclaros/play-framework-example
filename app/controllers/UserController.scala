@@ -116,15 +116,15 @@ class UserController @Inject()  (
     Await.result(repoRoles.listRoles().map(res => res), 3000.millis)
   }
 
-  def getAssignedRoles(): Seq[UserRole] = {
-    Await.result(repoRoles.listUserRoles().map(res => res), 3000.millis)
+  def getAssignedRoles(id: Long): Seq[UserRole] = {
+    Await.result(repoRoles.listUserRoles(id).map(res => res), 3000.millis)
   }
 
   var userId: Long =  _
   // to copy
   def show(id: Long) = Action.async { implicit request =>
     userId = id
-    var assignedRoles = getAssignedRoles()
+    var assignedRoles = getAssignedRoles(id)
     var roles = getRoles()
     repo.getById(id).map { res =>
       Ok(views.html.user_show(new MyDeadboltHandler, res(0), roles, assignedRoles))

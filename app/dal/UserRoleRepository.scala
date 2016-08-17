@@ -48,8 +48,8 @@ class UserRoleRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
     ) += (userId, roleName, roleCode)
   }
 
-  def listUserRoles(): Future[Seq[UserRole]] = db.run {
-    tableUserRole.result
+  def listUserRoles(id: Long): Future[Seq[UserRole]] = db.run {
+    tableUserRole.filter(_.userId === id).result
   }
 
   // to cpy
