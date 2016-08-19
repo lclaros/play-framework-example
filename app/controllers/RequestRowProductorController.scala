@@ -35,7 +35,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       "price" -> of[Double],
       "status" -> text,
       "measureId" -> longNumber,
-      "payTypes" -> text
+      "payType" -> text
     )(CreateRequestRowProductorForm.apply)(CreateRequestRowProductorForm.unapply)
   }
 
@@ -48,6 +48,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   var updatedRow: RequestRowProductor = _
   var parentId: Long = _
   var requestRow: RequestRow = _
+  val productorType = "productor"
 
   def index = Action.async { implicit request => 
     repo.list().map { res =>
@@ -87,7 +88,8 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, searchProductorForm, newForm,
+        println(errorForm)
+        Future.successful(Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, searchProductorForm, errorForm,
                               requestRows, products, productors, measures, payTypes)))
       },
       res => {
@@ -95,7 +97,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
                       res.requestRowId, res.productId, products(res.productId.toString()),
                       res.productorId, productors(res.productorId.toString()),
                       res.quantity, res.price, res.status, res.measureId,
-                      measures(res.measureId.toString()), res.payType
+                      measures(res.measureId.toString()), res.payType, productorType
                     ).map { resNew =>
           repoProductor.updateTotalDebt(res.productorId, res.price);
           Redirect(routes.RequestRowProductorController.show(resNew.id))
@@ -121,7 +123,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       "price" -> of[Double],
       "status" -> text,
       "measureId" -> longNumber,
-      "payTypes" -> text
+      "payType" -> text
 
     )(UpdateRequestRowProductorForm.apply)(UpdateRequestRowProductorForm.unapply)
   }
@@ -257,8 +259,9 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
                                             errorForm, requestRows, products, productors, measures, payTypes)))
       },
       res => {
-        repo.update(res.id, res.requestRowId, res.productId, products(res.productId.toString), res.productorId, productors(res.productorId.toString), res.quantity, res.price, res.status, res.measureId,
-                      measures(res.measureId.toString()), res.payType).map { _ =>
+        repo.update(res.id, res.requestRowId, res.productId, products(res.productId.toString), res.productorId,
+                    productors(res.productorId.toString), res.quantity, res.price, res.status, res.measureId,
+                      measures(res.measureId.toString()), res.payType, productorType).map { _ =>
           Redirect(routes.RequestRowProductorController.show(res.id))
         }
       }
