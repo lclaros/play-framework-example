@@ -37,13 +37,13 @@
             <div style="display: inline-block;"> <a href="/requestRowProductor_add/@row.id"  class="btn btn-primary btn-sm">Pagar</a> </div>
     </div>
 
-    <div>Lista de Pagos</div>
+    <div>Pagos</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
                     <th>Producto</th>
-                    <th>Productor</th>
+                    <th>Modulo</th>
                     <th>Cantidad</th>
                     <th>Precio</th>
                     <th>Estado</th>
@@ -62,25 +62,25 @@
                             }
                         </td>
                         <td>
-                            @restrictOr(roles = List(Array("productorShow"))) {
+                            @restrictOr(roles = List(Array("moduleShow"))) {
                                <a href="/productor_show/@child.productorId">@child.productorName
                             </a> 
                             }{
-                                @child.productorName                                    
+                                @child.productorName
                             }
                         </td>
                         <td>@child.quantity</td>
                         <td>@child.price</td>
                         <td>@child.status</td>
                         <td>
-                           @restrict(roles = List(Array("requestRowProductorEdit"))) {
-                               <a href="/requestRowProductor_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
+                           @restrict(roles = List(Array("requestRowModuleEdit"))) {
+                               <a href="/requestRowModule_update/@child.id" class="btn btn-primary btn-sm">Editar</a> 
                            }
-                           @restrict(roles = List(Array("requestRowProductorDelete"))) {
-                               <a href="/requestRowProductor_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
+                           @restrict(roles = List(Array("requestRowModuleDelete"))) {
+                               <a href="/requestRowModule_remove/@child.id" class="btn btn-danger btn-sm">Eliminar</a>
                            }
-                           @restrict(roles = List(Array("requestRowProductorShow"))) {
-                               <a href="/requestRowProductor_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
+                           @restrict(roles = List(Array("requestRowModuleShow"))) {
+                               <a href="/requestRowModule_show/@child.id" class="btn btn-info btn-sm">Mostrar</a>
                            }
                        </td> 
                     </tr>
