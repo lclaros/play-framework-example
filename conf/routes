@@ -251,7 +251,6 @@ GET     /requestRowsByInsumoByParent/:id         	controllers.RequestRowByInsumo
 GET     /requestRowByInsumo_list         			controllers.RequestRowByInsumoController.index
 GET     /requestRowByInsumo_add/:requestId         	controllers.RequestRowByInsumoController.addGet(requestId: Long)
 
-
 # Now for Product requests Rows Productors
 GET     /requestRowProductor_show/:id 				controllers.RequestRowProductorController.show(id: Long)
 GET     /requestRowProductor_update/:id        		controllers.RequestRowProductorController.getUpdate(id: Long)
@@ -264,10 +263,14 @@ GET     /requestRowProductorsByRequestRow/:id 		controllers.RequestRowProductorC
 POST    /requestRowProductor_update             	controllers.RequestRowProductorController.updatePost
 
 POST    /requestRowProductor                 		controllers.RequestRowProductorController.add
+POST    /requestRowModule                 			controllers.RequestRowProductorController.addModule
+POST    /requestRowTransport                 		controllers.RequestRowProductorController.addTransport
 GET     /requestRowProductors         				controllers.RequestRowProductorController.getRequestRowProductors
 GET     /requestRowProductor_list         			controllers.RequestRowProductorController.index
 GET     /requestRowProductorsByProductor/:id    	controllers.RequestRowProductorController.requestRowProductorsByProductor(id: Long)
 GET     /requestRowProductor_add/:requestRowId		controllers.RequestRowProductorController.addGet(requestRowId: Long)
+GET     /requestRowModule_add/:requestRowId		controllers.RequestRowProductorController.addModuleGet(requestRowId: Long)
+GET     /requestRowTransport_add/:requestRowId		controllers.RequestRowProductorController.addTransportGet(requestRowId: Long)
 
 #POST    /insumo                 		controllers.InsumoController.addInsumo
 #GET     /insumos         				controllers.InsumoController.getInsumos
