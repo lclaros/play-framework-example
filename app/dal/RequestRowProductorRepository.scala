@@ -31,27 +31,27 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
     def productorName = column[String]("productorName")
     def quantity = column[Int]("quantity") // amount of products
     def price = column[Double]("price") // unit price of the product
-    def totalValue = column[Double]("cuota") // price * quantity
+    def totalPrice = column[Double]("totalPrice") // price * quantity
     def paid = column[Double]("paid") // money already paid at the moment
-    def credit = column[Double]("debt") // the value that need to pay with discount on another baucher
+    def credit = column[Double]("credit") // the value that need to pay with discount on another baucher
     def status = column[String]("status") // completed, credit, 
     def measureId = column[Long]("measureId") // measure of the paid
     def measureName = column[String]("measureName") 
     def type_1 = column[String]("type") // productor, module, driver
     def observation = column[String]("payType") // observations of the pay
     def * = (id, requestRowId, productId, productName, productorId, productorName,
-            quantity, price, totalValue, paid, credit, status, measureId, measureName, type_1, observation) <> 
+            quantity, price, totalPrice, paid, credit, status, measureId, measureName, type_1, observation) <> 
             ((RequestRowProductor.apply _).tupled, RequestRowProductor.unapply)
   }
 
   private val tableQ = TableQuery[RequestRowProductorTable]
 
   def create(requestRowId: Long, productId: Long, productName: String, productorId: Long, productorName: String,
-            quantity: Int, price: Double, totalValue: Double, paid: Double, credit: Double,
+            quantity: Int, price: Double, totalPrice: Double, paid: Double, credit: Double,
             status: String, measureId: Long, measureName: String, type_1: String, observation: String):
             Future[RequestRowProductor] = db.run {
     (tableQ.map(p => (p.requestRowId, p.productId, p.productName, p.productorId, p.productorName, p.quantity,
-                p.price, p.totalValue, p.paid, p.credit, p.status, p.measureId, p.measureName, p.type_1, p.observation))
+                p.price, p.totalPrice, p.paid, p.credit, p.status, p.measureId, p.measureName, p.type_1, p.observation))
       returning tableQ.map(_.id)
       into ((nameAge, id) => RequestRowProductor(
                                                   id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7,
@@ -60,7 +60,7 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
                                                 )
             )
     ) += (requestRowId, productId, productName, productorId, productorName, quantity,
-          price, totalValue, paid, credit, status, measureId, measureName, type_1, observation)
+          price, totalPrice, paid, credit, status, measureId, measureName, type_1, observation)
   }
 
   def list(): Future[Seq[RequestRowProductor]] = db.run {
@@ -106,9 +106,9 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
     tableQ.take(200).map(s => (s.id, s.productorId.toString())).result
   }
 
-  // update required to copy, add totalValue, credit and observations
+  // update required to copy, add totalPrice, credit and observations
   def update(id: Long, requestRowId: Long, productId: Long, productName: String, productorId: Long, productorName: String,
-            quantity: Int, price: Double, totalValue: Double, paid: Double, credit: Double, status: String, measureId: Long,
+            quantity: Int, price: Double, totalPrice: Double, paid: Double, credit: Double, status: String, measureId: Long,
             measureName: String, type_1: String, observation: String):
             Future[Seq[RequestRowProductor]] = db.run {
     val q2 = for { c <- tableQ if c.id === id } yield c.requestRowId
@@ -135,8 +135,8 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
     val q10 = for { c <- tableQ if c.id === id } yield c.type_1
     db.run(q10.update(type_1))
     
-    val q11 = for { c <- tableQ if c.id === id } yield c.totalValue
-    db.run(q11.update(totalValue))
+    val q11 = for { c <- tableQ if c.id === id } yield c.totalPrice
+    db.run(q11.update(totalPrice))
 
     val q12 = for { c <- tableQ if c.id === id } yield c.paid
     db.run(q12.update(paid))

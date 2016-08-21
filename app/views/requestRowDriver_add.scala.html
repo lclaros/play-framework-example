@@ -21,7 +21,7 @@
         @select(field = rowForm("productId"), options = options(products))
         @select(field = rowForm("productorId"), options = options(productors), '_label -> "Transportador")
         @inputText(rowForm("quantity"))
-        @inputText(rowForm("totalValue"))
+        @inputText(rowForm("totalPrice"))
         @inputText(rowForm("paid"))
         @inputText(rowForm("credit"))
         @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")))

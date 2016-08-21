@@ -35,12 +35,10 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
     )(CreateRequestRowForm.apply)(CreateRequestRowForm.unapply)
   }
 
-  //var unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
-  var productRequestsMap = getProductRequestsMap(0)
-  var products = getProductsMap()
-  var productPrice = 0.0
-  var unidades = getMeasuresMap()
-  var updatedRow: RequestRow = new RequestRow(0, 0, 1, "", 2, 1, 1, "", 1, "")
+  var productRequestsMap: Map[String, String] = _
+  var products: Map[String, String] = _
+  var unidades: Map[String, String] = _
+  var updatedRow: RequestRow = _
   var productRequestId: Long = 0
   
   def getMeasuresMap(): Map[String, String] = {
@@ -78,9 +76,10 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
         var productMeasure =  getMeasureById(product1.measureId)
         var requestMeasure = getMeasureById(res.measureId)
         var equivalent =  requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
-
+        val newPrice = equivalent * product1.price
+        val totalPrice = res.quantity * newPrice
         repo.create(res.requestId, res.productId, products(res.productId.toString()),
-                    res.quantity, equivalent * product1.price, res.status,
+                    res.quantity, newPrice, totalPrice, 0, totalPrice, 0, 0, res.status,
                     res.measureId, res.measureId.toString,
                     request.session.get("userId").get.toLong,
                     request.session.get("userName").get.toString).map { resNew =>
@@ -255,7 +254,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
         println("Going to the method")
         repo.update(  
                       res.id, res.requestId, res.productId, products(res.productId.toString),
-                      res.quantity, new_price, res.status, res.measureId, res.measureId.toString,
+                      res.quantity, new_price, res.quantity * new_price, res.status, res.measureId, res.measureId.toString,
                       request.session.get("userId").get.toLong,
                       request.session.get("userName").get.toString
                     ).map { _ =>
