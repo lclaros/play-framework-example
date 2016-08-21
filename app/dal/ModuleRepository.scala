@@ -80,4 +80,13 @@ class ModuleRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repo
     tableQ.take(200).map(s => (s.id, s.name)).result
   }
 
+  def searchModule(search: String): Future[Seq[Module]] = db.run {
+    if (!search.isEmpty) {
+      tableQ.filter(p => (p.name like "%" + search + "%")).drop(0).take(100).result
+    } else {
+      tableQ.drop(0).take(100).result
+    }    
+  }
+
+
 }

@@ -85,7 +85,7 @@ GET     /measure_remove/:id        	controllers.MeasureController.delete(id: Lon
 GET     /measures/:id 				controllers.MeasureController.getById(id: Long)
 POST    /measure_update             controllers.MeasureController.updatePost
 
-POST    /unitMeasure                 controllers.MeasureController.add
+POST    /unitMeasure                controllers.MeasureController.add
 GET     /measure         			controllers.MeasureController.getMeasures
 GET     /measure_list         		controllers.MeasureController.index
 GET     /measure_add         		controllers.MeasureController.addGet
@@ -104,8 +104,8 @@ POST    /user_update            		controllers.UserController.updatePost
 
 POST    /user                 	controllers.UserController.add
 GET     /users         			controllers.UserController.getUsers
-GET     /user_list     		controllers.UserController.index
-GET     /user_add     		controllers.UserController.addGet
+GET     /user_list     			controllers.UserController.index
+GET     /user_add     			controllers.UserController.addGet
 
 # Now for provedores
 GET     /proveedor_show/:id 			controllers.ProveedorController.show(id: Long)
@@ -173,7 +173,7 @@ GET     /transactionDetails         				controllers.TransactionDetailController.
 GET     /transactionDetailsByTransaction/:id		controllers.TransactionDetailController.getTransactionDetailsByTransaction(id: Long)
 GET     /transactionDetailsByAccount/:id			controllers.TransactionDetailController.getTransactionDetailsByAccount(id: Long)
 GET     /transactionDetail_list         			controllers.TransactionDetailController.index
-GET     /transactionDetail_addGet/:id         			controllers.TransactionDetailController.addGet(id: Long)
+GET     /transactionDetail_addGet/:id         		controllers.TransactionDetailController.addGet(id: Long)
 
 # Now for  Discount Report
 GET     /discountReport_show/:id 				controllers.DiscountReportController.show(id: Long)
@@ -232,9 +232,9 @@ POST    /requestRow_update             		controllers.RequestRowController.update
 
 POST    /requestRow                 		controllers.RequestRowController.add
 GET     /requestRows         				controllers.RequestRowController.getRequestRows
-GET     /requestRowsByParent/:id         				controllers.RequestRowController.getRequestRowsByParent(id: Long)
+GET     /requestRowsByParent/:id         	controllers.RequestRowController.getRequestRowsByParent(id: Long)
 GET     /requestRow_list         			controllers.RequestRowController.index
-GET     /requestRow_add/:requestId         			controllers.RequestRowController.addGet(requestId: Long)
+GET     /requestRow_add/:requestId      	controllers.RequestRowController.addGet(requestId: Long)
 
 
 # Now for Product requests Rows
@@ -254,6 +254,8 @@ GET     /requestRowByInsumo_add/:requestId         	controllers.RequestRowByInsu
 # Now for Product requests Rows Productors
 GET     /requestRowProductor_show/:id 				controllers.RequestRowProductorController.show(id: Long)
 GET     /requestRowProductor_update/:id        		controllers.RequestRowProductorController.getUpdate(id: Long)
+GET     /requestRowModule_update/:id        		controllers.RequestRowProductorController.getModuleUpdate(id: Long)
+GET     /requestRowDriver_update/:id        		controllers.RequestRowProductorController.getDriverUpdate(id: Long)
 GET     /requestRowProductor_send/:id        		controllers.RequestRowProductorController.getSend(id: Long)
 GET     /requestRowProductor_fill/:id        		controllers.RequestRowProductorController.getAccept(id: Long)
 GET     /requestRowProductor_finish/:id        		controllers.RequestRowProductorController.getFinish(id: Long)
@@ -261,16 +263,18 @@ GET     /requestRowProductor_remove/:id        		controllers.RequestRowProductor
 GET     /requestRowProductors/:id 					controllers.RequestRowProductorController.getById(id: Long)
 GET     /requestRowProductorsByRequestRow/:id 		controllers.RequestRowProductorController.getByRequestRow(id: Long)
 POST    /requestRowProductor_update             	controllers.RequestRowProductorController.updatePost
+POST    /requestRowModule_update             		controllers.RequestRowProductorController.updateModulePost
+POST    /requestRowDriver_update             		controllers.RequestRowProductorController.updateDriverPost
 
 POST    /requestRowProductor                 		controllers.RequestRowProductorController.add
 POST    /requestRowModule                 			controllers.RequestRowProductorController.addModule
-POST    /requestRowTransport                 		controllers.RequestRowProductorController.addTransport
+POST    /requestRowDriver                 			controllers.RequestRowProductorController.addDriver
 GET     /requestRowProductors         				controllers.RequestRowProductorController.getRequestRowProductors
 GET     /requestRowProductor_list         			controllers.RequestRowProductorController.index
 GET     /requestRowProductorsByProductor/:id    	controllers.RequestRowProductorController.requestRowProductorsByProductor(id: Long)
 GET     /requestRowProductor_add/:requestRowId		controllers.RequestRowProductorController.addGet(requestRowId: Long)
-GET     /requestRowModule_add/:requestRowId		controllers.RequestRowProductorController.addModuleGet(requestRowId: Long)
-GET     /requestRowTransport_add/:requestRowId		controllers.RequestRowProductorController.addTransportGet(requestRowId: Long)
+GET     /requestRowModule_add/:requestRowId			controllers.RequestRowProductorController.addModuleGet(requestRowId: Long)
+GET     /requestRowDriver_add/:requestRowId			controllers.RequestRowProductorController.addDriverGet(requestRowId: Long)
 
 #POST    /insumo                 		controllers.InsumoController.addInsumo
 #GET     /insumos         				controllers.InsumoController.getInsumos
@@ -286,7 +290,7 @@ GET     /reportes_mayor      			controllers.ReporteController.mayor
 GET     /reportes_sumasYSaldos      	controllers.ReporteController.sumasYSaldos
 
 # Now for Product requests
-GET     /transaction_update/:id 	       		controllers.TransactionController.getUpdate(id: Long)
+GET     /transaction_update/:id 	       			controllers.TransactionController.getUpdate(id: Long)
 GET     /transaction_remove/:id        				controllers.TransactionController.delete(id: Long)
 GET     /transactions/:id 							controllers.TransactionController.getById(id: Long)
 
@@ -300,11 +304,11 @@ GET     /transaction_add/:type         				controllers.TransactionController.add
 GET     /transactions         						controllers.TransactionController.getTransactions
 GET     /transaction_list         					controllers.TransactionController.index
 
-GET     /clientes                    	controllers.ClienteController.getClientes
+GET     /clientes                    				controllers.ClienteController.getClientes
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file               				controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /company_update 	       		controllers.CompanyController.getUpdate
-GET     /company_show 						controllers.CompanyController.show
-POST    /company_update     				controllers.CompanyController.updatePost
+GET     /company_update 	       					controllers.CompanyController.getUpdate
+GET     /company_show 								controllers.CompanyController.show
+POST    /company_update     						controllers.CompanyController.updatePost

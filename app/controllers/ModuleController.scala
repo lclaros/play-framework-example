@@ -37,6 +37,13 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
     }
   }
 
+  val searchModuleForm: Form[SearchProductForm] = Form {
+    mapping(
+      "search" -> text
+    )(SearchProductForm.apply)(SearchProductForm.unapply)
+  }
+
+
   var associations: Map[String, String] = _
 
   def getAssociations(): Map[String, String] = {
@@ -157,3 +164,7 @@ case class CreateModuleForm(name: String, president: String, description: String
 
 // Update required
 case class UpdateModuleForm(id: Long, name: String, president: String, description: String, associationId: Long)
+
+case class SearchModuleForm (search: String)
+
+case class SearchDriverForm (search: String)

@@ -22,7 +22,7 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
 class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoRequestRow: RequestRowRepository, 
-                                               repoProduct: ProductRepository, repoModule: ModuleRepository, repoProductor: ProductorRepository,
+                                               repoProduct: ProductRepository, repoModule: ModuleRepository, repoDriver: ProductorRepository, repoProductor: ProductorRepository,
                                                repoUnit: MeasureRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -33,25 +33,42 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       "productorId" -> longNumber,
       "quantity" -> number,
       "price" -> of[Double],
+      "totalValue" -> of[Double],
+      "paid" -> of[Double],
+      "credit" -> of[Double],
       "status" -> text,
       "measureId" -> longNumber,
-      "payType" -> text
+      "observation" -> text
     )(CreateRequestRowProductorForm.apply)(CreateRequestRowProductorForm.unapply)
   }
 
-  val payTypes = scala.collection.immutable.Map[String, String]("En Efectivo" -> "En Efectivo", "A Credito" -> "A Credito")
+  val newDriverForm: Form[CreateRequestRowDriverForm] = Form {
+    mapping(
+      "requestRowId" -> longNumber,
+      "productId" -> longNumber,
+      "productorId" -> longNumber,
+      "quantity" -> number,
+      "totalValue" -> of[Double],
+      "paid" -> of[Double],
+      "credit" -> of[Double],
+      "status" -> text,
+      "measureId" -> longNumber,
+      "observation" -> text
+    )(CreateRequestRowDriverForm.apply)(CreateRequestRowDriverForm.unapply)
+  }
+
   var measures = getMeasureMap()
   var requestRows = getRequestRowsMap(0)
-  var products = getProducstMap(0)
-  var productors = getProductorsMap()
-  var modules = getModulesMap()
-  var transports = getTransportsMap()
+  var products = getProducts(0)
+  var productors = getProductors()
+  var modules = getModules()
+  var drivers = getDrivers()
   var updatedRow: RequestRowProductor = _
   var parentId: Long = _
   var requestRow: RequestRow = _
   val productorType = "productor"
   val moduleType = "module"
-  val transportType = "transport"
+  val driverType = "driver"
 
   def index = Action.async { implicit request => 
     repo.list().map { res =>
@@ -71,7 +88,6 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      
       cache.toMap
     }, 3000.millis)
   }
@@ -80,49 +96,49 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     parentId = requestRowId
     requestRow = getRequestRowObj(requestRowId)
     requestRows = getRequestRowsMap(requestRowId)
-    products = getProducstMap(requestRow.productId)
-    productors = getProductorsMap()
+    products = getProducts(requestRow.productId)
+    productors = getProductors()
     measures = getMeasureMap()
     Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, searchProductorForm, newForm, requestRows,
-                                          products, productors, measures, payTypes))
+                                          products, productors, measures))
   }
 
   def addModuleGet(requestRowId: Long) = Action { implicit request =>
     parentId = requestRowId
     requestRow = getRequestRowObj(requestRowId)
     requestRows = getRequestRowsMap(requestRowId)
-    products = getProducstMap(requestRow.productId)
-    modules = getModulesMap()
+    products = getProducts(requestRow.productId)
+    modules = getModules()
     measures = getMeasureMap()
-    Ok(views.html.requestRowModule_add(new MyDeadboltHandler, parentId, searchProductorForm, newForm, requestRows,
-                                          products, modules, measures, payTypes))
+    Ok(views.html.requestRowModule_add(new MyDeadboltHandler, parentId, searchModuleForm, newForm, requestRows,
+                                          products, modules, measures))
   }
 
-  def addTransportGet(requestRowId: Long) = Action { implicit request =>
+  def addDriverGet(requestRowId: Long) = Action { implicit request =>
     parentId = requestRowId
     requestRow = getRequestRowObj(requestRowId)
     requestRows = getRequestRowsMap(requestRowId)
-    products = getProducstMap(requestRow.productId)
-    transports = getTransportsMap()
+    products = getProducts(requestRow.productId)
+    drivers = getDrivers()
     measures = getMeasureMap()
-    Ok(views.html.requestRowTransport_add(new MyDeadboltHandler, parentId, searchProductorForm, newForm, requestRows,
-                                          products, transports, measures, payTypes))
+    Ok(views.html.requestRowDriver_add(new MyDeadboltHandler, parentId, searchDriverForm, newDriverForm, requestRows,
+                                          products, drivers, measures))
   }
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         println(errorForm)
         Future.successful(Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, searchProductorForm, errorForm,
-                              requestRows, products, productors, measures, payTypes)))
+                              requestRows, products, productors, measures)))
       },
       res => {
         repo.create(  
                       res.requestRowId, res.productId, products(res.productId.toString()),
                       res.productorId, productors(res.productorId.toString()),
-                      res.quantity, res.price, res.status, res.measureId,
-                      measures(res.measureId.toString()), res.payType, productorType
+                      res.quantity, res.price, res.totalValue, res.paid, res.credit, res.status, res.measureId,
+                      measures(res.measureId.toString()), productorType, res.observation
                     ).map { resNew =>
-          repoProductor.updateTotalDebt(res.productorId, res.price);
+          repoProductor.updateTotalDebt(res.productorId, res.credit);
           Redirect(routes.RequestRowProductorController.show(resNew.id))
         }
       }
@@ -132,39 +148,39 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   def addModule = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        println(errorForm)
-        Future.successful(Ok(views.html.requestRowModule_add(new MyDeadboltHandler, parentId, searchProductorForm, errorForm,
-                              requestRows, products, modules, measures, payTypes)))
+        Future.successful(Ok(views.html.requestRowModule_add(new MyDeadboltHandler, parentId, searchModuleForm, errorForm,
+                              requestRows, products, modules, measures)))
       },
       res => {
         repo.create(  
                       res.requestRowId, res.productId, products(res.productId.toString()),
                       res.productorId, modules(res.productorId.toString()),
-                      res.quantity, res.price, res.status, res.measureId,
-                      measures(res.measureId.toString()), res.payType, moduleType
+                      res.quantity, res.price, res.totalValue, res.paid, res.credit,
+                      res.status, res.measureId, measures(res.measureId.toString()), moduleType, res.observation
                     ).map { resNew =>
-          repoProductor.updateTotalDebt(res.productorId, res.price);
+          //repoModule.updateTotalDebt(res.productorId, res.credit);
           Redirect(routes.RequestRowProductorController.show(resNew.id))
         }
       }
     )
   }
 
-  def addTransport = Action.async { implicit request =>
-    newForm.bindFromRequest.fold(
+  def addDriver = Action.async { implicit request =>
+    newDriverForm.bindFromRequest.fold(
       errorForm => {
         println(errorForm)
-        Future.successful(Ok(views.html.requestRowTransport_add(new MyDeadboltHandler, parentId, searchProductorForm, errorForm,
-                              requestRows, products, transports, measures, payTypes)))
+        Future.successful(Ok(views.html.requestRowDriver_add(new MyDeadboltHandler, parentId, searchDriverForm, errorForm,
+                              requestRows, products, drivers, measures)))
       },
       res => {
         repo.create(  
                       res.requestRowId, res.productId, products(res.productId.toString()),
-                      res.productorId, transports(res.productorId.toString()),
-                      res.quantity, res.price, res.status, res.measureId,
-                      measures(res.measureId.toString()), res.payType, transportType
+                      res.productorId, drivers(res.productorId.toString()),
+                      res.quantity, 0, res.totalValue, res.paid, res.credit,
+                      res.status, res.measureId, measures(res.measureId.toString()),
+                      driverType, res.observation
                     ).map { resNew =>
-          repoProductor.updateTotalDebt(res.productorId, res.price);
+          //repoProductor.updateTotalDebt(res.productorId, res.credit);
           Redirect(routes.RequestRowProductorController.show(resNew.id))
         }
       }
@@ -186,12 +202,31 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       "productorId" -> longNumber,
       "quantity" -> number,
       "price" -> of[Double],
+      "totalValue" -> of[Double],
+      "paid" -> of[Double],
+      "credit" -> of[Double],
       "status" -> text,
       "measureId" -> longNumber,
-      "payType" -> text
-
+      "observation" -> text
     )(UpdateRequestRowProductorForm.apply)(UpdateRequestRowProductorForm.unapply)
   }
+
+  val updateDriverForm: Form[UpdateRequestRowDriverForm] = Form {
+    mapping(
+      "id" -> longNumber,
+      "requestRowId" -> longNumber,
+      "productId" -> longNumber,
+      "productorId" -> longNumber,
+      "quantity" -> number,
+      "totalValue" -> of[Double],
+      "paid" -> of[Double],
+      "credit" -> of[Double],
+      "status" -> text,
+      "measureId" -> longNumber,
+      "observation" -> text
+    )(UpdateRequestRowDriverForm.apply)(UpdateRequestRowDriverForm.unapply)
+  }
+
 
   // to copy
   def show(id: Long) = Action.async { implicit request =>
@@ -206,15 +241,57 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       updatedRow = res(0)
       val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> updatedRow.requestRowId.toString(),
                                 "productId" -> updatedRow.productId.toString(), "productorId" -> updatedRow.productorId.toString(),
-                                "quantity" -> updatedRow.quantity.toString(), "price" -> updatedRow.price.toString(), "status" -> updatedRow.status.toString(), 
-                                "measureId" -> updatedRow.measureId.toString(), "payType" -> updatedRow.payType.toString())
+                                "quantity" -> updatedRow.quantity.toString(), "price" -> updatedRow.price.toString(), 
+                                "totalValue" -> updatedRow.price.toString(), "paid" -> updatedRow.price.toString(),
+                                "credit" -> updatedRow.price.toString(), "status" -> updatedRow.status.toString(), 
+                                "measureId" -> updatedRow.measureId.toString(), "observation" -> updatedRow.observation)
       requestRows = getRequestRowsMap(updatedRow.requestRowId)
       requestRow = getRequestRowObj(updatedRow.requestRowId)
-      products = getProducstMap(requestRow.productId)
-      productors = getProductorsMapById(updatedRow.productId)
+      products = getProducts(requestRow.productId)
+      productors = getProductorById(updatedRow.productId)
 
       Ok(views.html.requestRowProductor_update(new MyDeadboltHandler, updatedRow,
-                updateForm.bind(anyData), requestRows, products, productors, measures, payTypes))
+                updateForm.bind(anyData), requestRows, products, productors, measures))
+
+    }
+  }
+
+  // update required
+  def getModuleUpdate(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map {case (res) =>
+      updatedRow = res(0)
+      val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> updatedRow.requestRowId.toString(),
+                                "productId" -> updatedRow.productId.toString(), "productorId" -> updatedRow.productorId.toString(),
+                                "quantity" -> updatedRow.quantity.toString(), "price" -> updatedRow.price.toString(), 
+                                "totalValue" -> updatedRow.price.toString(), "paid" -> updatedRow.price.toString(),
+                                "credit" -> updatedRow.price.toString(), "status" -> updatedRow.status.toString(), 
+                                "measureId" -> updatedRow.measureId.toString(), "observation" -> updatedRow.observation)
+      requestRows = getRequestRowsMap(updatedRow.requestRowId)
+      requestRow = getRequestRowObj(updatedRow.requestRowId)
+      products = getProducts(requestRow.productId)
+      modules = getModuleById(updatedRow.productId)
+      Ok(views.html.requestRowModule_update(new MyDeadboltHandler, updatedRow,
+                updateForm.bind(anyData), requestRows, products, modules, measures))
+    }
+  }
+
+  // update required
+  def getDriverUpdate(id: Long) = Action.async { implicit request =>
+    repo.getById(id).map {case (res) =>
+      updatedRow = res(0)
+      val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> updatedRow.requestRowId.toString(),
+                                "productId" -> updatedRow.productId.toString(), "productorId" -> updatedRow.productorId.toString(),
+                                "quantity" -> updatedRow.quantity.toString(), 
+                                "totalValue" -> updatedRow.price.toString(), "paid" -> updatedRow.price.toString(),
+                                "credit" -> updatedRow.price.toString(), "status" -> updatedRow.status.toString(), 
+                                "measureId" -> updatedRow.measureId.toString(), "observation" -> updatedRow.observation)
+      requestRows = getRequestRowsMap(updatedRow.requestRowId)
+      requestRow = getRequestRowObj(updatedRow.requestRowId)
+      products = getProducts(requestRow.productId)
+      drivers = getDriverById(updatedRow.productId)
+
+      Ok(views.html.requestRowDriver_update(new MyDeadboltHandler, updatedRow,
+                updateDriverForm.bind(anyData), requestRows, products, drivers, measures))
 
     }
   }
@@ -229,7 +306,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     }, 3000.millis)
   }
 
-  def getProducstMap(id: Long): Map[String, String] = {
+  def getProducts(id: Long): Map[String, String] = {
     Await.result(repoProduct.getById(id).map { res1 => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ product => 
@@ -239,7 +316,27 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     }, 3000.millis)
   }
 
-  def getProductorsMap(): Map[String, String] = {
+  def getModules(id: Long): Map[String, String] = {
+    Await.result(repoModule.getById(id).map { res1 => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ product => 
+        cache put (product.id.toString(), product.name)
+      }
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getDrivers(id: Long): Map[String, String] = {
+    Await.result(repoProduct.getById(id).map { res1 => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ product => 
+        cache put (product.id.toString(), product.name)
+      }
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getProductors(): Map[String, String] = {
     Await.result(repoProductor.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -250,7 +347,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     }, 3000.millis)
   }
 
-  def getModulesMap(): Map[String, String] = {
+  def getModules(): Map[String, String] = {
     Await.result(repoModule.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -261,7 +358,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     }, 3000.millis)
   }
 
-  def getTransportsMap(): Map[String, String] = {
+  def getDrivers(): Map[String, String] = {
     Await.result(repoProductor.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -272,11 +369,31 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     }, 3000.millis)
   }
 
-  def getProductorsMapById(productId: Long): Map[String, String] = {
+  def getProductorById(productId: Long): Map[String, String] = {
     Await.result(repoProductor.getById(productId).map{ case res1 => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { product => 
         cache put (product.id.toString, product.name)
+      }      
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getModuleById(moduleId: Long): Map[String, String] = {
+    Await.result(repoModule.getById(moduleId).map{ case res1 => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach { module => 
+        cache put (module.id.toString, module.name)
+      }      
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getDriverById(driverId: Long): Map[String, String] = {
+    Await.result(repoDriver.getById(driverId).map{ case res1 => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach { driver => 
+        cache put (driver.id.toString, driver.name)
       }      
       cache.toMap
     }, 3000.millis)
@@ -342,12 +459,47 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowProductor_update(new MyDeadboltHandler, updatedRow,
-                                            errorForm, requestRows, products, productors, measures, payTypes)))
+                                            errorForm, requestRows, products, productors, measures)))
       },
       res => {
         repo.update(res.id, res.requestRowId, res.productId, products(res.productId.toString), res.productorId,
-                    productors(res.productorId.toString), res.quantity, res.price, res.status, res.measureId,
-                      measures(res.measureId.toString()), res.payType, productorType).map { _ =>
+                    productors(res.productorId.toString), res.quantity, res.price, res.totalValue, res.paid, 
+                    res.credit, res.status, res.measureId, measures(res.measureId.toString()),
+                    productorType, res.observation).map { _ =>
+          Redirect(routes.RequestRowProductorController.show(res.id))
+        }
+      }
+    )
+  }
+
+  def updateModulePost = Action.async { implicit request =>
+    updateForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.requestRowModule_update(new MyDeadboltHandler, updatedRow,
+                                            errorForm, requestRows, products, modules, measures)))
+      },
+      res => {
+        repo.update(res.id, res.requestRowId, res.productId, products(res.productId.toString), res.productorId,
+                    modules(res.productorId.toString), res.quantity, res.price, res.totalValue, res.paid, 
+                    res.credit, res.status, res.measureId, measures(res.measureId.toString()),
+                    moduleType, res.observation).map { _ =>
+          Redirect(routes.RequestRowProductorController.show(res.id))
+        }
+      }
+    )
+  }
+
+  def updateDriverPost = Action.async { implicit request =>
+    updateDriverForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.requestRowDriver_update(new MyDeadboltHandler, updatedRow,
+                                            errorForm, requestRows, products, drivers, measures)))
+      },
+      res => {
+        repo.update(res.id, res.requestRowId, res.productId, products(res.productId.toString), res.productorId,
+                    drivers(res.productorId.toString), res.quantity, 0, res.totalValue, res.paid, 
+                    res.credit, res.status, res.measureId, measures(res.measureId.toString()),
+                    driverType, res.observation).map { _ =>
           Redirect(routes.RequestRowProductorController.show(res.id))
         }
       }
@@ -360,11 +512,23 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
     )(SearchProductorForm.apply)(SearchProductorForm.unapply)
   }
 
-  def searchProductorPost = Action.async{ implicit request =>
+  val searchModuleForm: Form[SearchModuleForm] = Form {
+    mapping(
+      "search" -> text
+    )(SearchModuleForm.apply)(SearchModuleForm.unapply)
+  }
+
+  val searchDriverForm: Form[SearchDriverForm] = Form {
+    mapping(
+      "search" -> text
+    )(SearchDriverForm.apply)(SearchDriverForm.unapply)
+  }
+
+  def searchProductorPost = Action.async { implicit request =>
     searchProductorForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, searchProductorForm,
-                          newForm, requestRows, products, productors, measures, payTypes)))
+                          newForm, requestRows, products, productors, measures)))
       },
       res => {
         repoProductor.searchProductor(res.search).map { resProductors =>
@@ -373,13 +537,70 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
             cache put (productor.id.toString(), productor.account.toString + ": " +productor.name.toString)
           }
           productors = cache.toMap
-          Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, searchProductorForm, newForm, requestRows, products, productors, measures, payTypes))
+          Ok(views.html.requestRowProductor_add(new MyDeadboltHandler, parentId, searchProductorForm, newForm, requestRows, products, productors, measures))
         }
       }
     )
   }
+  
+  def searchModulePost = Action.async { implicit request =>
+    searchModuleForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.requestRowModule_add(new MyDeadboltHandler, parentId, searchModuleForm,
+                          newForm, requestRows, products, productors, measures)))
+      },
+      res => {
+        repoModule.searchModule(res.search).map { resModules =>
+          val cache = collection.mutable.Map[String, String]()
+          resModules.map { module => 
+            cache put (module.id.toString(), module.name.toString)
+          }
+          productors = cache.toMap
+          Ok(views.html.requestRowModule_add(new MyDeadboltHandler, parentId, searchModuleForm, newForm,
+            requestRows, products, productors, measures))
+        }
+      }
+    )
+  }
+
+  def searchDriverPost = Action.async { implicit request =>
+    searchDriverForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.requestRowDriver_add(new MyDeadboltHandler, parentId, searchDriverForm,
+                          newDriverForm, requestRows, products, productors, measures)))
+      },
+      res => {
+        repoDriver.searchProductor(res.search).map { resDrivers =>
+          val cache = collection.mutable.Map[String, String]()
+          resDrivers.map { driver => 
+            cache put (driver.id.toString(), driver.name.toString)
+          }
+          productors = cache.toMap
+          Ok(views.html.requestRowDriver_add(new MyDeadboltHandler, parentId, searchDriverForm, newDriverForm,
+            requestRows, products, productors, measures))
+        }
+      }
+    )
+  }
+
 }
 
-case class CreateRequestRowProductorForm(requestRowId: Long, productId: Long, productorId: Long, quantity: Int, price: Double, status: String, measureId: Long, payType: String)
+case class CreateRequestRowProductorForm(requestRowId: Long, productId: Long,
+                productorId: Long, quantity: Int,
+                price: Double, totalValue: Double, paid: Double, credit: Double, status: String,
+                measureId: Long, observation: String)
 
-case class UpdateRequestRowProductorForm(id: Long, requestRowId: Long, productId: Long, productorId: Long, quantity: Int, price: Double, status: String, measureId: Long, payType: String)
+case class CreateRequestRowDriverForm(requestRowId: Long, productId: Long,
+                productorId: Long, quantity: Int,
+                totalValue: Double, paid: Double, credit: Double, status: String,
+                measureId: Long, observation: String)
+
+case class UpdateRequestRowProductorForm(id: Long, requestRowId: Long, productId: Long,
+                productorId: Long, quantity: Int,
+                price: Double, totalValue: Double, paid: Double, credit: Double, status: String,
+                measureId: Long, observation: String)
+
+case class UpdateRequestRowDriverForm(id: Long, requestRowId: Long, productId: Long,
+                productorId: Long, quantity: Int,
+                totalValue: Double, paid: Double, credit: Double, status: String,
+                measureId: Long, observation: String)

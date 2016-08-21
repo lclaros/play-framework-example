@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRow: RequestRowProductor, row: Form[UpdateRequestRowProductorForm], requests: Map[String, String], productos: Map[String, String], productors: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRow: RequestRowProductor, row: Form[UpdateRequestRowDriverForm], requests: Map[String, String], productos: Map[String, String], drivers: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -6,20 +6,19 @@
     @examples.templates.nav(handler)
     <div class="container">
     	@restrict(roles = List(Array("requestRowShow"))) {
-            <a href="/requestRow_show/@requestRow.requestRowId" class="btn btn-primary btn-sm">Detalle de Pedido</a> 
+            <a href="/requestRowByInsumo_show/@requestRow.requestRowId" class="btn btn-primary btn-sm">Detalle de Pedido</a>
         }
         @restrict(roles = List(Array("requestRowProductorShow"))) {
-            <a href="/requestRowProductor_show/@requestRow.id" class="btn btn-info btn-sm">Mostrar</a> 
+            <a href="/requestRowProductor_show/@requestRow.id" class="btn btn-info btn-sm">Mostrar</a>
         }
         @restrict(roles = List(Array("requestRowProductorDelete"))) {
            <a href="/requestRowProductor_remove/@requestRow.id" class="btn btn-danger btn-sm">Eliminar</a>
         }
     </div>
-    @form(routes.RequestRowProductorController.updatePost()) {
+    @form(routes.RequestRowProductorController.updateDriverPost()) {
         @select(field = row("productId"), options = options(productos))
-        @select(field = row("productorId"), options = options(productors))
+        @select(field = row("productorId"), options = options(drivers), '_label -> "Transportador")
         @inputText(row("quantity"))
-        @inputText(row("price"))
         @inputText(row("totalValue"))
         @inputText(row("paid"))
         @inputText(row("credit"))

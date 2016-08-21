@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, searchForm: Form[SearchProductorForm], rowForm: Form[CreateRequestRowProductorForm], requests: Map[String, String], products: Map[String, String], productors: Map[String, String], measures: Map[String, String], payTypes: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, searchForm: Form[SearchDriverForm], rowForm: Form[CreateRequestRowDriverForm], requests: Map[String, String], products: Map[String, String], productors: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -17,14 +17,16 @@
         }        
     </div>
 
-    @form(routes.RequestRowProductorController.addTransport()) {
+    @form(routes.RequestRowProductorController.addDriver()) {
         @select(field = rowForm("productId"), options = options(products))
         @select(field = rowForm("productorId"), options = options(productors), '_label -> "Transportador")
         @inputText(rowForm("quantity"))
-        @inputText(rowForm("price"))
+        @inputText(rowForm("totalValue"))
+        @inputText(rowForm("paid"))
+        @inputText(rowForm("credit"))
         @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")))
         @select(field = rowForm("measureId"), options = options(measures)))
-        @select(field = rowForm("payType"), options = options(payTypes)))
+        @inputText(rowForm("observation"))
         <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/requestRowByInsumo_show/@requestRowId" class="btn btn-primary btn-sm">Cancelar</a>
         @select(field = rowForm("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")

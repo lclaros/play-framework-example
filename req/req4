@@ -1,4 +1,9 @@
 TODO
+August 20
+    Request Rows (productor, module, transporte)
+        Added new fields(totalValue, paid, credit)
+        Removed field(payType)
+
 August 19
     RequestRowInsumo Module
         Duplicate just the VIEW

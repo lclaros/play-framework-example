@@ -27,36 +27,40 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
     def requestRowId = column[Long]("requestRowId")
     def productId = column[Long]("productId")
     def productName = column[String]("productName")
-    def productorId = column[Long]("productorId")
+    def productorId = column[Long]("productorId") // productor, module, driver
     def productorName = column[String]("productorName")
-    def quantity = column[Int]("quantity")
-    def price = column[Double]("price")
-    def paid = column[Double]("paid")
-    def status = column[String]("status")
-    def measureId = column[Long]("measureId")
-    def measureName = column[String]("measureName")
-    def payType = column[String]("payType")
-    def type_1 = column[String]("type")
+    def quantity = column[Int]("quantity") // amount of products
+    def price = column[Double]("price") // unit price of the product
+    def totalValue = column[Double]("cuota") // price * quantity
+    def paid = column[Double]("paid") // money already paid at the moment
+    def credit = column[Double]("debt") // the value that need to pay with discount on another baucher
+    def status = column[String]("status") // completed, credit, 
+    def measureId = column[Long]("measureId") // measure of the paid
+    def measureName = column[String]("measureName") 
+    def type_1 = column[String]("type") // productor, module, driver
+    def observation = column[String]("payType") // observations of the pay
     def * = (id, requestRowId, productId, productName, productorId, productorName,
-            quantity, price, paid, status, measureId, measureName, payType, type_1) <> 
+            quantity, price, totalValue, paid, credit, status, measureId, measureName, type_1, observation) <> 
             ((RequestRowProductor.apply _).tupled, RequestRowProductor.unapply)
   }
 
   private val tableQ = TableQuery[RequestRowProductorTable]
 
   def create(requestRowId: Long, productId: Long, productName: String, productorId: Long, productorName: String,
-            quantity: Int, price: Double, status: String, measureId: Long, measureName: String, payType: String, type_1: String):
+            quantity: Int, price: Double, totalValue: Double, paid: Double, credit: Double,
+            status: String, measureId: Long, measureName: String, type_1: String, observation: String):
             Future[RequestRowProductor] = db.run {
     (tableQ.map(p => (p.requestRowId, p.productId, p.productName, p.productorId, p.productorName, p.quantity,
-                p.price, p.paid, p.status, p.measureId, p.measureName, p.payType, p.type_1))
+                p.price, p.totalValue, p.paid, p.credit, p.status, p.measureId, p.measureName, p.type_1, p.observation))
       returning tableQ.map(_.id)
       into ((nameAge, id) => RequestRowProductor(
                                                   id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7,
-                                                  nameAge._8, nameAge._9, nameAge._10, nameAge._11, nameAge._12, nameAge._13
+                                                  nameAge._8, nameAge._9, nameAge._10, nameAge._11, nameAge._12, nameAge._13, nameAge._14,
+                                                  nameAge._15
                                                 )
             )
     ) += (requestRowId, productId, productName, productorId, productorName, quantity,
-          price, 0, status, measureId, measureName, payType, type_1)
+          price, totalValue, paid, credit, status, measureId, measureName, type_1, observation)
   }
 
   def list(): Future[Seq[RequestRowProductor]] = db.run {
@@ -86,6 +90,14 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
     tableQ.filter(_.requestRowId === id).result
   }
 
+  def listModulesByParent(id: Long): Future[Seq[RequestRowProductor]] = db.run {
+    tableQ.filter(x => x.requestRowId === id && x.type_1 === "module").result
+  }
+
+  def listDriversByParent(id: Long): Future[Seq[RequestRowProductor]] = db.run {
+    tableQ.filter(x => x.requestRowId === id && x.type_1 === "driver").result
+  }
+
   def listByProductor(id: Long): Future[Seq[RequestRowProductor]] = db.run {
     tableQ.filter(_.productorId === id).result
   }
@@ -94,9 +106,10 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
     tableQ.take(200).map(s => (s.id, s.productorId.toString())).result
   }
 
-  // update required to copy
+  // update required to copy, add totalValue, credit and observations
   def update(id: Long, requestRowId: Long, productId: Long, productName: String, productorId: Long, productorName: String,
-            quantity: Int, price: Double, status: String, measureId: Long, measureName: String, payType: String, type_1: String):
+            quantity: Int, price: Double, totalValue: Double, paid: Double, credit: Double, status: String, measureId: Long,
+            measureName: String, type_1: String, observation: String):
             Future[Seq[RequestRowProductor]] = db.run {
     val q2 = for { c <- tableQ if c.id === id } yield c.requestRowId
     db.run(q2.update(requestRowId))
@@ -119,10 +132,21 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
     db.run(q7.update(measureId))
     val q8 = for { c <- tableQ if c.id === id } yield c.measureName
     db.run(q8.update(measureName))
-    val q9 = for { c <- tableQ if c.id === id } yield c.payType
-    db.run(q9.update(payType))
     val q10 = for { c <- tableQ if c.id === id } yield c.type_1
     db.run(q10.update(type_1))
+    
+    val q11 = for { c <- tableQ if c.id === id } yield c.totalValue
+    db.run(q11.update(totalValue))
+
+    val q12 = for { c <- tableQ if c.id === id } yield c.paid
+    db.run(q12.update(paid))
+
+    val q13 = for { c <- tableQ if c.id === id } yield c.credit
+    db.run(q13.update(credit))
+
+    val q14 = for { c <- tableQ if c.id === id } yield c.observation
+    db.run(q14.update(observation))
+
     tableQ.filter(_.id === id).result
   }
 
