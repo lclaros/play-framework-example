@@ -111,56 +111,25 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
             quantity: Int, price: Double, totalPrice: Double, paid: Double, credit: Double, status: String, measureId: Long,
             measureName: String, type_1: String, observation: String):
             Future[Seq[RequestRowProductor]] = db.run {
-    val q2 = for { c <- tableQ if c.id === id } yield c.requestRowId
-    db.run(q2.update(requestRowId))
-    val q = for { c <- tableQ if c.id === id } yield c.productId
-    db.run(q.update(productId))
-    val q1 = for { c <- tableQ if c.id === id } yield c.productName
-    db.run(q1.update(productName))
-    val q3 = for { c <- tableQ if c.id === id } yield c.productorId
-    db.run(q3.update(productorId))
-    val q31 = for { c <- tableQ if c.id === id } yield c.productorName
-    db.run(q31.update(productorName))
-    val q4 = for { c <- tableQ if c.id === id } yield c.quantity
-    db.run(q4.update(quantity))
-    val q5 = for { c <- tableQ if c.id === id } yield c.price
-    db.run(q5.update(price))
-    val q6 = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q6.update(status))
-    
-    val q7 = for { c <- tableQ if c.id === id } yield c.measureId
-    db.run(q7.update(measureId))
-    val q8 = for { c <- tableQ if c.id === id } yield c.measureName
-    db.run(q8.update(measureName))
-    val q10 = for { c <- tableQ if c.id === id } yield c.type_1
-    db.run(q10.update(type_1))
-    
-    val q11 = for { c <- tableQ if c.id === id } yield c.totalPrice
-    db.run(q11.update(totalPrice))
-
-    val q12 = for { c <- tableQ if c.id === id } yield c.paid
-    db.run(q12.update(paid))
-
-    val q13 = for { c <- tableQ if c.id === id } yield c.credit
-    db.run(q13.update(credit))
-
-    val q14 = for { c <- tableQ if c.id === id } yield c.observation
-    db.run(q14.update(observation))
-
+    db.run(tableQ.filter(_.id === id).map(x => (
+                                                  x.requestRowId, x.productId, x.productName, x.productorId, x.productorName,
+                                                  x.quantity, x.price, x.totalPrice, x.paid, x.credit, x.status, x.measureId,
+                                                  x.measureName, x.type_1, x.observation))
+                                          .update(requestRowId, productId, productName, productorId, productorName, quantity, price,
+                                                  totalPrice, paid, credit, status, measureId, measureName, type_1, observation
+                                                  ))
     tableQ.filter(_.id === id).result
   }
 
   // Update the status to enviado status
   def sendById(id: Long): Future[Seq[RequestRowProductor]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("enviado"))
     tableQ.filter(_.id === id).result
   }
 
   // Update the status to enviado status
   def acceptById(id: Long): Future[Seq[RequestRowProductor]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("aceptado"))
     tableQ.filter(_.id === id).result
   }
 
@@ -176,7 +145,6 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
   // Update the status to finalizado status
   def finishById(id: Long): Future[Seq[RequestRowProductor]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("finalizado"))
     tableQ.filter(_.id === id).result
   }
 

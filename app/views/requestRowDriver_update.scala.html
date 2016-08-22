@@ -18,15 +18,15 @@
     @form(routes.RequestRowProductorController.updateDriverPost()) {
         @select(field = row("productId"), options = options(productos))
         @select(field = row("productorId"), options = options(drivers), '_label -> "Transportador")
-        @inputText(row("quantity"))
-        @inputText(row("totalPrice"))
         @inputText(row("paid"))
         @inputText(row("credit"))
         @inputText(row("status"))
-        @select(field = row("measureId"), options = options(measures)))
         @inputText(row("observation"))
         <input type="submit" value="Actualizar"  class="btn btn-primary btn-sm"/>
         <a href="/requestRowProductor_show/@requestRow.id" class="btn btn-primary btn-sm">Cancelar</a>
+        @inputText(row("quantity"), 'hidden -> "true", '_label -> "")
+        @select(field = row("measureId"), options = options(measures)), 'hidden -> "true", '_label -> "")
+        @inputText(row("totalPrice"), 'hidden -> "true", '_label -> "")
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @select(field = row("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")
     }

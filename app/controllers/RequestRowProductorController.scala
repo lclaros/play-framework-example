@@ -138,8 +138,8 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
                       res.quantity, res.price, res.totalPrice, res.paid, res.credit, res.status, res.measureId,
                       measures(res.measureId.toString()), productorType, res.observation
                     ).map { resNew =>
-          repoProductor.updateTotalDebt(res.productorId, res.credit);
-          repoRequestRow.updateRequestRow(res.requestRowId, res.paid, res.credit)
+          repoProductor.updateTotalDebt(res.productorId, res.credit)// in productor table
+          repoRequestRow.updateRequestRow(res.requestRowId, res.paid, res.credit) // in request row table
           Redirect(routes.RequestRowProductorController.show(resNew.id))
         }
       }
@@ -178,7 +178,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
         repo.create(  
                       res.requestRowId, res.productId, products(res.productId.toString()),
                       res.productorId, drivers(res.productorId.toString()),
-                      res.quantity, 0, res.totalPrice, res.paid, res.credit,
+                      0, 0, res.paid, res.paid, 0,
                       res.status, res.measureId, measures(res.measureId.toString()),
                       driverType, res.observation
                     ).map { resNew =>
@@ -245,8 +245,8 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> updatedRow.requestRowId.toString(),
                                 "productId" -> updatedRow.productId.toString(), "productorId" -> updatedRow.productorId.toString(),
                                 "quantity" -> updatedRow.quantity.toString(), "price" -> updatedRow.price.toString(), 
-                                "totalPrice" -> updatedRow.price.toString(), "paid" -> updatedRow.price.toString(),
-                                "credit" -> updatedRow.price.toString(), "status" -> updatedRow.status.toString(), 
+                                "totalPrice" -> updatedRow.totalPrice.toString(), "paid" -> updatedRow.paid.toString(),
+                                "credit" -> updatedRow.credit.toString(), "status" -> updatedRow.status.toString(), 
                                 "measureId" -> updatedRow.measureId.toString(), "observation" -> updatedRow.observation)
       requestRows = getRequestRowsMap(updatedRow.requestRowId)
       requestRow = getRequestRowObj(updatedRow.requestRowId)
@@ -469,6 +469,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
                     productors(res.productorId.toString), res.quantity, res.price, res.totalPrice, res.paid, 
                     res.credit, res.status, res.measureId, measures(res.measureId.toString()),
                     productorType, res.observation).map { _ =>
+          repoRequestRow.updateRequestRow(res.requestRowId, res.paid - updatedRow.paid, res.credit - updatedRow.credit) // in request row table
           Redirect(routes.RequestRowProductorController.show(res.id))
         }
       }
@@ -486,6 +487,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
                     modules(res.productorId.toString), res.quantity, res.price, res.totalPrice, res.paid, 
                     res.credit, res.status, res.measureId, measures(res.measureId.toString()),
                     moduleType, res.observation).map { _ =>
+          repoRequestRow.updateRequestRow(res.requestRowId, res.paid - updatedRow.paid, res.credit - updatedRow.credit) // in request row table
           Redirect(routes.RequestRowProductorController.show(res.id))
         }
       }
@@ -503,6 +505,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
                     drivers(res.productorId.toString), res.quantity, 0, res.totalPrice, res.paid, 
                     res.credit, res.status, res.measureId, measures(res.measureId.toString()),
                     driverType, res.observation).map { _ =>
+          repoRequestRow.updateRequestRowDriver(res.requestRowId, res.paid - updatedRow.paid, res.credit - updatedRow.credit) // in request row table
           Redirect(routes.RequestRowProductorController.show(res.id))
         }
       }
@@ -585,7 +588,6 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       }
     )
   }
-
 }
 
 case class CreateRequestRowProductorForm(requestRowId: Long, productId: Long,
