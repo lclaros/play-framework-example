@@ -1,4 +1,23 @@
 TODO
+August 22
+    Progress bar example
+        - on request row
+    Image loading
+        - 
+    Javascript functions(TODO)
+        - On the request row productor, module and driver
+
+August 21
+    Parent Updates after do some operation in the children Rows(ON TESTING)
+        - Productor
+        - Module
+        - Driver
+    Add fields on the parent to save the amount payed of acredit on the request to show later
+    a status bar of the row
+        - product request
+        - request row(DONE)
+        - product request insumo
+        - request row insumo
 August 20
     Request Rows (productor, module, transporte)
         Added new fields(totalValue, paid, credit)
