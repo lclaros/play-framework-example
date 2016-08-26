@@ -167,13 +167,18 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     Await.result(repo.getById(id).map {res => res(0).transactionId }, 1000.millis)
   }
 
+  def getByIdNow(id: Long): TransactionDetail = {
+    Await.result(repo.getById(id).map {res => res(0) }, 1000.millis)
+  }
+
   // delete required
   def delete(id: Long) = Action.async {
     parentId = getParentId(id)
+    var deletedRecord = getByIdNow(id)
+    repoAccounts.updateParentDebitCredit(deletedRecord.accountId, -deletedRecord.debit, -deletedRecord.credit);
     repo.delete(id).map { res =>
       Redirect(routes.TransactionController.show(parentId))
     }
-
   }
 
   // to copy
@@ -194,7 +199,8 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
                       res.id, res.transactionId, res.accountId, res.debit, res.credit,
                       request.session.get("userId").get.toLong,
                       request.session.get("userName").get.toString
-                    ).map { _ =>
+                    ).map { resUpdated =>
+          repoAccounts.updateParentDebitCredit(res.accountId, res.debit - updatedRow.debit, res.credit - updatedRow.credit);
           Redirect(routes.TransactionDetailController.show(res.id))
         }
       }
