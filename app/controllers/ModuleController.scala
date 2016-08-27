@@ -18,7 +18,8 @@ import it.innove.play.pdf.PdfGenerator
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ModuleController @Inject() (repo: ModuleRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
+class ModuleController @Inject() (repo: ModuleRepository, repoProductor: ProductorRepository,
+                                  repoRequest: ProductRequestRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
 
@@ -45,6 +46,7 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
 
 
   var associations: Map[String, String] = _
+  var requests: Seq[ProductRequest] = _
 
   def getAssociations(): Map[String, String] = {
     Await.result(repoProductor.getListNamesAssociations().map{ res => 
@@ -53,6 +55,12 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
         cache put (asociation.id.toString, asociation.name)
       }
       cache.toMap
+    }, 3000.millis)
+  }
+
+  def getRequestByModuleId(moduleId: Long): Seq[ProductRequest] = {
+    Await.result(repoRequest.listByModule(moduleId).map{ res => 
+      res
     }, 3000.millis)
   }
 
@@ -107,8 +115,9 @@ class ModuleController @Inject() (repo: ModuleRepository, repoProductor: Product
 
   // to copy
   def show(id: Long) = Action.async { implicit request =>
+    requests = getRequestByModuleId(id)
     repo.getById(id).map{ res =>
-      Ok(views.html.module_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.module_show(new MyDeadboltHandler, res(0), requests))
     }
   }
 

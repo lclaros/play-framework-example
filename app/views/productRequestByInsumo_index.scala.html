@@ -28,7 +28,7 @@
                         <td>@row.date</td>
                         <td>
                             @restrictOr(roles = List(Array("userShow"))) {
-                               <a href="/user_show/@row.veterinario">@row.userName
+                               <a href="/user_show/@row.userId">@row.userName
                             </a> 
                             }{
                                 @row.userName                                    
@@ -36,7 +36,7 @@
                         </td>
                         <td>
                             @restrictOr(roles = List(Array("moduleShow"))) {
-                               <a href="/user_show/@row.storekeeper">@row.moduleName
+                               <a href="/module_show/@row.moduleId">@row.moduleName
                             </a>
                             }{
                                 @row.moduleName

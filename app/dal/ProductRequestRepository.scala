@@ -98,6 +98,10 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.result
   }
 
+  def listByModule(id: Long): Future[Seq[ProductRequest]] = db.run {
+    tableQ.filter(_.moduleId === id).result
+  }
+
   def listByVeterinario(id: Long): Future[Seq[ProductRequest]] = db.run {
     tableQ.filter(_.veterinario === id).result
   }
