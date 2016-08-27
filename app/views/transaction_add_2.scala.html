@@ -10,8 +10,8 @@
         }
     </div>
     @form(routes.TransactionController.addEgreso()) {
-    	@inputDate(row("date"))
-        @select(field = row("type_1"), options = options(Map("Egreso" -> "Egreso")))
+    	@inputDate(row("date"), '_label -> "Fecha")
+        @select(field = row("type_1"), options = options(Map("Egreso" -> "Egreso")), '_label -> "Tipo de asiento")
         @inputText(row("description"))
         @select(field = row("receivedBy"), options = options(users))
         @select(field = row("autorizedBy"), options = options(users))

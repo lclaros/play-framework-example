@@ -10,7 +10,7 @@
         }
     </div>
     @form(routes.ProductRequestByInsumoController.add()) {
-        @inputText(row("date"))
+        @inputText(row("date"), '_label -> "Fecha")
         @select(field = row("userId"), options = options(users))
         @select(field = row("moduleId"), options = options(modules))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))

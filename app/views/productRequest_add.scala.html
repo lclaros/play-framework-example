@@ -10,7 +10,7 @@
         }
     </div>
     @form(routes.ProductRequestController.add()) {
-        @inputText(row("date"))
+        @inputText(row("date"), '_label -> "Fecha")
         @select(field = row("veterinario"), options = options(vets))
         @select(field = row("storekeeper"), options = options(stors))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))

@@ -30,8 +30,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       "requestId" -> longNumber,
       "productId" -> longNumber,
       "quantity" -> number,
-      "status" -> text,
-      "measureId" -> longNumber
+      "status" -> text
     )(CreateRequestRowForm.apply)(CreateRequestRowForm.unapply)
   }
 
@@ -74,13 +73,13 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       res => {
         var product1 = getProductById(res.productId)
         var productMeasure =  getMeasureById(product1.measureId)
-        var requestMeasure = getMeasureById(res.measureId)
-        var equivalent =  requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
+        //var requestMeasure = getMeasureById(res.measureId)
+        var equivalent =  1//requestMeasure.quantity.toDouble / productMeasure.quantity.toDouble;
         val newPrice = equivalent * product1.price
         val totalPrice = res.quantity * newPrice
         repo.create(res.requestId, res.productId, products(res.productId.toString()),
                     res.quantity, newPrice, totalPrice, 0, totalPrice, 0, 0, res.status,
-                    res.measureId, res.measureId.toString,
+                    product1.measureId, unidades(product1.measureId.toString),
                     request.session.get("userId").get.toLong,
                     request.session.get("userName").get.toString).map { resNew =>
           Redirect(routes.RequestRowController.show(resNew.id))
@@ -289,6 +288,6 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   }
 }
 
-case class CreateRequestRowForm(requestId: Long, productId: Long, quantity: Int, status: String, measureId: Long)
+case class CreateRequestRowForm(requestId: Long, productId: Long, quantity: Int, status: String)
 
 case class UpdateRequestRowForm(id: Long, requestId: Long, productId: Long, quantity: Int, price: Double, status: String, measureId: Long)

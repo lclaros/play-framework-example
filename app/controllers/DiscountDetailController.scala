@@ -74,7 +74,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
         Future.successful(Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, productors)))
       },
       res => {
-        repoProductor.searchProductor(res.search).map { resProductors =>
+        repoProductor.searchProductorDebs(res.search).map { resProductors =>
           val cache = collection.mutable.Map[String, String]()
           resProductors.map { productor => 
             cache put (productor.id.toString(), productor.account.toString + ": " +productor.name.toString)
@@ -171,7 +171,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   }
 
   def getProductorMap(): Map[String, String] = {
-    Await.result(repoProductor.list100Productors().map { productors => 
+    Await.result(repoProductor.list100ProductorsDebt().map { productors => 
       val cache = collection.mutable.Map[String, String]()
       productors.foreach { productor =>
         cache put (productor.id.toString(), productor.account + ": " + productor.name)

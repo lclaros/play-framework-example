@@ -167,6 +167,10 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, r
     tableQ.take(100).result
   }
 
+  def list100ProductorsDebt(): Future[Seq[Productor]] = db.run {
+    tableQ.filter(_.totalDebt > 0.0).take(100).result
+  }
+
   def searchByAccount(acc: String): Future[Seq[Productor]] = db.run {
     tableQ.filter(_.account like "%" + acc + "%").take(100).result
   }
@@ -209,6 +213,15 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, r
     if (!search.isEmpty) {
       tableQ.filter(p => (p.account like "%" + search + "%") || (p.name like "%" + search + "%")
                           || (p.associationName like "%" + search + "%")).drop(0).take(100).result
+    } else {
+      tableQ.drop(0).take(100).result
+    }    
+  }
+
+  def searchProductorDebs(search: String): Future[Seq[Productor]] = db.run {
+    if (!search.isEmpty) {
+      tableQ.filter(p => (p.account like "%" + search + "%") || (p.name like "%" + search + "%")
+                          || (p.associationName like "%" + search + "%") && p.totalDebt > 0.0).drop(0).take(100).result
     } else {
       tableQ.drop(0).take(100).result
     }    

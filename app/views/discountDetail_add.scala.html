@@ -18,7 +18,7 @@
     </div>
 
     @form(routes.DiscountDetailController.add()) {
-        @select(field = row("productorId"), options = options(productors))
+        @select(field = row("productorId"), options = options(productors), '_label -> "Productor Con Deuda")
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("discount"))
         <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>

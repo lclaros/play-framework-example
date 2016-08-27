@@ -10,8 +10,8 @@
         }
     </div>
     @form(routes.TransactionController.addIngreso()) {
-    	@inputDate(row("date"))
-        @select(field = row("type_1"), options = options(Map("Ingreso" -> "Ingreso")))
+    	@inputDate(row("date"), '_label -> "Fecha")
+        @select(field = row("type_1"), options = options(Map("Ingreso" -> "Ingreso")), '_label -> "Tipo de asiento")
         @inputText(row("description"))
         <input type="submit" value="Inicial transaccion" class="btn btn-primary btn-sm"/>
         <a href="/transaction_list" class="btn btn-primary btn-sm">Cancelar</a>

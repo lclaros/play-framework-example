@@ -26,7 +26,7 @@
         @inputText(rowForm("paid"))
         @inputText(rowForm("credit"))
         @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")))
-        @select(field = rowForm("measureId"), options = options(measures)))
+        @select(field = rowForm("measureId"), options = options(measures))
         @inputText(rowForm("observation"))
         <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/requestRow_show/@requestRowId" class="btn btn-primary btn-sm">Cancelar</a>
