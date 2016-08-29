@@ -9,11 +9,11 @@
         <a href="/">Muro</a>
     </div>
     @form(routes.MeasureController.add()) {
-        @inputText(row("name"))
-        @inputText(row("quantity"))
-        @inputText(row("description"))
-        @select(field = row("measureId"), options = options(measures))
-        <input type="submit" value="Agregar Unidad de Medida" class="btn btn-primary btn-sm"/>
+        @inputText(row("name"), 'id -> "name")
+        @inputText(row("quantity"), 'id -> "quantity")
+        @inputText(row("description"), 'id -> "description")
+        @select(field = row("measureId"), options = options(measures), 'id -> "measureParent")
+        <input id="addSubmit" type="submit" value="Agregar Unidad de Medida" class="btn btn-primary btn-sm"/>
         <a href="measure_list" class="btn btn-primary btn-sm">Cancelar</a>
     }
 }

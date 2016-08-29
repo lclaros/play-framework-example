@@ -11,11 +11,11 @@
         }
     </div>
     @form(routes.ModuleController.add()) {
-        @inputText(row("name"))
-        @inputText(row("president"))
-        @inputText(row("description"))
-        @select(field = row("associationId"), options = options(associations))
-        <input type="submit" value="Agregar Modulo" class="btn btn-primary btn-sm"/>
+        @inputText(row("name"), 'id -> "name")
+        @inputText(row("president"), 'id -> "president")
+        @inputText(row("description"), 'id -> "description")
+        @select(field = row("associationId"), options = options(associations), 'id -> "associationId")
+        <input id="addSubmit" type="submit" value="Agregar Modulo" class="btn btn-primary btn-sm"/>
         <a href="/module_list" class="btn btn-primary btn-sm">Cancelar</a>
     }
 }

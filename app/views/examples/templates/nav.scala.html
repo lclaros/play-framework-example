@@ -9,14 +9,14 @@
 
         @restrict(roles = List(Array("company"))) {
             <li>
-               <a href="/company_show">Configuracion<span class="caret"></span></a>
+               <a id="company" href="/company_show">Configuracion<span class="caret"></span></a>
                <div>
                   <ul>
                      @restrict(roles = List(Array("companyShow"))) {
-                      <li><a href="/company_show">Mostrar</a></li>
+                      <li><a id="company_show" href="/company_show">Mostrar</a></li>
                      }
                      @restrict(roles = List(Array("companyEdit"))) {
-                      <li><a href="/company_update">Editar</a></li>
+                      <li><a id="company_update" href="/company_update">Editar</a></li>
                      }
                   </ul>
                </div>
@@ -24,12 +24,12 @@
         }
         @restrict(roles = List(Array("measure"))) {
             <li>
-               <a href="/measure_list">Medidas<span class="caret"></span></a>
+               <a id="measure" href="/measure_list">Medidas<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/measure_list">Lista</a></li>
+                     <li><a id="measure_list" href="/measure_list">Lista</a></li>
                      @restrict(roles = List(Array("measureCreate"))) {
-                      <li><a href="/measure_add">Nuevo</a></li>
+                      <li><a id="measure_add" href="/measure_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -37,12 +37,12 @@
         }
         @restrict(roles = List(Array("product"))) {
             <li>
-               <a href="/product_list">Productos<span class="caret"></span></a>
+               <a id="product" href="/product_list">Productos<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/product_list">Lista</a></li>
+                     <li><a id="product_list" href="/product_list">Lista</a></li>
                      @restrict(roles = List(Array("productCreate"))) {
-                      <li><a href="/product_add">Nuevo</a></li>
+                      <li><a id="product_add" href="/product_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -50,12 +50,12 @@
         }
         @restrict(roles = List(Array("proveedor"))) {
             <li>
-               <a href="/proveedor_list">Proveedores<span class="caret"></span></a>
+               <a id="proveedor" href="/proveedor_list">Proveedores<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/proveedor_list">Lista</a></li>
+                     <li><a id="proveedor_list" href="/proveedor_list">Lista</a></li>
                      @restrict(roles = List(Array("proveedorCreate"))) {
-                      <li><a href="/proveedor_add">Nuevo</a></li>
+                      <li><a id="proveedor_add" href="/proveedor_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -63,12 +63,12 @@
         }
         @restrict(roles = List(Array("module"))) {
             <li>
-               <a href="/module_list">Modulos<span class="caret"></span></a>
+               <a id="module" href="/module_list">Modulos<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/module_list">Lista</a></li>
+                     <li><a id="module_list" href="/module_list">Lista</a></li>
                      @restrict(roles = List(Array("moduleCreate"))) {
-                      <li><a href="/module_add">Nuevo</a></li>
+                      <li><a id="module_add" href="/module_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -76,22 +76,22 @@
         }
         @restrict(roles = List(Array("association"))) {
             <li>
-               <a href="/association_list">Asociaciones<span class="caret"></span></a>
+               <a id="association" href="/association_list">Asociaciones<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/association_list">Lista</a></li>
+                     <li><a id="association_list" href="/association_list">Lista</a></li>
                   </ul>
                </div>
             </li>
         }
         @restrict(roles = List(Array("productor"))) {
             <li>
-               <a href="/productor_list/1">Productores<span class="caret"></span></a>
+               <a id="productor" href="/productor_list/1">Productores<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/productor_list/1">Lista</a></li>
+                     <li><a id="productor_list" href="/productor_list/1">Lista</a></li>
                      @restrict(roles = List(Array("productorCreate"))) {
-                      <li><a href="/productor_add">Nuevo</a></li>
+                      <li><a id="productor_add" href="/productor_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -99,12 +99,12 @@
         }
         @restrict(roles = List(Array("user"))) {
             <li>
-               <a href="/user_list">Usuarios<span class="caret"></span></a>
+               <a id="user" href="/user_list">Usuarios<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/user_list">Lista</a></li>
+                     <li><a id="user_list" href="/user_list">Lista</a></li>
                      @restrict(roles = List(Array("userCreate"))) {
-                      <li><a href="/user_add">Nuevo</a></li>
+                      <li><a id="user_add" href="/user_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -112,12 +112,12 @@
         }
         @restrict(roles = List(Array("account"))) {
             <li>
-               <a href="/account_list">Cuentas<span class="caret"></span></a>
+               <a id="account" href="/account_list">Cuentas<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/account_list">Lista</a></li>
+                     <li><a id="account_list" href="/account_list">Lista</a></li>
                      @restrict(roles = List(Array("accountCreate"))) {
-                      <li><a href="/account_add">Nuevo</a></li>
+                      <li><a id="account_add" href="/account_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -125,13 +125,13 @@
         }
         @restrict(roles = List(Array("transaction"))) {
             <li>
-               <a href="/transaction_list">Transacciones<span class="caret"></span></a>
+               <a id="transaction" href="/transaction_list">Transacciones<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/transaction_list">Lista</a></li>
+                     <li><a id="transaction_list" href="/transaction_list">Lista</a></li>
                      @restrict(roles = List(Array("transactionCreate"))) {
-                      <li><a href="/transaction_add/1">Agregar Ingreso</a></li>
-                      <li><a href="/transaction_add/2">Agregar Egreso</a></li>
+                      <li><a id="transaction_add1" href="/transaction_add/1">Agregar Ingreso</a></li>
+                      <li><a id="transaction_add2" href="/transaction_add/2">Agregar Egreso</a></li>
                      }
                   </ul>
                </div>
@@ -139,12 +139,12 @@
         }
         @restrict(roles = List(Array("productRequest"))) {
             <li>
-               <a href="/productRequest_list">Veterinaria<span class="caret"></span></a>
+               <a id="product_request" href="/productRequest_list">Veterinaria<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/productRequest_list">Lista</a></li>
+                     <li><a id="product_request_list" href="/productRequest_list">Lista</a></li>
                      @restrict(roles = List(Array("productRequestCreate"))) {
-                      <li><a href="/productRequest_add">Nuevo</a></li>
+                      <li><a id="product_request_add" href="/productRequest_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -152,12 +152,12 @@
         }
         @restrict(roles = List(Array("productRequestByInsumo"))) {
             <li>
-               <a href="/productRequestByInsumo_list">Insumos<span class="caret"></span></a>
+               <a id="product_request_insumo" href="/productRequestByInsumo_list">Insumos<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/productRequestByInsumo_list">Lista</a></li>
+                     <li><a id="product_request_insumo_list" href="/productRequestByInsumo_list">Lista</a></li>
                      @restrict(roles = List(Array("productRequestByInsumoCreate"))) {
-                      <li><a href="/productRequestByInsumo_add">Nuevo</a></li>
+                      <li><a id="product_request_insumo_add" href="/productRequestByInsumo_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -165,12 +165,12 @@
         }
         @restrict(roles = List(Array("discountReport"))) {
             <li>
-               <a href="/discountReport_list">Descuentos<span class="caret"></span></a>
+               <a id="discount_report" href="/discountReport_list">Descuentos<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/discountReport_list">Lista</a></li>
+                     <li><a id="discount_report_list" href="/discountReport_list">Lista</a></li>
                      @restrict(roles = List(Array("discountReportCreate"))) {
-                      <li><a href="/discountReport_add">Nuevo</a></li>
+                      <li><a id="discount_report_add" href="/discountReport_add">Nuevo</a></li>
                      }
                   </ul>
                </div>
@@ -178,24 +178,24 @@
         }
         @restrict(roles = List(Array("report"))) {
             <li>
-               <a href="/reporte_list">Reportes<span class="caret"></span></a>
+               <a id="report" href="/reporte_list">Reportes<span class="caret"></span></a>
                <div>
                   <ul>
                      <li><a href="/reporte_list">Lista</a></li>
                      @restrict(roles = List(Array("balanceShow"))) {
-                      <li><a href="/reportes_balance">Balance General</a></li>
+                      <li><a id="report_balance" href="/reportes_balance">Balance General</a></li>
                      }
                      @restrict(roles = List(Array("diaryShow"))) {
-                      <li><a href="/reportes_diary">Libro Diario</a></li>
+                      <li><a id="report_diary" href="/reportes_diary">Libro Diario</a></li>
                      }
                      @restrict(roles = List(Array("financeShow"))) {
-                      <li><a href="/result_finance">Estado de Resultados</a></li>
+                      <li><a id="result_finance" href="/result_finance">Estado de Resultados</a></li>
                      }
                      @restrict(roles = List(Array("mayorShow"))) {
-                      <li><a href="/reportes_mayor">Libros del mayor</a></li>
+                      <li><a id="report_mayor" href="/reportes_mayor">Libros del mayor</a></li>
                      }
                      @restrict(roles = List(Array("sumasSaldosShow"))) {
-                      <li><a href="/reportes_sumasYSaldos">Sumas Y Saldos</a></li>
+                      <li><a id="report_sumas" href="/reportes_sumasYSaldos">Sumas Y Saldos</a></li>
                      }
                   </ul>
                </div>
@@ -203,7 +203,7 @@
         }
         @restrict(roles = List(Array("logEntry"))) {
             <li>
-               <a href="/logEntry_list">Eventos<span class="caret"></span></a>
+               <a id="log_entry" href="/logEntry_list">Eventos<span class="caret"></span></a>
                <div>
                   <ul>
                      <li><a href="/logEntry_list">Lista</a></li>

@@ -10,17 +10,17 @@
         }
     </div>
     @form(routes.ProductorController.add()) {
-        @inputText(row("name"), '_label -> "Nombre")
-        @inputText(row("carnet"))
-        @inputText(row("telefono"))
-        @inputText(row("direccion"))
-        @inputText(row("account"))
-        @select(field = row("module"), options = options(modules))
-        @inputText(row("acopio"))
-        @inputText(row("promedio"))
-        @inputText(row("excedent"))
-        @inputText(row("pleno"))
-        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        @inputText(row("name"), '_label -> "Nombre", 'id -> "name")
+        @inputText(row("carnet"), 'id -> "ci")
+        @inputText(row("telefono"), 'id -> "phone")
+        @inputText(row("direccion"), 'id -> "address")
+        @inputText(row("account"), 'id -> "accountId")
+        @select(field = row("module"), options = options(modules), 'id -> "moduleId")
+        @inputText(row("acopio"), 'id -> "acopio")
+        @inputText(row("promedio"), 'id -> "avg")
+        @inputText(row("excedent"), 'id -> "excedent")
+        @inputText(row("pleno"), 'id -> "pleno")
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="productor_list/1" class="btn btn-primary btn-sm">Cancelar</a>
     }
 }

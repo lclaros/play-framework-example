@@ -11,17 +11,17 @@
     </div>
     @form(routes.ProductController.addProduct()) {
         <div class="container">
-                @inputText(row("name"))
-                @inputText(row("cost"))
-                @inputText(row("percent"))
-                @select(field = row("measureId"), options = options(measures))
-                @inputText(row("currentAmount"))
-                @textarea(row("description"), 'rows -> 3, 'cols -> 100)
-                @select(field = row("type_1"), options = options(types))
+                @inputText(row("name"), 'id -> "name")
+                @inputText(row("cost"), 'id -> "cost")
+                @inputText(row("percent"), 'id -> "percent")
+                @select(field = row("measureId"), options = options(measures), 'id -> "measureId")
+                @inputText(row("currentAmount"), 'id -> "currentAmount")
+                @textarea(row("description"), 'rows -> 3, 'cols -> 100, 'id -> "description")
+                @select(field = row("type_1"), options = options(types), 'id -> "type")
                 <br/>
                 <br/>
                 <br/>
-               <input type="submit" class="btn btn-primary btn-sm" value="Agregar Producto"/>
+               <input id="addSubmit" type="submit" class="btn btn-primary btn-sm" value="Agregar Producto"/>
                <a href="/product_list" class="btn btn-info btn-sm">Cancelar</a>
             </div>
         </div>

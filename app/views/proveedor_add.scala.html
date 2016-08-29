@@ -11,12 +11,12 @@
     </div>
     @form(routes.ProveedorController.addProveedor()) {
         <div class="container">
-            @inputText(proveedor("name"))
-            @inputText(proveedor("telefono"))
-            @inputText(proveedor("direccion"))
-            @inputText(proveedor("contacto"))
-            @inputText(proveedor("account"))
-            <input type="submit" class="btn btn-primary btn-sm" value="Guardar"/>
+            @inputText(proveedor("name"), 'id -> "name")
+            @inputText(proveedor("telefono"), 'id -> "phone")
+            @inputText(proveedor("direccion"), 'id -> "address")
+            @inputText(proveedor("contacto"), 'id -> "contact")
+            @inputText(proveedor("account"), 'id -> "accountValue")
+            <input id="addSubmit" type="submit" class="btn btn-primary btn-sm" value="Guardar"/>
             <a href="/proveedor_list" class="btn btn-primary btn-sm">Cancelar</a>
         </div>
     }

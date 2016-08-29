@@ -10,10 +10,10 @@
         }
     </div>
     @form(routes.CompanyController.updatePost()) {
-        @inputText(rowForm("name"))
-        @inputText(rowForm("president"))
-        @inputText(rowForm("description"))
-        <input type="submit" value="Actualizar"  class="btn btn-primary btn-sm"/>
+        @inputText(rowForm("name"), 'id -> "companyName")
+        @inputText(rowForm("president"), 'id -> "president")
+        @inputText(rowForm("description"), 'id -> "description")
+        <input id="updateSubmit" type="submit" value="Actualizar"  class="btn btn-primary btn-sm"/>
         <a href="/company_show" class="btn btn-primary btn-sm">Cancelar</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
