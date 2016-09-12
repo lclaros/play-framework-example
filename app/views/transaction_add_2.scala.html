@@ -10,12 +10,12 @@
         }
     </div>
     @form(routes.TransactionController.addEgreso()) {
-    	@inputDate(row("date"), '_label -> "Fecha")
-        @select(field = row("type_1"), options = options(Map("Egreso" -> "Egreso")), '_label -> "Tipo de asiento")
-        @inputText(row("description"))
-        @select(field = row("receivedBy"), options = options(users))
-        @select(field = row("autorizedBy"), options = options(users))
-        <input type="submit" value="Inicial transaccion" class="btn btn-primary btn-sm"/>
-        <a href="/transaction_list" class="btn btn-primary btn-sm">Cancelar</a>
+    	@inputDate(row("date"), '_label -> "Fecha", 'id -> "date")
+        @select(field = row("type_1"), options = options(Map("Egreso" -> "Egreso")), '_label -> "Tipo de asiento", 'id -> "type")
+        @inputText(row("description"), 'id -> "description")
+        @select(field = row("receivedBy"), options = options(users), 'id -> "receivedBy")
+        @select(field = row("autorizedBy"), options = options(users), 'id -> "autorizedBy")
+        <input id="addSubmit" type="submit" value="Inicial transaccion" class="btn btn-primary btn-sm"/>
+        <a id="" href="/transaction_list" class="btn btn-primary btn-sm">Cancelar</a>
     }
 }

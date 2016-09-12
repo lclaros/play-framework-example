@@ -20,13 +20,13 @@
 
 
     @form(routes.AccountController.add()) {
-        @inputText(rowForm("code"))
-        @inputText(rowForm("name"))
-        @select(field = rowForm("type_1"), options = options(account_type))
-        @select(field = rowForm("negativo"), options = options(yes_no))
-        @select(field = rowForm("parent"), options = options(accounts))
-        @inputText(rowForm("description"))
-        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        @inputText(rowForm("code"), 'id -> "code")
+        @inputText(rowForm("name"), 'id -> "name")
+        @select(field = rowForm("type_1"), options = options(account_type), 'id -> "type")
+        @select(field = rowForm("negativo"), options = options(yes_no), 'id -> "negative")
+        @select(field = rowForm("parent"), options = options(accounts), 'id -> "parent")
+        @inputText(rowForm("description"), 'id -> "description")
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/account_list" class="btn btn-info btn-sm">Cancelar</a>
     }
 }

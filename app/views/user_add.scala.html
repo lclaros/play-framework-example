@@ -13,15 +13,15 @@
     @form(routes.UserController.add()) {
         <div class="container">
         <div>
-            @inputText(row("name"))
-            @inputText(row("carnet"))
-            @inputText(row("telefono"))
-            @inputText(row("login"))
-            @inputText(row("password"))
-            @inputText(row("direccion"))
-            @inputText(row("sueldo"))
-            @select(field = row("type_1"), options = options(types))
-            <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+            @inputText(row("name"), 'id -> "name")
+            @inputText(row("carnet"), 'id -> "carnet")
+            @inputText(row("telefono"), 'id -> "phone")
+            @inputText(row("login"), 'id -> "login")
+            @inputText(row("password"), 'id -> "password")
+            @inputText(row("direccion"), 'id -> "direccion")
+            @inputText(row("sueldo"), 'id -> "sueldo")
+            @select(field = row("type_1"), options = options(types), 'id -> "type1")
+            <input type="submit" id="addSubmit" value="Guardar" class="btn btn-primary btn-sm"/>
             <a href="/user_list" class="btn btn-primary btn-sm">Cancelar</a>
         </div>
         </div>
