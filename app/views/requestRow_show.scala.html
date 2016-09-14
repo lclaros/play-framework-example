@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestShow"))) {
-            <a href="/productRequest_show/@row.requestId" class="btn btn-info btn-sm">Pedido</a>
+            <a id="goRequest" href="/productRequest_show/@row.requestId" class="btn btn-info btn-sm">Pedido</a>
         }
         @restrict(roles = List(Array("requestRowEdit"))) {
             <a href="/requestRow_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
@@ -42,7 +42,7 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRowProductor_add/@row.id"  class="btn btn-primary btn-sm">Entrega de Producto</a> </div>
+            <div style="display: inline-block;"> <a id="addProductor" href="/requestRowProductor_add/@row.id"  class="btn btn-primary btn-sm">Entrega de Producto</a> </div>
     </div>
 
     <div>Lista de Productos Entregados</div>

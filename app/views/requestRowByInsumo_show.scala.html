@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestByInsumoShow"))) {
-            <a href="/productRequestByInsumo_show/@row.requestId" class="btn btn-info btn-sm">Pedido</a>
+            <a id="goRequest" href="/productRequestByInsumo_show/@row.requestId" class="btn btn-info btn-sm">Pedido</a>
         }
         @restrict(roles = List(Array("requestRowEdit"))) {
             <a href="/requestRowByInsumo_update/@row.id" class="btn btn-primary btn-sm">Editar</a> 
@@ -48,8 +48,8 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRowModule_add/@row.id"  class="btn btn-primary btn-sm">Pago del Modulo</a> </div>
-            <div style="display: inline-block;"> <a href="/requestRowDriver_add/@row.id"  class="btn btn-primary btn-sm">Pagar al Transportador</a> </div>
+            <div style="display: inline-block;"> <a id="payModule" href="/requestRowModule_add/@row.id"  class="btn btn-primary btn-sm">Pago del Modulo</a> </div>
+            <div style="display: inline-block;"> <a id="payTransport" href="/requestRowDriver_add/@row.id"  class="btn btn-primary btn-sm">Pagar al Transportador</a> </div>
     </div>
 
     <div>Pagos</div>

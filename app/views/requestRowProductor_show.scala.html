@@ -7,19 +7,19 @@
     <div class="container">
         @if(row.type_1 == "productor") {
             @restrict(roles = List(Array("requestRowShow"))) {
-                <a href="/requestRow_show/@row.requestRowId" class="btn btn-info btn-sm">Detalle de Pedido</a> 
+                <a id="goRequestRow" href="/requestRow_show/@row.requestRowId" class="btn btn-info btn-sm">Detalle de Pedido</a> 
             }
         }
 
         @if(row.type_1 == "module") {
             @restrict(roles = List(Array("requestRowShow"))) {
-                <a href="/requestRowByInsumo_show/@row.requestRowId" class="btn btn-info btn-sm">Detalle de Pedido</a> 
+                <a id="goRequestRow" href="/requestRowByInsumo_show/@row.requestRowId" class="btn btn-info btn-sm">Detalle de Pedido</a> 
             }
         }
 
         @if(row.type_1 == "driver") {
             @restrict(roles = List(Array("requestRowShow"))) {
-                <a href="/requestRowByInsumo_show/@row.requestRowId" class="btn btn-info btn-sm">Detalle de Pedido</a> 
+                <a id="goRequestRow" href="/requestRowByInsumo_show/@row.requestRowId" class="btn btn-info btn-sm">Detalle de Pedido</a>
             }
         }
 

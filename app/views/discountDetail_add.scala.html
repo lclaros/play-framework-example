@@ -13,7 +13,7 @@
     <div style="display: inline-block;">
         @form(routes.DiscountDetailController.searchProductorPost()) {
             @inputText(row("search"))
-            <input type="submit" value="Buscar Productor" class="btn btn-primary btn-sm"/>
+            <input id="searchSubmit" type="submit" value="Buscar Productor" class="btn btn-primary btn-sm"/>
         }        
     </div>
 
@@ -21,7 +21,7 @@
         @select(field = row("productorId"), options = options(productors), '_label -> "Productor Con Deuda")
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("discount"))
-        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/discountReport_show/@discountId" class="btn btn-primary btn-sm">Cancelar</a>
         @select(field = row("discountReport"), options = options(discounts), 'hidden -> "true", '_label -> "")
     }

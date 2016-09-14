@@ -13,16 +13,16 @@
     <div style="container">
         @form(routes.RequestRowController.searchProductPost()) {
             @inputText(searchForm("search"))
-            <input type="submit" value="Buscar Product" class="btn btn-primary btn-sm"/>
+            <input id="searchSubmit" type="submit" value="Buscar Product" class="btn btn-primary btn-sm"/>
         }        
     </div>
 
     @form(routes.RequestRowController.add()) {
-        @select(field = rowForm("requestId"), options = options(requests))
-        @select(field = rowForm("productId"), options = options(products))
-        @inputText(rowForm("quantity"))
-        @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")))
-        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        @select(field = rowForm("requestId"), options = options(requests), 'id -> "requestId")
+        @select(field = rowForm("productId"), options = options(products), 'id -> "productId")
+        @inputText(rowForm("quantity"), 'id -> "quantity")
+        @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")), 'id -> "status")
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/productRequest_show/@parentId" class="btn btn-primary btn-sm"> Cancelar</a>
     }
 }

@@ -10,12 +10,12 @@
         }
     </div>
     @form(routes.ProductRequestByInsumoController.add()) {
-        @inputText(row("date"), '_label -> "Fecha")
-        @select(field = row("userId"), options = options(users))
-        @select(field = row("moduleId"), options = options(modules))
-        @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
-        @inputText(row("detail"))
-        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        @inputText(row("date"), '_label -> "Fecha", 'id -> "date")
+        @select(field = row("userId"), options = options(users), 'id -> "userId")
+        @select(field = row("moduleId"), options = options(modules), 'id -> "moduleId")
+        @select(field = row("status"), options = options(Map("borrador" -> "Borrador")), 'id -> "status")
+        @inputText(row("detail"), 'id -> "detail")
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/productRequestByInsumo_list" class="btn btn-primary btn-sm"> Cancelar</a>
     }
 }

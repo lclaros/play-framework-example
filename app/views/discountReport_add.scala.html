@@ -13,7 +13,7 @@
         @inputDate(row("startDate"))
         @inputDate(row("endDate"))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
-        <input type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="/discountReport_list" class="btn btn-primary btn-sm"> Cancelar</a>
     }
 }
