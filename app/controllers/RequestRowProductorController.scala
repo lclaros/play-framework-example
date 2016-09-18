@@ -132,7 +132,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
                               requestRows, products, productors, measures)))
       },
       res => {
-        repo.create(  
+        repo.create(
                       res.requestRowId, res.productId, products(res.productId.toString()),
                       res.productorId, productors(res.productorId.toString()),
                       res.quantity, res.price, res.totalPrice, res.paid, res.credit, res.status, res.measureId,

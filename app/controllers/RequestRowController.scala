@@ -39,6 +39,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
   var unidades: Map[String, String] = _
   var updatedRow: RequestRow = _
   var productRequestId: Long = 0
+  var requestIdParm: Long = 0
   
   def getMeasuresMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map{ case (res1) => 
@@ -56,7 +57,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
       Ok(views.html.requestRow_index(new MyDeadboltHandler, res))
     }
   }
-  var requestIdParm: Long = 0
+  
   def addGet(requestId: Long) = Action { implicit request =>
     unidades = getMeasuresMap()
     productRequestsMap = getProductRequestsMap(requestId)
@@ -78,7 +79,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowProduct
         val newPrice = equivalent * product1.price
         val totalPrice = res.quantity * newPrice
         repo.create(res.requestId, res.productId, products(res.productId.toString()),
-                    res.quantity, newPrice, totalPrice, 0, totalPrice, 0, 0, res.status,
+                    res.quantity, newPrice, totalPrice, 0, 0, 0, 0, res.status,
                     product1.measureId, unidades(product1.measureId.toString),
                     request.session.get("userId").get.toLong,
                     request.session.get("userName").get.toString).map { resNew =>

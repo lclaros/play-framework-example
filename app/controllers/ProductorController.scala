@@ -251,8 +251,8 @@ class ProductorController @Inject() (
 
   // delete required
   def delete(id: Long) = Action.async { implicit request =>
-    var total = getTotal()
-    var currentPage = 1
+    //var total = getTotal()
+    //var currentPage = 1
     repo.delete(id).map { res =>
       Redirect(routes.ProductorController.index(1))
     }
