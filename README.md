@@ -2,6 +2,11 @@
 
 This project demonstrates how to create a simple CRUD application with Play.
 
+# Prerequisites
+Scala
+Sbt
+Java8
+
 # Installation
 * run activator
 * Go to localhost:8888
