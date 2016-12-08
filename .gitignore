@@ -9,3 +9,6 @@ target
 
 .sbtserver/
 project/.sbtserver
+mockups/
+project/
+UI/
